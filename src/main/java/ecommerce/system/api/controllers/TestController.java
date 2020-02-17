@@ -16,7 +16,7 @@ public class TestController {
     @GetMapping("/check")
     public ResponseEntity<?> checkApplication() {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>(true, "Hello world!", "API is on.", LocalDateTime.now());
+        BaseResponseModel<String> response = new BaseResponseModel<>(true, "Hello world!", "API is on.");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

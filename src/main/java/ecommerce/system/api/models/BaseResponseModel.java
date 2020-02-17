@@ -8,11 +8,15 @@ public class BaseResponseModel<T> {
     private T data;
     private LocalDateTime timestamp;
 
-    public BaseResponseModel(boolean isSuccess, String message, T data, LocalDateTime timestamp) {
+    public BaseResponseModel() {
+        this.timestamp = LocalDateTime.now();
+    }
+
+    public BaseResponseModel(boolean isSuccess, String message, T data) {
         this.isSuccess = isSuccess;
         this.message = message;
         this.data = data;
-        this.timestamp = timestamp;
+        this.timestamp = LocalDateTime.now();
     }
 
     public boolean isSuccess() {
