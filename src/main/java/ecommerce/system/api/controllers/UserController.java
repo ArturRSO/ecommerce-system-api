@@ -4,6 +4,8 @@ import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 @RequestMapping("/users")
 public class UserController {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final IUserService userService;
 
     @Autowired
@@ -38,6 +41,8 @@ public class UserController {
 
         } catch (Exception e) {
 
+            logger.error(e.getMessage());
+
             response.setSuccess(false);
             response.setMessage("Um erro ocorreu.");
             response.setData(e.getMessage());
@@ -58,6 +63,8 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
+
+            logger.error(e.getMessage());
 
             BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
 
