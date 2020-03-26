@@ -1,13 +1,16 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.EmptySearchException;
+import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IUserService;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -47,6 +50,18 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException {
+
+        String userRole = RolesEnum.getRoleById(user.getRoleId());
+
+        if(userRole != "customer") {
+            throw new ForbiddenException("Operação não permitida!");
+        }
+
+        this.createUser(user);
+    }
+
+    @Override
     public ArrayList<UserModel> getAllUsers() throws EmptySearchException {
 
         return this.userRepository.getAll();
@@ -56,6 +71,19 @@ public class UserService implements IUserService {
     public UserModel getUserById(int id) {
 
         return this.userRepository.getById(id);
+    }
+
+    @Override
+    public UserModel getUserByEmail(String email) {
+
+        return this.userRepository.getUserByEmail(email);
+    }
+
+    @Override
+    public UserModel getProfile() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return this.getUserByEmail(email);
     }
 
     @Override
@@ -72,7 +100,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUser(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void deleteUsers(ArrayList<Integer> ids) throws BatchUpdateException {
 
         System.out.println("Deleting " + ids.size() + " users...");
 

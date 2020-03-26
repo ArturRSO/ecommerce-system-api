@@ -3,8 +3,11 @@ package ecommerce.system.api.repositories.implementations;
 import ecommerce.system.api.entities.UserEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.EmptySearchException;
+import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
@@ -16,6 +19,8 @@ import java.util.List;
 @Repository
 @Transactional(rollbackOn = {Exception.class})
 public class UserRepository implements IUserRepository<UserModel> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
     EntityManager entityManager;
@@ -50,11 +55,46 @@ public class UserRepository implements IUserRepository<UserModel> {
     @Override
     public UserModel getById(int id) {
 
-        String query = "FROM UserEntity u WHERE u.isActive = true and u.userId = :userId";
+        String query = "FROM UserEntity u WHERE u.isActive = true AND u.userId = :userId";
         TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
         UserEntity user = result.getSingleResult();
 
         return user.toModel();
+    }
+
+    @Override
+    public UserModel getUserByEmail(String email) {
+
+        String query = "FROM UserEntity u WHERE u.isActive = true AND u.email = :email";
+        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                .setParameter("email", email);
+
+        UserEntity user = result.getSingleResult();
+
+        return user.toModel();
+    }
+
+    @Override
+    public boolean checkUserCredentials(CredentialsModel credentials) {
+
+        try {
+            String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.status = true";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                    .setParameter("email", credentials.getEmail())
+                    .setParameter("password", credentials.getPassword());
+
+            UserEntity user = result.getSingleResult();
+
+            logger.info("Credentials succesfully checked for user with id " + user.getUserId());
+
+            return true;
+
+        } catch (Exception e) {
+
+            logger.warn("Failed credentials check for e-mail " + credentials.getEmail());
+
+            return false;
+        }
     }
 
     @Override

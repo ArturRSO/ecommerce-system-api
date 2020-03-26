@@ -1,6 +1,7 @@
 package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.exceptions.EmptySearchException;
+import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IUserService;
@@ -27,6 +28,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserModel user) {
+
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
@@ -38,6 +40,43 @@ public class UserController {
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/create/customer")
+    public ResponseEntity<?> createCustomer(@RequestBody UserModel user) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            this.userService.createCustomer(user);
+
+            response.setSuccess(true);
+            response.setMessage("Usuário criado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (ForbiddenException fe) {
+
+            logger.error(fe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(fe.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
         } catch (Exception e) {
 
@@ -71,6 +110,102 @@ public class UserController {
             HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR;
 
             return new ResponseEntity<>(response, httpStatus);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
+
+        try {
+            UserModel user = this.userService.getUserById(id);
+
+            BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "Usuário encontrado com sucesso", user);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+
+        try {
+            UserModel user = this.userService.getProfile();
+
+            BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "Perfil encontrado com sucesso", user);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody UserModel user) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.updateUser(user);
+
+            response.setSuccess(true);
+            response.setMessage("Usuário atualizado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR;
+
+            return new ResponseEntity<>(response, httpStatus);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUsers(@RequestBody ArrayList<Integer> ids) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.deleteUsers(ids);
+
+            String message = ids.size() > 1 ? "Usuários atualizados com sucesso!" : "Usuário atualizado com sucesso!";
+
+            response.setSuccess(true);
+            response.setMessage(message);
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
