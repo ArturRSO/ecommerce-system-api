@@ -78,7 +78,7 @@ public class UserRepository implements IUserRepository<UserModel> {
     public boolean checkUserCredentials(CredentialsModel credentials) {
 
         try {
-            String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.status = true";
+            String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.isActive = true";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", credentials.getEmail())
                     .setParameter("password", credentials.getPassword());
@@ -92,6 +92,7 @@ public class UserRepository implements IUserRepository<UserModel> {
         } catch (Exception e) {
 
             logger.warn("Failed credentials check for e-mail " + credentials.getEmail());
+            logger.error(e.getMessage());
 
             return false;
         }

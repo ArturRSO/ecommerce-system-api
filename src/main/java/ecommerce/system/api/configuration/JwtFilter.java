@@ -43,7 +43,9 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String token = this.jwtHandler.getTokenFromRequest(httpServletRequest);
 
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String email = currentAuthentication == null ? this.jwtHandler.getTokenSubject(token) : currentAuthentication.getName();
 
             if (token == null) {
                 throw new InvalidTokenException("Token inválido ou nulo");
@@ -64,7 +66,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.warn("Autenticação falhou: " + e.getMessage());
+            logger.warn(e.getMessage());
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);

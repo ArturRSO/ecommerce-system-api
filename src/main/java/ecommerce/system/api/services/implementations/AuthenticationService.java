@@ -6,9 +6,11 @@ import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.tools.JwtHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 
+@Service
 public class AuthenticationService implements IAuthenticationService {
 
     private final IUserRepository userRepository;

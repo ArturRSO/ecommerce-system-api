@@ -13,16 +13,10 @@ import java.util.Date;
 public class JwtHandler {
 
     @Value("${jwt.expiration.miliseconds}")
-    static long expirationMiliseconds;
-
-    @Value("${jwt.header}")
-    static String header;
-
-    @Value("${jwt.token.prefix}")
-    static String tokenPrefix;
+    private long expirationMiliseconds;
 
     @Value("${jwt.secret}")
-    static String secret;
+    private String secret;
 
     public boolean checkToken(String subject, String token) {
 
@@ -39,7 +33,7 @@ public class JwtHandler {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMiliseconds))
-                .signWith(SignatureAlgorithm.ES512, secret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
 
         return jwt;
@@ -56,6 +50,12 @@ public class JwtHandler {
         }
 
         return null;
+    }
+
+    public String getTokenSubject(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+
+        return claims.getSubject();
     }
 
     private boolean isTokenExpired(Date expiration) {
