@@ -75,6 +75,31 @@ public class UserRepository implements IUserRepository<UserModel> {
     }
 
     @Override
+    public boolean checkUserByEmail(String email, boolean isActive) {
+
+        logger.info("Checking user by e-mail...");
+
+        try {
+            String query = "FROM UserEntity u WHERE u.isActive = true AND u.email = :email";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                    .setParameter("email", email);
+
+            UserEntity user = result.getSingleResult();
+
+            logger.info("E-mail successfully checked for user with Id: " + user.getUserId());
+
+            return true;
+
+        } catch (Exception e) {
+
+            logger.warn("Check failed for e-mail: " + email);
+            logger.error(e.getMessage());
+
+            return false;
+        }
+    }
+
+    @Override
     public boolean checkUserCredentials(CredentialsModel credentials) {
 
         try {
