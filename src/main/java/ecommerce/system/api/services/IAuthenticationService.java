@@ -7,4 +7,5 @@ import java.security.NoSuchAlgorithmException;
 public interface IAuthenticationService {
 
     public String authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
+    public String passwordRecover(String email);
 }

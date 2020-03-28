@@ -3,6 +3,7 @@ package ecommerce.system.api.models;
 import java.time.LocalDateTime;
 
 public class BaseResponseModel<T> {
+
     private boolean isSuccess;
     private String message;
     private T data;

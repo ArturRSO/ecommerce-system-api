@@ -37,4 +37,9 @@ public class AuthenticationService implements IAuthenticationService {
 
         return null;
     }
+
+    @Override
+    public String passwordRecover(String email) {
+        return null;
+    }
 }
