@@ -68,6 +68,71 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_user` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_telephoneType`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_telephoneType` (
+  `pk_telephoneTypeId` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`pk_telephoneTypeId`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_telephone`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_telephone` (
+  `pk_telephoneId` INT NOT NULL AUTO_INCREMENT,
+  `fk_userId` INT NOT NULL,
+  `fk_telephoneTypeId` INT NOT NULL,
+  `internationalCode` VARCHAR(5) NOT NULL,
+  `localCode` INT NOT NULL,
+  `number` VARCHAR(9) NOT NULL,
+  `creationDate` DATETIME NOT NULL,
+  `lastUpdate` DATETIME NULL,
+  INDEX `fk_tb_telephone_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
+  INDEX `fk_tb_telephone_tb_telephoneType1_idx` (`fk_telephoneTypeId` ASC) VISIBLE,
+  PRIMARY KEY (`pk_telephoneId`),
+  CONSTRAINT `fk_tb_telephone_tb_user1`
+    FOREIGN KEY (`fk_userId`)
+    REFERENCES `db_e-commerce_system`.`tb_user` (`pk_userId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_telephone_tb_telephoneType1`
+    FOREIGN KEY (`fk_telephoneTypeId`)
+    REFERENCES `db_e-commerce_system`.`tb_telephoneType` (`pk_telephoneTypeId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_address`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_address` (
+  `pk_addressId` INT NOT NULL AUTO_INCREMENT,
+  `fk_userId` INT NOT NULL,
+  `country` VARCHAR(200) NOT NULL,
+  `postalCode` VARCHAR(8) NOT NULL,
+  `address` VARCHAR(500) NOT NULL,
+  `number` INT NULL,
+  `stateCode` VARCHAR(2) NOT NULL,
+  `city` VARCHAR(200) NOT NULL,
+  `district` VARCHAR(200) NOT NULL,
+  `complement` VARCHAR(200) NOT NULL,
+  `creationDate` DATETIME NOT NULL,
+  `lastUpdate` DATETIME NULL,
+  PRIMARY KEY (`pk_addressId`),
+  INDEX `fk_tb_address_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_address_tb_user1`
+    FOREIGN KEY (`fk_userId`)
+    REFERENCES `db_e-commerce_system`.`tb_user` (`pk_userId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

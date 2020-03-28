@@ -47,7 +47,6 @@ public class UserModel {
     private LocalDate birthday;
 
     private String profileImagePath;
-
     private LocalDateTime creationDate;
     private LocalDateTime lastUpdate;
     private boolean isActive;
