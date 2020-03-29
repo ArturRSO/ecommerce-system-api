@@ -10,12 +10,14 @@ import java.util.ArrayList;
 
 public interface IUserService {
 
-    public void createUser(UserModel user) throws NoSuchAlgorithmException;
-    public void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException;
+    public void createUser(UserModel user) throws NoSuchAlgorithmException, EmptySearchException;
+    public void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException, EmptySearchException;
     public ArrayList<UserModel> getAllUsers() throws EmptySearchException;
     public UserModel getUserById(int id);
     public UserModel getUserByEmail(String email);
     public UserModel getProfile();
     public void updateUser(UserModel user) throws EmptySearchException;
+    public void updateUserPassword(int userId, String email, String password, int roleId) throws ForbiddenException;
+    public void deleteUserProfile(int id) throws ForbiddenException, BatchUpdateException;
     public void deleteUsers(ArrayList<Integer> ids) throws BatchUpdateException;
 }

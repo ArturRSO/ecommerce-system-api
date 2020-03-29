@@ -181,6 +181,78 @@ public class UserController {
         }
     }
 
+    @PutMapping("update/password")
+    public ResponseEntity<?> updateUserPassword(@RequestBody UserModel user) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.updateUserPassword(user.getUserId(), user.getEmail(), user.getPassword(), user.getRoleId());
+
+            response.setSuccess(true);
+            response.setMessage("Senha atualizada com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (ForbiddenException fe) {
+
+            logger.error(fe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(fe.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/delete/profile/{id}")
+    public ResponseEntity<?> deleteProfile(@PathVariable int id) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.deleteUserProfile(id);
+
+            response.setSuccess(true);
+            response.setMessage("Perfil deletado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }  catch (ForbiddenException fe) {
+
+            logger.error(fe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(fe.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUsers(@RequestBody ArrayList<Integer> ids) {
 
@@ -189,7 +261,7 @@ public class UserController {
         try {
             this.userService.deleteUsers(ids);
 
-            String message = ids.size() > 1 ? "Usuários atualizados com sucesso!" : "Usuário atualizado com sucesso!";
+            String message = ids.size() > 1 ? "Usuários deletados com sucesso!" : "Usuário deletado com sucesso!";
 
             response.setSuccess(true);
             response.setMessage(message);

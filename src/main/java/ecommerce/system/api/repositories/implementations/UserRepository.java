@@ -18,7 +18,7 @@ import java.util.List;
 
 @Repository
 @Transactional(rollbackOn = {Exception.class})
-public class UserRepository implements IUserRepository<UserModel> {
+public class UserRepository implements IUserRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -56,7 +56,8 @@ public class UserRepository implements IUserRepository<UserModel> {
     public UserModel getById(int id) {
 
         String query = "FROM UserEntity u WHERE u.isActive = true AND u.userId = :userId";
-        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
+        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                .setParameter("userId", id);
         UserEntity user = result.getSingleResult();
 
         return user.toModel();

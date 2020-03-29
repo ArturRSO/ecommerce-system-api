@@ -39,7 +39,7 @@ public class PasswordRecoverHandler {
         String base = this.createBase(userId);
         String encryptedParameter = this.aesCodec.encryptText(base, this.tokenKey);
 
-        return baseUrl + "/password-recover/" + encryptedParameter;
+        return baseUrl + "/recover/password/" + encryptedParameter;
     }
 
     public int extractId(String token) throws Exception {
