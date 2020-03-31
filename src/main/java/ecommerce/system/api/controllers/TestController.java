@@ -66,11 +66,11 @@ public class TestController {
         logger.info("Testing recover password mail...");
 
         try {
-            this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
+            SimpleMailModel mail = this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
 
             logger.info("Recover password mail tested with success");
 
-            BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "E-mail enviado com sucesso!", user);
+            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, "E-mail enviado com sucesso!", mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

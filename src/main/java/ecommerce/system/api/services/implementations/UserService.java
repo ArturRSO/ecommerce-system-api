@@ -4,9 +4,11 @@ import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
+import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IUserService;
+import ecommerce.system.api.tools.PasswordRecoverHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +27,18 @@ public class UserService implements IUserService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final IUserRepository userRepository;
     private final SHAEncoder shaEncoder;
+    private final PasswordRecoverHandler passwordRecoverHandler;
 
     @Value("${images.path.users.default}")
     private String defaultProfileImagePath;
 
     @Autowired
-    public UserService(IUserRepository userRepository, SHAEncoder shaEncoder) {
+    public UserService(IUserRepository userRepository,
+                       SHAEncoder shaEncoder,
+                       PasswordRecoverHandler passwordRecoverHandler) {
         this.userRepository = userRepository;
         this.shaEncoder = shaEncoder;
+        this.passwordRecoverHandler = passwordRecoverHandler;
     }
 
     @Override
@@ -96,6 +102,41 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public boolean sendPasswordRecoverEmail(String email) throws Exception {
+
+        if (this.userRepository.checkUserByEmail(email, true)) {
+
+            UserModel user = this.userRepository.getUserByEmail(email);
+
+            this.passwordRecoverHandler.sendEmail(user.getUserId(), email);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean checkPasswordRecoverToken(String token) throws Exception {
+
+        return this.passwordRecoverHandler.validateToken(token);
+    }
+
+    @Override
+    public void recoverPassword(String email, String password, String token) throws Exception {
+
+        if (this.checkPasswordRecoverToken(token)) {
+
+           UserModel user = this.userRepository.getUserByEmail(email);
+
+            this.updateUserPassword(true, user.getUserId(), user.getRoleId(), email, password);
+
+        } else {
+            throw new InvalidTokenException("Token expirado");
+        }
+    }
+
+    @Override
     public void updateUser(UserModel user) throws EmptySearchException {
 
         UserModel oldUser = this.userRepository.getById(user.getUserId());
@@ -109,7 +150,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUserPassword(int userId, String email, String password, int roleId) throws ForbiddenException {
+    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws ForbiddenException {
 
         String role = RolesEnum.getRoleById(roleId);
         UserModel user = this.userRepository.getById(userId);

@@ -3,6 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
@@ -187,7 +188,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
-            this.userService.updateUserPassword(user.getUserId(), user.getEmail(), user.getPassword(), user.getRoleId());
+            this.userService.updateUserPassword(false, user.getUserId(), user.getRoleId(), user.getEmail(), user.getPassword());
 
             response.setSuccess(true);
             response.setMessage("Senha atualizada com sucesso!");
@@ -204,6 +205,59 @@ public class UserController {
             response.setData(fe.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("recover/password/{token}")
+    public ResponseEntity<?> recoverPassword(@RequestBody CredentialsModel credentials, @PathVariable String token) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.recoverPassword(credentials.getEmail(), credentials.getPassword(), token);
+
+            response.setSuccess(true);
+            response.setMessage("Senha atualizada com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Um erro ocorreu.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @PostMapping("recover/password/mail")
+    public ResponseEntity<?> sendRecoverPasswordMail(@RequestBody String email) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+            this.userService.sendPasswordRecoverEmail(email);
+
+            response.setSuccess(true);
+            response.setMessage("E-mail para recuperação de senha enviado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
 
