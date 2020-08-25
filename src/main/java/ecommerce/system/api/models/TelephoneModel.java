@@ -1,5 +1,8 @@
 package ecommerce.system.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -27,6 +30,7 @@ public class TelephoneModel {
 
     private LocalDateTime creationDate;
     private LocalDateTime lastUpdate;
+    private boolean isActive;
 
     public TelephoneModel(int telephoneId,
                           int userId,
@@ -35,7 +39,8 @@ public class TelephoneModel {
                           int localCode,
                           String number,
                           LocalDateTime creationDate,
-                          LocalDateTime lastUpdate) {
+                          LocalDateTime lastUpdate,
+                          boolean isActive) {
         this.telephoneId = telephoneId;
         this.userId = userId;
         this.telephoneTypeId = telephoneTypeId;
@@ -44,6 +49,7 @@ public class TelephoneModel {
         this.number = number;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
+        this.isActive = isActive;
     }
 
     public int getTelephoneId() {
@@ -108,5 +114,15 @@ public class TelephoneModel {
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @JsonIgnore
+    public boolean isActive() {
+        return isActive;
+    }
+
+    @JsonProperty
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

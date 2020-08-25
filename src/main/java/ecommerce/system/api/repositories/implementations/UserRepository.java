@@ -10,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -135,11 +138,11 @@ public class UserRepository implements IUserRepository {
     @Override
     public void delete(ArrayList<Integer> ids) throws BatchUpdateException {
         int result = 0;
-        String query = "UPDATE UserEntity SET isActive = false, lastUpdate = :date WHERE userId = :id";
+        String query = "UPDATE UserEntity SET isActive = false, lastUpdate = :date WHERE userId = :userId";
 
         for (int id : ids) {
             Query update = entityManager.createQuery(query)
-                    .setParameter("id", id)
+                    .setParameter("userId", id)
                     .setParameter("date", LocalDateTime.now());
             result += update.executeUpdate();
         }
