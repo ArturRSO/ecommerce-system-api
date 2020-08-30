@@ -7,5 +7,5 @@ import java.util.ArrayList;
 
 public interface ITelephoneRepository extends IBaseRepository<TelephoneModel> {
 
-    public ArrayList<TelephoneModel> getTelephoneByUserId(int userId) throws EmptySearchException;
+    public ArrayList<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException;
 }

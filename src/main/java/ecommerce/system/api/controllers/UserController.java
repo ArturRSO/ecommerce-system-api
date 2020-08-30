@@ -47,7 +47,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -74,7 +74,7 @@ public class UserController {
             logger.error(fe.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(fe.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
@@ -84,7 +84,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,7 +108,7 @@ public class UserController {
 
             BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR;
+            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
 
             return new ResponseEntity<>(response, httpStatus);
         }
@@ -118,6 +118,7 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
 
         try {
+
             UserModel user = this.userService.getUserById(id);
 
             BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "Usuário encontrado com sucesso", user);
@@ -138,6 +139,7 @@ public class UserController {
     public ResponseEntity<?> getProfile() {
 
         try {
+
             UserModel user = this.userService.getProfile();
 
             BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "Perfil encontrado com sucesso", user);
@@ -160,6 +162,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.updateUser(user);
 
             response.setSuccess(true);
@@ -173,12 +176,10 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return new ResponseEntity<>(response, httpStatus);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -188,6 +189,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.updateUserPassword(false, user.getUserId(), user.getRoleId(), user.getEmail(), user.getPassword());
 
             response.setSuccess(true);
@@ -201,7 +203,7 @@ public class UserController {
             logger.error(fe.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(fe.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
@@ -211,7 +213,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -224,6 +226,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.recoverPassword(credentials.getEmail(), credentials.getPassword(), token);
 
             response.setSuccess(true);
@@ -237,7 +240,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -251,6 +254,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.sendPasswordRecoverEmail(email);
 
             response.setSuccess(true);
@@ -264,7 +268,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -277,6 +281,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.deleteUserProfile(id);
 
             response.setSuccess(true);
@@ -290,7 +295,7 @@ public class UserController {
             logger.error(fe.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(fe.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
@@ -300,7 +305,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -313,6 +318,7 @@ public class UserController {
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
+
             this.userService.deleteUsers(ids);
 
             String message = ids.size() > 1 ? "Usuários deletados com sucesso!" : "Usuário deletado com sucesso!";
@@ -328,7 +334,7 @@ public class UserController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Um erro ocorreu.");
+            response.setMessage("Ocorreu um erro.");
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

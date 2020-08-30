@@ -42,7 +42,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserModel user) throws NoSuchAlgorithmException, EmptySearchException {
+    public void createUser(UserModel user) throws NoSuchAlgorithmException {
 
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
@@ -65,11 +65,11 @@ public class UserService implements IUserService {
 
     @Override
     public void createCustomer(UserModel user)
-            throws ForbiddenException, NoSuchAlgorithmException, EmptySearchException {
+            throws ForbiddenException, NoSuchAlgorithmException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
-        if(userRole != "customer") {
+        if (userRole != null && userRole.equals("customer")) {
             throw new ForbiddenException("Operação não permitida!");
         }
 
@@ -137,7 +137,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(UserModel user) throws EmptySearchException {
+    public void updateUser(UserModel user) {
 
         UserModel oldUser = this.userRepository.getById(user.getUserId());
 
@@ -156,9 +156,9 @@ public class UserService implements IUserService {
         UserModel user = this.userRepository.getById(userId);
         String loggedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if (role.equals("store_employee") || role.equals("customer")) {
+        if (role != null && (role.equals("store_employee") || role.equals("customer"))) {
 
-            if(!(user.getEmail().equals(loggedEmail))) {
+            if (!(user.getEmail().equals(loggedEmail))) {
                 throw new ForbiddenException("Operação não autorizada");
             }
         }

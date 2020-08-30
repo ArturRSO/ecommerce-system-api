@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_telephone` (
   `number` VARCHAR(9) NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
+  `isActive` TINYINT NOT NULL,
   INDEX `fk_tb_telephone_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
   INDEX `fk_tb_telephone_tb_telephoneType1_idx` (`fk_telephoneTypeId` ASC) VISIBLE,
   PRIMARY KEY (`pk_telephoneId`),
@@ -123,6 +124,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_address` (
   `complement` VARCHAR(200) NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
+  `isActive` TINYINT NOT NULL,
   PRIMARY KEY (`pk_addressId`),
   INDEX `fk_tb_address_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
   CONSTRAINT `fk_tb_address_tb_user1`

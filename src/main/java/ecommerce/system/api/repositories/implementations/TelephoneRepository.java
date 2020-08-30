@@ -63,7 +63,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public ArrayList<TelephoneModel> getTelephoneByUserId(int userId) throws EmptySearchException {
+    public ArrayList<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
 
         String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.userId = :userId ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)

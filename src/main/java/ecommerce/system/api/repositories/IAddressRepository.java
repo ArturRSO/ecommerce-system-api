@@ -7,5 +7,5 @@ import java.util.ArrayList;
 
 public interface IAddressRepository extends IBaseRepository<AddressModel> {
 
-    public ArrayList<AddressModel> getAddressByUserId(int userId) throws EmptySearchException;
+    public ArrayList<AddressModel> getAddressesByUserId(int userId) throws EmptySearchException;
 }

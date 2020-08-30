@@ -62,7 +62,7 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public ArrayList<AddressModel> getAddressByUserId(int userId) throws EmptySearchException {
+    public ArrayList<AddressModel> getAddressesByUserId(int userId) throws EmptySearchException {
 
         String query = "FROM AddressEntity a WHERE a.isActive = true AND a.userId = :userId ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
