@@ -1,6 +1,7 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.models.CredentialsModel;
+import ecommerce.system.api.models.TokenModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.tools.JwtHandler;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 @Service
 public class AuthenticationService implements IAuthenticationService {
@@ -29,14 +31,17 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException {
+    public TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException {
 
         String encodedPassword = this.shaEncoder.encode(credentials.getPassword());
         credentials.setPassword(encodedPassword);
 
         if (this.userRepository.checkUserCredentials(credentials)) {
 
-            return this.jwtHandler.getToken(credentials.getEmail());
+            String token = this.jwtHandler.getToken(credentials.getEmail());
+            LocalDateTime expirationDate = this.jwtHandler.getExpirationFromToken(token);
+
+            return new TokenModel(token, expirationDate);
         }
 
         return null;

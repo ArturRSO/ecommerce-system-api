@@ -1,10 +1,11 @@
 package ecommerce.system.api.services;
 
 import ecommerce.system.api.models.CredentialsModel;
+import ecommerce.system.api.models.TokenModel;
 
 import java.security.NoSuchAlgorithmException;
 
 public interface IAuthenticationService {
 
-    public String authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
+    public TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
 }

@@ -2,6 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.CredentialsModel;
+import ecommerce.system.api.models.TokenModel;
 import ecommerce.system.api.services.IAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticateUser(@RequestBody CredentialsModel credentials) {
 
         try {
-            String token = this.authenticationService.authenticateUser(credentials);
+            TokenModel token = this.authenticationService.authenticateUser(credentials);
 
             if (token == null) {
                 BaseResponseModel<String> response = new BaseResponseModel<>(true, "Autenticação falhou.", "E-mail ou senha incorretos.");
@@ -37,7 +38,7 @@ public class AuthenticationController {
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(true, "Autenticação realizada com sucesso!", token);
+            BaseResponseModel<TokenModel> response = new BaseResponseModel<>(true, "Autenticação realizada com sucesso!", token);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

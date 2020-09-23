@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -25,6 +27,14 @@ public class JwtHandler {
         final String tokenSubject = claims.getSubject();
 
         return (tokenSubject.equals(subject) && !isTokenExpired(claims.getExpiration()));
+    }
+
+    public LocalDateTime getExpirationFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+
+        Date expirationDate = claims.getExpiration();
+
+        return LocalDateTime.ofInstant(expirationDate.toInstant(), ZoneId.systemDefault());
     }
 
     public String getToken(String subject) {
