@@ -18,9 +18,9 @@ public interface IUserService {
     public UserModel getProfile();
     public boolean sendPasswordRecoverEmail(String email) throws Exception;
     public boolean checkPasswordRecoverToken(String token) throws Exception;
-    public void recoverPassword(String email, String password, String token) throws Exception;
+    public void recoverPassword(String password, String token) throws Exception;
     public void updateUser(UserModel user) throws EmptySearchException;
-    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws ForbiddenException;
+    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws ForbiddenException, NoSuchAlgorithmException;
     public void deleteUserProfile(int id) throws ForbiddenException, BatchUpdateException;
     public void deleteUsers(ArrayList<Integer> ids) throws BatchUpdateException;
 }

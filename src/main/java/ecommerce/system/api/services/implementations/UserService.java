@@ -123,13 +123,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void recoverPassword(String email, String password, String token) throws Exception {
+    public void recoverPassword(String password, String token)
+            throws Exception {
 
         if (this.checkPasswordRecoverToken(token)) {
 
-           UserModel user = this.userRepository.getUserByEmail(email);
+            int userId = this.passwordRecoverHandler.extractId(token);
+            UserModel user = this.userRepository.getById(userId);
+            String encodedPassword = this.shaEncoder.encode(password);
 
-            this.updateUserPassword(true, user.getUserId(), user.getRoleId(), email, password);
+            if (user.getPassword().equals(encodedPassword)) {
+
+               throw new ForbiddenException("Nova senha não pode ser igual a anterior!");
+
+            } else {
+               this.updateUserPassword(true, user.getUserId(), user.getRoleId(), user.getEmail(), password);
+            }
 
         } else {
             throw new InvalidTokenException("Token expirado");
@@ -150,7 +159,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws ForbiddenException {
+    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password)
+            throws ForbiddenException, NoSuchAlgorithmException {
 
         String role = RolesEnum.getRoleById(roleId);
         UserModel user = this.userRepository.getById(userId);
@@ -165,7 +175,9 @@ public class UserService implements IUserService {
 
         // TO DO - Flux to store_admin role
 
-        user.setPassword(password);
+        String encodedPassword = this.shaEncoder.encode(password);
+
+        user.setPassword(encodedPassword);
         user.setLastUpdate(LocalDateTime.now());
 
         this.userRepository.update(user);

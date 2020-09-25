@@ -2,6 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
+import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
@@ -156,6 +157,28 @@ public class UserController {
         }
     }
 
+    @GetMapping("/recover/password/status/{token}")
+    public ResponseEntity<?> getPasswordRecoverTokenStatus(@PathVariable("token") String token) {
+
+        try {
+
+          boolean status =  this.userService.checkPasswordRecoverToken(token);
+
+          BaseResponseModel<Boolean> response = new BaseResponseModel<>(true, "Status do token verificado com sucesso!", status);
+
+          return new ResponseEntity<>(response, HttpStatus.OK);
+
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/update")
     public ResponseEntity<?> updateUser(@RequestBody UserModel user) {
 
@@ -221,16 +244,26 @@ public class UserController {
     }
 
     @PostMapping("recover/password/{token}")
-    public ResponseEntity<?> recoverPassword(@RequestBody CredentialsModel credentials, @PathVariable String token) {
+    public ResponseEntity<?> recoverPassword(@RequestBody String password, @PathVariable String token) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.userService.recoverPassword(credentials.getEmail(), credentials.getPassword(), token);
+            this.userService.recoverPassword(password, token);
 
             response.setSuccess(true);
             response.setMessage("Senha atualizada com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidTokenException ite) {
+
+            logger.error(response.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Token expirado!");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -255,10 +288,12 @@ public class UserController {
 
         try {
 
-            this.userService.sendPasswordRecoverEmail(email);
+            boolean result = this.userService.sendPasswordRecoverEmail(email);
+            String message = result ? "E-mail para recuperação de senha enviado com sucesso!" :
+                    "Nenhum cadastro relacionando a esse e-mail foi encontrado";
 
-            response.setSuccess(true);
-            response.setMessage("E-mail para recuperação de senha enviado com sucesso!");
+            response.setSuccess(result);
+            response.setMessage(message);
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
