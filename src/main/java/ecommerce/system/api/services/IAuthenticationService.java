@@ -7,5 +7,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface IAuthenticationService {
 
-    public TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
+    TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
 }

@@ -8,7 +8,7 @@ public enum TelephoneTypeEnum {
     private final int id;
     private final String name;
 
-    private TelephoneTypeEnum(int id, String name) {
+    TelephoneTypeEnum(int id, String name) {
         this.id = id;
         this.name = name;
     }

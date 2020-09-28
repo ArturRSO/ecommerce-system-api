@@ -9,7 +9,7 @@ public enum RolesEnum {
     private final int id;
     private final String name;
 
-    private RolesEnum(int id, String name) {
+    RolesEnum(int id, String name) {
         this.id = id;
         this.name = name;
     }

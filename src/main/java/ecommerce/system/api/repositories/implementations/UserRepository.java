@@ -37,7 +37,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public ArrayList<UserModel> getAll() throws EmptySearchException {
+    public List<UserModel> getAll() throws EmptySearchException {
 
         String query = "FROM UserEntity u WHERE u.isActive = true ORDER BY u.userId ASC";
         TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
@@ -48,9 +48,7 @@ public class UserRepository implements IUserRepository {
         }
 
         ArrayList<UserModel> users = new ArrayList<>();
-        (entities).forEach((user) -> {
-            users.add(user.toModel());
-        });
+        (entities).forEach((user) -> users.add(user.toModel()));
 
         return users;
     }
@@ -136,7 +134,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void delete(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void delete(List<Integer> ids) throws BatchUpdateException {
         int result = 0;
         String query = "UPDATE UserEntity SET isActive = false, lastUpdate = :date WHERE userId = :userId";
 

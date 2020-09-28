@@ -4,7 +4,6 @@ import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.BaseResponseModel;
-import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -97,9 +97,9 @@ public class UserController {
 
         try {
 
-            ArrayList<UserModel> users = this.userService.getAllUsers();
+            List<UserModel> users = this.userService.getAllUsers();
 
-            BaseResponseModel<ArrayList<UserModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", users);
+            BaseResponseModel<List<UserModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", users);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

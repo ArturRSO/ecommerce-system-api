@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TelephoneService implements ITelephoneService {
@@ -32,13 +32,13 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public ArrayList<TelephoneModel> getAllTelephones() throws EmptySearchException {
+    public List<TelephoneModel> getAllTelephones() throws EmptySearchException {
 
         return this.telephoneRepository.getAll();
     }
 
     @Override
-    public ArrayList<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
+    public List<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
 
         return this.telephoneRepository.getTelephonesByUserId(userId);
     }
@@ -58,7 +58,7 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public void deleteTelephones(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void deleteTelephones(List<Integer> ids) throws BatchUpdateException {
 
         this.telephoneRepository.delete(ids);
     }

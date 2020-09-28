@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/telephones")
@@ -57,9 +58,9 @@ public class TelephoneController {
 
         try {
 
-            ArrayList<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
+            List<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
 
-            BaseResponseModel<ArrayList<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
+            BaseResponseModel<List<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -80,9 +81,9 @@ public class TelephoneController {
 
         try {
 
-            ArrayList<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
+            List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
 
-            BaseResponseModel<ArrayList<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
+            BaseResponseModel<List<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public ArrayList<TelephoneModel> getAll() throws EmptySearchException {
+    public List<TelephoneModel> getAll() throws EmptySearchException {
 
         String query = "FROM TelephoneEntity t WHERE t.isActive = true ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class);
@@ -44,9 +43,7 @@ public class TelephoneRepository implements ITelephoneRepository {
         }
 
         ArrayList<TelephoneModel> telephones = new ArrayList<>();
-        (entities).forEach((telephone) -> {
-            telephones.add(telephone.toModel());
-        });
+        (entities).forEach((telephone) -> telephones.add(telephone.toModel()));
 
         return telephones;
     }
@@ -63,7 +60,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public ArrayList<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
+    public List<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
 
         String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.userId = :userId ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
@@ -75,9 +72,7 @@ public class TelephoneRepository implements ITelephoneRepository {
         }
 
         ArrayList<TelephoneModel> telephones = new ArrayList<>();
-        (entities).forEach((telephone) -> {
-            telephones.add(telephone.toModel());
-        });
+        (entities).forEach((telephone) -> telephones.add(telephone.toModel()));
 
         return telephones;
     }
@@ -91,7 +86,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public void delete(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void delete(List<Integer> ids) throws BatchUpdateException {
         int result = 0;
         String query = "UPDATE TelephoneEntity SET isActive = false, lastUpdate = :date WHERE telephoneId = :telephoneId";
 

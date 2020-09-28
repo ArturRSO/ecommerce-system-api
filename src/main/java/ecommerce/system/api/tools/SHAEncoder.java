@@ -19,8 +19,8 @@ public class SHAEncoder {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < hash.length; i++) {
-            String hex = Integer.toHexString(0xff & hash[i]);
+        for (byte b : hash) {
+            String hex = Integer.toHexString(0xff & b);
 
             if (hex.length() == 1) {
                 stringBuilder.append('0');

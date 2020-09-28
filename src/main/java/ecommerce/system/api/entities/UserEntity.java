@@ -5,7 +5,6 @@ import ecommerce.system.api.models.UserModel;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity(name = "UserEntity")
 @Table(name = "tb_user")

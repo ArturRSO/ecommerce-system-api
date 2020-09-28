@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService implements IUserService {
@@ -80,7 +81,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public ArrayList<UserModel> getAllUsers() throws EmptySearchException {
+    public List<UserModel> getAllUsers() throws EmptySearchException {
 
         return this.userRepository.getAll();
     }
@@ -208,7 +209,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUsers(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void deleteUsers(List<Integer> ids) throws BatchUpdateException {
 
         logger.info("Deleting " + ids.size() + " users...");
 

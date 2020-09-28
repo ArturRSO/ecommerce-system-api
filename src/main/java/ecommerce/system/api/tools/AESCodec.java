@@ -7,7 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,9 +17,9 @@ import java.util.Base64;
 @Component
 public class AESCodec {
 
-    private SecretKeySpec setKey(String key) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    private SecretKeySpec setKey(String key) throws NoSuchAlgorithmException {
 
-        byte[] keyBytes = key.getBytes("UTF-8");
+        byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
 
         keyBytes = messageDigest.digest(keyBytes);
@@ -32,7 +32,6 @@ public class AESCodec {
             throws NoSuchAlgorithmException,
             NoSuchPaddingException,
             InvalidKeyException,
-            UnsupportedEncodingException,
             BadPaddingException,
             IllegalBlockSizeException {
 
@@ -41,7 +40,7 @@ public class AESCodec {
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
-        String encryptedText = Base64.getEncoder().encodeToString(cipher.doFinal(text.getBytes("UTF-8")));
+        String encryptedText = Base64.getEncoder().encodeToString(cipher.doFinal(text.getBytes(StandardCharsets.UTF_8)));
 
         return encryptedText;
     }
@@ -51,8 +50,7 @@ public class AESCodec {
             NoSuchPaddingException,
             InvalidKeyException,
             BadPaddingException,
-            IllegalBlockSizeException,
-            UnsupportedEncodingException {
+            IllegalBlockSizeException {
 
         SecretKeySpec secretKey = this.setKey(key);
 

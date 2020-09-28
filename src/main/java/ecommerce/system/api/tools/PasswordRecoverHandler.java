@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
@@ -54,14 +53,11 @@ public class PasswordRecoverHandler {
 
         String[] splitedToken = decryptedToken.split(Pattern.quote("|"), 2);
 
-        int id = Integer.parseInt(splitedToken[1]);
-
-        return id;
+        return Integer.parseInt(splitedToken[1]);
     }
 
     public LocalDateTime extractExpirationDate(String token)
             throws NoSuchPaddingException,
-            UnsupportedEncodingException,
             NoSuchAlgorithmException,
             IllegalBlockSizeException,
             BadPaddingException,
@@ -71,9 +67,7 @@ public class PasswordRecoverHandler {
 
         String[] splitedToken = decryptedToken.split(Pattern.quote("|"), 0);
 
-        LocalDateTime expirationDate = LocalDateTime.parse(splitedToken[0]);
-
-        return expirationDate;
+        return LocalDateTime.parse(splitedToken[0]);
     }
 
     public boolean validateToken(String token) throws Exception {

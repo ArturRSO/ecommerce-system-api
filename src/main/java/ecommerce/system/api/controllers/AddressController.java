@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/adresses")
@@ -57,9 +58,9 @@ public class AddressController {
 
         try {
 
-            ArrayList<AddressModel> adresses = this.addressService.getAllAdresses();
+            List<AddressModel> adresses = this.addressService.getAllAdresses();
 
-            BaseResponseModel<ArrayList<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", adresses);
+            BaseResponseModel<List<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", adresses);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -80,9 +81,9 @@ public class AddressController {
 
         try {
 
-            ArrayList<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
+            List<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
 
-            BaseResponseModel<ArrayList<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso", adresses);
+            BaseResponseModel<List<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso", adresses);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

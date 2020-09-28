@@ -32,7 +32,7 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public ArrayList<AddressModel> getAll() throws EmptySearchException {
+    public List<AddressModel> getAll() throws EmptySearchException {
 
         String query = "FROM AddressEntity a WHERE a.isActive = true ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class);
@@ -43,9 +43,7 @@ public class AddressRepository implements IAddressRepository {
         }
 
         ArrayList<AddressModel> addresses = new ArrayList<>();
-        (entities).forEach((address) -> {
-            addresses.add(address.toModel());
-        });
+        (entities).forEach((address) -> addresses.add(address.toModel()));
 
         return addresses;
     }
@@ -62,7 +60,7 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public ArrayList<AddressModel> getAddressesByUserId(int userId) throws EmptySearchException {
+    public List<AddressModel> getAddressesByUserId(int userId) throws EmptySearchException {
 
         String query = "FROM AddressEntity a WHERE a.isActive = true AND a.userId = :userId ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
@@ -74,9 +72,7 @@ public class AddressRepository implements IAddressRepository {
         }
 
         ArrayList<AddressModel> addresses = new ArrayList<>();
-        (entities).forEach((address) -> {
-            addresses.add(address.toModel());
-        });
+        (entities).forEach((address) -> addresses.add(address.toModel()));
 
         return addresses;
     }
@@ -90,7 +86,7 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public void delete(ArrayList<Integer> ids) throws BatchUpdateException {
+    public void delete(List<Integer> ids) throws BatchUpdateException {
         int result = 0;
         String query = "UPDATE AddressEntity SET isActive = false, lastUpdate = :date WHERE addressId = :addressId";
 

@@ -7,7 +7,7 @@ public enum DocumentTypeEnum {
     private final int id;
     private final String name;
 
-    private DocumentTypeEnum(int id, String name) {
+    DocumentTypeEnum(int id, String name) {
         this.id = id;
         this.name = name;
     }

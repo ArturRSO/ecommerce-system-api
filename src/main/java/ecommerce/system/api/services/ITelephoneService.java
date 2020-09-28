@@ -4,14 +4,14 @@ import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.TelephoneModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface ITelephoneService {
 
-    public void createTelephone(TelephoneModel telephone);
-    public ArrayList<TelephoneModel> getAllTelephones() throws EmptySearchException;
-    public ArrayList<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException;
-    public TelephoneModel getTelephoneById(int telephoneId);
-    public void updateTelephone(TelephoneModel telephone);
-    public void deleteTelephones(ArrayList<Integer> ids) throws BatchUpdateException;
+    void createTelephone(TelephoneModel telephone);
+    List<TelephoneModel> getAllTelephones() throws EmptySearchException;
+    List<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException;
+    TelephoneModel getTelephoneById(int telephoneId);
+    void updateTelephone(TelephoneModel telephone);
+    void deleteTelephones(List<Integer> ids) throws BatchUpdateException;
 }

@@ -33,9 +33,7 @@ public class UserOptionRepository implements IUserOptionRepository {
         }
 
         ArrayList<UserOptionModel> options = new ArrayList<>();
-        (entities).forEach((option) -> {
-            options.add(option.toModel());
-        });
+        (entities).forEach((option) -> options.add(option.toModel()));
 
         return options;
     }
