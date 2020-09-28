@@ -6,8 +6,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-@Entity(name = "UserEntity")
-@Table(name = "tb_user")
+@Entity(name = "RoleUserOptionEntity")
+@Table(name = "tb_role_userOption")
 public class RoleUserOptionEntity {
 
     @EmbeddedId
