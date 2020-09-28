@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "tb_address")
 public class AddressEntity {
 
-    @Id()
+    @Id
     @Column(name = "pk_addressId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int addressId;

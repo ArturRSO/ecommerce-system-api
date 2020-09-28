@@ -6,6 +6,7 @@ import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.repositories.IUserOptionRepository;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IUserService;
 import ecommerce.system.api.tools.PasswordRecoverHandler;
@@ -26,6 +27,7 @@ public class UserService implements IUserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final IUserRepository userRepository;
+    private final IUserOptionRepository userOptionRepository;
     private final SHAEncoder shaEncoder;
     private final PasswordRecoverHandler passwordRecoverHandler;
 
@@ -34,9 +36,10 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(IUserRepository userRepository,
-                       SHAEncoder shaEncoder,
+                       IUserOptionRepository userOptionRepository, SHAEncoder shaEncoder,
                        PasswordRecoverHandler passwordRecoverHandler) {
         this.userRepository = userRepository;
+        this.userOptionRepository = userOptionRepository;
         this.shaEncoder = shaEncoder;
         this.passwordRecoverHandler = passwordRecoverHandler;
     }
@@ -95,10 +98,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getProfile() {
+    public UserModel getProfile() throws EmptySearchException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return this.getUserByEmail(email);
+        UserModel user = this.getUserByEmail(email);
+
+        user.setOptions(this.userOptionRepository.getUserOptionsByRoleId(user.getRoleId()));
+
+        return user;
     }
 
     @Override

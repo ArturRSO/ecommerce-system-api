@@ -15,7 +15,7 @@ public interface IUserService {
     public ArrayList<UserModel> getAllUsers() throws EmptySearchException;
     public UserModel getUserById(int id);
     public UserModel getUserByEmail(String email);
-    public UserModel getProfile();
+    public UserModel getProfile() throws EmptySearchException;
     public boolean sendPasswordRecoverEmail(String email) throws Exception;
     public boolean checkPasswordRecoverToken(String token) throws Exception;
     public void recoverPassword(String password, String token) throws Exception;

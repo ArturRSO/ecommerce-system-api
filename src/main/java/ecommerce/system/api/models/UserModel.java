@@ -8,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserModel {
 
@@ -50,6 +51,8 @@ public class UserModel {
     private LocalDateTime creationDate;
     private LocalDateTime lastUpdate;
     private boolean isActive;
+
+    private List<UserOptionModel> options;
 
     public UserModel(int userId,
                      String firstName,
@@ -113,6 +116,7 @@ public class UserModel {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -189,5 +193,15 @@ public class UserModel {
     @JsonProperty
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    @JsonIgnore
+    public List<UserOptionModel> getOptions() {
+        return options;
+    }
+
+    @JsonProperty
+    public void setOptions(List<UserOptionModel> options) {
+        this.options = options;
     }
 }

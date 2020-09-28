@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_address` (
   `country` VARCHAR(200) NOT NULL,
   `postalCode` VARCHAR(8) NOT NULL,
   `address` VARCHAR(500) NOT NULL,
-  `number` INT NULL,
+  `number` INT NOT NULL,
   `stateCode` VARCHAR(2) NOT NULL,
   `city` VARCHAR(200) NOT NULL,
   `district` VARCHAR(200) NOT NULL,
@@ -130,6 +130,41 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_address` (
   CONSTRAINT `fk_tb_address_tb_user1`
     FOREIGN KEY (`fk_userId`)
     REFERENCES `db_e-commerce_system`.`tb_user` (`pk_userId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_userOption`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_userOption` (
+  `pk_userOptionId` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NOT NULL,
+  `elementId` VARCHAR(50) NULL,
+  `route` VARCHAR(50) NULL,
+  `samePage` TINYINT NOT NULL,
+  `isActive` TINYINT NOT NULL,
+  PRIMARY KEY (`pk_userOptionId`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_role_userOption`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_role_userOption` (
+  `pk_fk_roleId` INT NOT NULL,
+  `pk_fk_userOptionId` INT NOT NULL,
+  INDEX `fk_tb_role_userOption_tb_role1_idx` (`pk_fk_roleId` ASC) VISIBLE,
+  INDEX `fk_tb_role_userOption_tb_userOption1_idx` (`pk_fk_userOptionId` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_role_userOption_tb_role1`
+    FOREIGN KEY (`pk_fk_roleId`)
+    REFERENCES `db_e-commerce_system`.`tb_role` (`pk_roleId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_role_userOption_tb_userOption1`
+    FOREIGN KEY (`pk_fk_userOptionId`)
+    REFERENCES `db_e-commerce_system`.`tb_userOption` (`pk_userOptionId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
