@@ -6,6 +6,7 @@ import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.repositories.IUserOptionRepository;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IUserService;
@@ -99,12 +100,17 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException {
+        return this.userOptionRepository.getUserOptionsByRoleId(roleId);
+    }
+
+    @Override
     public UserModel getProfile() throws EmptySearchException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserModel user = this.getUserByEmail(email);
 
-        user.setOptions(this.userOptionRepository.getUserOptionsByRoleId(user.getRoleId()));
+        user.setOptions(this.getUserOptionsByRoleId(user.getRoleId()));
 
         return user;
     }

@@ -5,6 +5,7 @@ import ecommerce.system.api.exceptions.ForbiddenException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,7 +169,6 @@ public class UserController {
 
           return new ResponseEntity<>(response, HttpStatus.OK);
 
-
         } catch (Exception e) {
 
             logger.error(e.getMessage());
@@ -176,6 +176,29 @@ public class UserController {
             BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/options/{roleId}")
+    public ResponseEntity<?> getUserOptionsByRoleId(@PathVariable("roleId") int roleId) {
+
+        try {
+
+            List<UserOptionModel> options = this.userService.getUserOptionsByRoleId(roleId);
+
+            BaseResponseModel<List<UserOptionModel>> response = new BaseResponseModel<>(true, "Opções consultadas com sucesso", options);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+
+            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
+
+            return new ResponseEntity<>(response, httpStatus);
         }
     }
 
@@ -279,7 +302,6 @@ public class UserController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PostMapping("recover/password/mail")
     public ResponseEntity<?> sendRecoverPasswordMail(@RequestBody String email) {

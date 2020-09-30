@@ -33,7 +33,7 @@ public class AuthenticationController {
             TokenModel token = this.authenticationService.authenticateUser(credentials);
 
             if (token == null) {
-                BaseResponseModel<String> response = new BaseResponseModel<>(true, "Autenticação falhou.", "E-mail ou senha incorretos.");
+                BaseResponseModel<String> response = new BaseResponseModel<>(false, "Autenticação falhou.", "E-mail ou senha incorretos.");
 
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
