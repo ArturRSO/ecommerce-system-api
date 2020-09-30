@@ -82,7 +82,6 @@ public class AddressModel {
         return addressId;
     }
 
-    @JsonProperty
     public void setAddressId(int addressId) {
         this.addressId = addressId;
     }
@@ -164,7 +163,6 @@ public class AddressModel {
         return creationDate;
     }
 
-    @JsonProperty
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
@@ -174,7 +172,6 @@ public class AddressModel {
         return lastUpdate;
     }
 
-    @JsonProperty
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
@@ -184,7 +181,6 @@ public class AddressModel {
         return isActive;
     }
 
-    @JsonProperty
     public void setActive(boolean active) {
         isActive = active;
     }

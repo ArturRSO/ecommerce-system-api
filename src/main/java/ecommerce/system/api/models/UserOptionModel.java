@@ -1,5 +1,7 @@
 package ecommerce.system.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class UserOptionModel {
 
     private int userOptionId;
@@ -18,6 +20,7 @@ public class UserOptionModel {
         this.isActive = isActive;
     }
 
+    @JsonIgnore
     public int getUserOptionId() {
         return userOptionId;
     }

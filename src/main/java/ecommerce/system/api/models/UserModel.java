@@ -82,12 +82,11 @@ public class UserModel {
         this.isActive = isActive;
     }
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public int getUserId() {
         return userId;
     }
 
-    @JsonProperty
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -165,12 +164,11 @@ public class UserModel {
         this.profileImagePath = profileImagePath;
     }
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    @JsonProperty
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
@@ -180,7 +178,6 @@ public class UserModel {
         return lastUpdate;
     }
 
-    @JsonProperty
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
@@ -190,17 +187,15 @@ public class UserModel {
         return isActive;
     }
 
-    @JsonProperty
     public void setActive(boolean active) {
         isActive = active;
     }
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public List<UserOptionModel> getOptions() {
         return options;
     }
 
-    @JsonProperty
     public void setOptions(List<UserOptionModel> options) {
         this.options = options;
     }
