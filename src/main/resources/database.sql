@@ -143,6 +143,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_userOption` (
   `name` VARCHAR(200) NOT NULL,
   `elementId` VARCHAR(50) NULL,
   `route` VARCHAR(50) NULL,
+  `icon` VARCHAR(50) NULL,
   `samePage` TINYINT NOT NULL,
   `isActive` TINYINT NOT NULL,
   PRIMARY KEY (`pk_userOptionId`))

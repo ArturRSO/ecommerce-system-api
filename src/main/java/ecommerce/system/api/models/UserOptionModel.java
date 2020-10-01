@@ -8,14 +8,16 @@ public class UserOptionModel {
     private String name;
     private String elementId;
     private String route;
+    private String icon;
     private boolean samePage;
     private boolean isActive;
 
-    public UserOptionModel(int userOptionId, String name, String elementId, String route, boolean samePage, boolean isActive) {
+    public UserOptionModel(int userOptionId, String name, String elementId, String route, String icon, boolean samePage, boolean isActive) {
         this.userOptionId = userOptionId;
         this.name = name;
         this.elementId = elementId;
         this.route = route;
+        this.icon = icon;
         this.samePage = samePage;
         this.isActive = isActive;
     }
@@ -53,6 +55,14 @@ public class UserOptionModel {
         this.route = route;
     }
 
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
     public boolean isSamePage() {
         return samePage;
     }
@@ -61,6 +71,7 @@ public class UserOptionModel {
         this.samePage = samePage;
     }
 
+    @JsonIgnore
     public boolean isActive() {
         return isActive;
     }

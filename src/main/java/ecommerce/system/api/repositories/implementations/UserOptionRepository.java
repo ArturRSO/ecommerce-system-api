@@ -23,7 +23,7 @@ public class UserOptionRepository implements IUserOptionRepository {
     @Override
     public List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException {
 
-        String query = "SELECT uo FROM UserOptionEntity uo, RoleUserOptionEntity ru WHERE uo.userOptionId = ru.id.userOptionId AND ru.id.roleId = :roleId";
+        String query = "SELECT uo FROM UserOptionEntity uo, RoleUserOptionEntity ru WHERE uo.userOptionId = ru.id.userOptionId AND ru.id.roleId = :roleId AND uo.isActive = true";
         TypedQuery<UserOptionEntity> result = this.entityManager.createQuery(query, UserOptionEntity.class)
                 .setParameter("roleId", roleId);
         List<UserOptionEntity> entities = result.getResultList();

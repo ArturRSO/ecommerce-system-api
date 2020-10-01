@@ -23,6 +23,9 @@ public class UserOptionEntity {
     @Column(name = "route")
     private String route;
 
+    @Column(name = "icon")
+    private String icon;
+
     @Column(name = "samePage")
     private boolean samePage;
 
@@ -32,11 +35,12 @@ public class UserOptionEntity {
     public UserOptionEntity() {
     }
 
-    public UserOptionEntity(int userOptionId, String name, String elementId, String route, boolean samePage, boolean isActive, Set<UserEntity> users) {
+    public UserOptionEntity(int userOptionId, String name, String elementId, String route, String icon, boolean samePage, boolean isActive, Set<UserEntity> users) {
         this.userOptionId = userOptionId;
         this.name = name;
         this.elementId = elementId;
         this.route = route;
+        this.icon = icon;
         this.samePage = samePage;
         this.isActive = isActive;
     }
@@ -47,6 +51,7 @@ public class UserOptionEntity {
                 this.name,
                 this.elementId,
                 this.route,
+                this.icon,
                 this.samePage,
                 this.isActive
         );
@@ -82,6 +87,14 @@ public class UserOptionEntity {
 
     public void setRoute(String route) {
         this.route = route;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public boolean isSamePage() {
