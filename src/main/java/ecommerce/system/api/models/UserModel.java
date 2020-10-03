@@ -115,7 +115,7 @@ public class UserModel {
         this.email = email;
     }
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     public String getPassword() {
         return password;
     }
