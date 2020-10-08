@@ -1,10 +1,7 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.RolesEnum;
-import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
-import ecommerce.system.api.exceptions.ForbiddenException;
-import ecommerce.system.api.exceptions.InvalidTokenException;
+import ecommerce.system.api.exceptions.*;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.repositories.IUserOptionRepository;
@@ -47,7 +44,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserModel user) throws NoSuchAlgorithmException {
+    public void createUser(UserModel user) throws NoSuchAlgorithmException, ForbiddenException, InactiveAccountException {
 
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
@@ -60,21 +57,50 @@ public class UserService implements IUserService {
             user.setProfileImagePath(this.defaultProfileImagePath);
         }
 
-        if (this.userRepository.checkUserByEmail(user.getEmail(), false)) {
-            this.updateUser(user);
+        UserModel checkedUser = this.userRepository.getUserByDocumentNumber(user.getDocumentNumber());
+
+        if (checkedUser == null) {
+            checkedUser = this.userRepository.getUserByEmail(user.getEmail());
+
+            if (checkedUser != null) {
+
+                checkedUser.setEmail(checkedUser.getEmail() + " [Inactive]");
+                this.userRepository.update(checkedUser);
+            }
+
+            this.userRepository.create(user);
 
         } else {
-            this.userRepository.create(user);
+
+            if (checkedUser.isActive()) {
+                throw new ForbiddenException("Já existe um usuário cadastrado com o número do documento informado.");
+
+            } else {
+                throw new InactiveAccountException("Encontramos um cadastro inativo para o documento informado.");
+            }
         }
     }
 
     @Override
     public void createCustomer(UserModel user)
-            throws ForbiddenException, NoSuchAlgorithmException {
+            throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
-        if (userRole != null && userRole.equals("customer")) {
+        if (userRole == null || !userRole.equals("customer")) {
+            throw new ForbiddenException("Operação não permitida!");
+        }
+
+        this.createUser(user);
+    }
+
+    @Override
+    public void createStoreAdmin(UserModel user)
+            throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException {
+
+        String userRole = RolesEnum.getRoleById(user.getRoleId());
+
+        if (userRole == null || !userRole.equals("store_admin")) {
             throw new ForbiddenException("Operação não permitida!");
         }
 
@@ -96,7 +122,13 @@ public class UserService implements IUserService {
     @Override
     public UserModel getUserByEmail(String email) {
 
-        return this.userRepository.getUserByEmail(email);
+        UserModel user = this.userRepository.getUserByEmail(email);
+
+        if (user != null) {
+            return user.isActive() ? user : null;
+        }
+
+        return null;
     }
 
     @Override
@@ -105,7 +137,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getProfile() throws EmptySearchException {
+    public UserModel getUserProfile() throws EmptySearchException {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserModel user = this.getUserByEmail(email);
@@ -118,11 +150,11 @@ public class UserService implements IUserService {
     @Override
     public boolean sendPasswordRecoverEmail(String email) throws Exception {
 
-        if (this.userRepository.checkUserByEmail(email, true)) {
+        UserModel user = this.getUserByEmail(email);
 
-            UserModel user = this.userRepository.getUserByEmail(email);
+        if (user != null) {
 
-            this.passwordRecoverHandler.sendEmail(user.getUserId(), email);
+            this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
 
             return true;
         }
@@ -202,7 +234,7 @@ public class UserService implements IUserService {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserModel user = this.userRepository.getUserByEmail(email);
+        UserModel user = this.getUserByEmail(email);
 
         if (id != user.getUserId()) {
             throw new ForbiddenException("Operação não permitida!");

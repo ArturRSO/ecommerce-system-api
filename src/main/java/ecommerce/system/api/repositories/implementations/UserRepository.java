@@ -65,39 +65,44 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public UserModel getUserByEmail(String email) {
+    public UserModel getUserByDocumentNumber(String documentNumber) {
 
-        String query = "FROM UserEntity u WHERE u.isActive = true AND u.email = :email";
-        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
-                .setParameter("email", email);
+        try {
 
-        UserEntity user = result.getSingleResult();
+            String query = "FROM UserEntity u WHERE u.documentNumber = :documentNumber";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                    .setParameter("documentNumber", documentNumber);
 
-        return user.toModel();
+            UserEntity user = result.getSingleResult();
+
+            return user.toModel();
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            return null;
+        }
     }
 
     @Override
-    public boolean checkUserByEmail(String email, boolean isActive) {
-
-        logger.info("Checking user by e-mail...");
+    public UserModel getUserByEmail(String email) {
 
         try {
-            String query = "FROM UserEntity u WHERE u.isActive = true AND u.email = :email";
+
+            String query = "FROM UserEntity u WHERE u.email = :email;";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", email);
 
             UserEntity user = result.getSingleResult();
 
-            logger.info("E-mail successfully checked for user with Id: " + user.getUserId());
-
-            return true;
+            return user.toModel();
 
         } catch (Exception e) {
 
-            logger.warn("Check failed for e-mail: " + email);
             logger.error(e.getMessage());
 
-            return false;
+            return null;
         }
     }
 
@@ -105,6 +110,7 @@ public class UserRepository implements IUserRepository {
     public boolean checkUserCredentials(CredentialsModel credentials) {
 
         try {
+
             String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.isActive = true";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", credentials.getEmail())

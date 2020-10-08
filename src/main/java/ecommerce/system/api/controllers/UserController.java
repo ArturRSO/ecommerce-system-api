@@ -79,6 +79,43 @@ public class UserController {
             response.setMessage("Ocorreu um erro.");
             response.setData(fe.getMessage());
 
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Ocorreu um erro.");
+            response.setData(e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/create/store-admin")
+    public ResponseEntity<?> createStoreAdmin(@RequestBody UserModel user) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            this.userService.createStoreAdmin(user);
+
+            response.setSuccess(true);
+            response.setMessage("Usuário criado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (ForbiddenException fe) {
+
+            logger.error(fe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage("Ocorreu um erro.");
+            response.setData(fe.getMessage());
+
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
 
         } catch (Exception e) {
@@ -142,7 +179,7 @@ public class UserController {
 
         try {
 
-            UserModel user = this.userService.getProfile();
+            UserModel user = this.userService.getUserProfile();
 
             BaseResponseModel<UserModel> response = new BaseResponseModel<>(true, "Perfil encontrado com sucesso", user);
 

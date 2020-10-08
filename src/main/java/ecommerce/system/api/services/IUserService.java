@@ -3,6 +3,7 @@ package ecommerce.system.api.services;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.exceptions.ForbiddenException;
+import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.models.UserOptionModel;
 
@@ -11,13 +12,14 @@ import java.util.List;
 
 public interface IUserService {
 
-    void createUser(UserModel user) throws NoSuchAlgorithmException;
-    void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException;
+    void createUser(UserModel user) throws NoSuchAlgorithmException, ForbiddenException, InactiveAccountException;
+    void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException;
+    void createStoreAdmin(UserModel user) throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException;
     List<UserModel> getAllUsers() throws EmptySearchException;
     UserModel getUserById(int id);
     UserModel getUserByEmail(String email);
     List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException;
-    UserModel getProfile() throws EmptySearchException;
+    UserModel getUserProfile() throws EmptySearchException;
     boolean sendPasswordRecoverEmail(String email) throws Exception;
     boolean checkPasswordRecoverToken(String token) throws Exception;
     void recoverPassword(String password, String token) throws Exception;
