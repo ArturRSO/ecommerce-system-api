@@ -156,6 +156,7 @@ public class UserModel {
         this.birthday = birthday;
     }
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public String getProfileImagePath() {
         return profileImagePath;
     }
