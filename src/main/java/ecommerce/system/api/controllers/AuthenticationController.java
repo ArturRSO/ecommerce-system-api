@@ -1,5 +1,6 @@
 package ecommerce.system.api.controllers;
 
+import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.TokenModel;
@@ -29,16 +30,17 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody CredentialsModel credentials) {
 
+        BaseResponseModel<?> response;
+
         try {
             TokenModel token = this.authenticationService.authenticateUser(credentials);
 
             if (token == null) {
-                BaseResponseModel<String> response = new BaseResponseModel<>(false, "Autenticação falhou.", "E-mail ou senha incorretos.");
+                response = new BaseResponseModel<>(false, "Autenticação falhou.", "E-mail ou senha incorretos.");
 
-                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                response = new BaseResponseModel<>(true, "Autenticação realizada com sucesso!", token);
             }
-
-            BaseResponseModel<TokenModel> response = new BaseResponseModel<>(true, "Autenticação realizada com sucesso!", token);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -46,7 +48,7 @@ public class AuthenticationController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Autenticação falhou.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

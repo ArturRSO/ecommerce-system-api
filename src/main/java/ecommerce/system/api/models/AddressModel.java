@@ -1,6 +1,7 @@
 package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 public class AddressModel {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int addressId;
 
     @NotNull
@@ -44,8 +46,13 @@ public class AddressModel {
     @Size(min = 2, max = 200)
     private String complement;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
+
+    @JsonIgnore
     private LocalDateTime lastUpdate;
+
+    @JsonIgnore
     private boolean isActive;
 
     public AddressModel(int addressId,
@@ -76,7 +83,6 @@ public class AddressModel {
         this.isActive = isActive;
     }
 
-    @JsonIgnore
     public int getAddressId() {
         return addressId;
     }
@@ -157,7 +163,6 @@ public class AddressModel {
         this.complement = complement;
     }
 
-    @JsonIgnore
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -166,7 +171,6 @@ public class AddressModel {
         this.creationDate = creationDate;
     }
 
-    @JsonIgnore
     public LocalDateTime getLastUpdate() {
         return lastUpdate;
     }
@@ -175,7 +179,6 @@ public class AddressModel {
         this.lastUpdate = lastUpdate;
     }
 
-    @JsonIgnore
     public boolean isActive() {
         return isActive;
     }

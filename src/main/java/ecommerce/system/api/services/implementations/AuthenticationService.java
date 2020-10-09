@@ -2,6 +2,7 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.TokenModel;
+import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.tools.JwtHandler;
@@ -36,9 +37,11 @@ public class AuthenticationService implements IAuthenticationService {
         String encodedPassword = this.shaEncoder.encode(credentials.getPassword());
         credentials.setPassword(encodedPassword);
 
-        if (this.userRepository.checkUserCredentials(credentials)) {
+        UserModel user = this.userRepository.getUserByCredentials(credentials);
 
-            String token = this.jwtHandler.getToken(credentials.getEmail());
+        if (user != null) {
+
+            String token = this.jwtHandler.getToken(user.getEmail());
             LocalDateTime expirationDate = this.jwtHandler.getExpirationFromToken(token);
 
             return new TokenModel(token, expirationDate);

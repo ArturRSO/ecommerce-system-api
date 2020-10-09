@@ -2,7 +2,6 @@ package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.UserEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
@@ -37,31 +36,48 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<UserModel> getAll() throws EmptySearchException {
+    public List<UserModel> getAll() {
 
-        String query = "FROM UserEntity u WHERE u.isActive = true ORDER BY u.userId ASC";
-        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
-        List<UserEntity> entities = result.getResultList();
+        try {
 
-        if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhum usuário encontrado!");
+            String query = "FROM UserEntity u WHERE u.isActive = true ORDER BY u.userId ASC";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
+            List<UserEntity> entities = result.getResultList();
+
+            if (entities == null || entities.isEmpty()) {
+                return null;
+            }
+
+            ArrayList<UserModel> users = new ArrayList<>();
+            (entities).forEach((user) -> users.add(user.toModel()));
+
+            return users;
+
+        }  catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            return null;
         }
-
-        ArrayList<UserModel> users = new ArrayList<>();
-        (entities).forEach((user) -> users.add(user.toModel()));
-
-        return users;
     }
 
     @Override
     public UserModel getById(int id) {
 
-        String query = "FROM UserEntity u WHERE u.isActive = true AND u.userId = :userId";
-        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
-                .setParameter("userId", id);
-        UserEntity user = result.getSingleResult();
+        try {
+            String query = "FROM UserEntity u WHERE u.isActive = true AND u.userId = :userId";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                    .setParameter("userId", id);
+            UserEntity user = result.getSingleResult();
 
-        return user.toModel();
+            return user.toModel();
+
+        }  catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            return null;
+        }
     }
 
     @Override
@@ -107,7 +123,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public boolean checkUserCredentials(CredentialsModel credentials) {
+    public UserModel getUserByCredentials(CredentialsModel credentials) {
 
         try {
 
@@ -120,14 +136,14 @@ public class UserRepository implements IUserRepository {
 
             logger.info("Credentials succesfully checked for user with id " + user.getUserId());
 
-            return true;
+            return user.toModel();
 
         } catch (Exception e) {
 
             logger.warn("Failed credentials check for e-mail " + credentials.getEmail());
             logger.error(e.getMessage());
 
-            return false;
+            return null;
         }
     }
 

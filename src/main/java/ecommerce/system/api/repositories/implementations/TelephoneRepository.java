@@ -2,7 +2,6 @@ package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.TelephoneEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import org.springframework.stereotype.Repository;
@@ -32,14 +31,14 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public List<TelephoneModel> getAll() throws EmptySearchException {
+    public List<TelephoneModel> getAll() {
 
         String query = "FROM TelephoneEntity t WHERE t.isActive = true ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class);
         List<TelephoneEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhum telefone encontrado!");
+            return null;
         }
 
         ArrayList<TelephoneModel> telephones = new ArrayList<>();
@@ -60,7 +59,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public List<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
+    public List<TelephoneModel> getTelephonesByUserId(int userId) {
 
         String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.userId = :userId ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
@@ -68,7 +67,7 @@ public class TelephoneRepository implements ITelephoneRepository {
         List<TelephoneEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhum telefone encontrado!");
+            return null;
         }
 
         ArrayList<TelephoneModel> telephones = new ArrayList<>();

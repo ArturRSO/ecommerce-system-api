@@ -1,5 +1,6 @@
 package ecommerce.system.api.controllers;
 
+import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.SimpleMailModel;
 import ecommerce.system.api.models.UserModel;
@@ -31,7 +32,7 @@ public class TestController {
 
         logger.info("Checking if API is on...");
 
-        BaseResponseModel<String> response = new BaseResponseModel<>(true, "Hello world!", "API is on.");
+        BaseResponseModel<String> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), "Hello world!");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -44,9 +45,9 @@ public class TestController {
         try {
             this.emailSender.sendSimpleMail(mail);
 
-            logger.info("Mail tested with success");
+            logger.info("Mail tested with success!");
 
-            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, "E-mail enviado com sucesso!", mail);
+            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -54,7 +55,7 @@ public class TestController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Um erro ocorreu.", e.getMessage());
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -68,9 +69,9 @@ public class TestController {
         try {
             SimpleMailModel mail = this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
 
-            logger.info("Recover password mail tested with success");
+            logger.info("Recover password mail tested with success!");
 
-            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, "E-mail enviado com sucesso!", mail);
+            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -78,7 +79,7 @@ public class TestController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Um erro ocorreu.", e.getMessage());
+            BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

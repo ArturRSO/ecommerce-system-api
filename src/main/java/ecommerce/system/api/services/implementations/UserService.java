@@ -1,7 +1,10 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.RolesEnum;
-import ecommerce.system.api.exceptions.*;
+import ecommerce.system.api.exceptions.BatchUpdateException;
+import ecommerce.system.api.exceptions.InvalidOperationException;
+import ecommerce.system.api.exceptions.InactiveAccountException;
+import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.repositories.IUserOptionRepository;
@@ -44,7 +47,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserModel user) throws NoSuchAlgorithmException, ForbiddenException, InactiveAccountException {
+    public void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException, InactiveAccountException {
 
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
@@ -73,7 +76,7 @@ public class UserService implements IUserService {
         } else {
 
             if (checkedUser.isActive()) {
-                throw new ForbiddenException("Já existe um usuário cadastrado com o número do documento informado.");
+                throw new InvalidOperationException("Já existe um usuário cadastrado com o número do documento informado.");
 
             } else {
                 throw new InactiveAccountException("Encontramos um cadastro inativo para o documento informado.");
@@ -83,32 +86,19 @@ public class UserService implements IUserService {
 
     @Override
     public void createCustomer(UserModel user)
-            throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException {
+            throws InvalidOperationException, NoSuchAlgorithmException, InactiveAccountException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
-        if (userRole == null || !userRole.equals("customer")) {
-            throw new ForbiddenException("Operação não permitida!");
+        if (userRole == null || (!userRole.equals("customer") && !userRole.equals("store_admin"))) {
+            throw new InvalidOperationException("Operação não permitida!");
         }
 
         this.createUser(user);
     }
 
     @Override
-    public void createStoreAdmin(UserModel user)
-            throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException {
-
-        String userRole = RolesEnum.getRoleById(user.getRoleId());
-
-        if (userRole == null || !userRole.equals("store_admin")) {
-            throw new ForbiddenException("Operação não permitida!");
-        }
-
-        this.createUser(user);
-    }
-
-    @Override
-    public List<UserModel> getAllUsers() throws EmptySearchException {
+    public List<UserModel> getAllUsers() {
 
         return this.userRepository.getAll();
     }
@@ -132,12 +122,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException {
+    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) {
         return this.userOptionRepository.getUserOptionsByRoleId(roleId);
     }
 
     @Override
-    public UserModel getUserProfile() throws EmptySearchException {
+    public UserModel getUserProfile() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserModel user = this.getUserByEmail(email);
@@ -180,7 +170,7 @@ public class UserService implements IUserService {
 
             if (user.getPassword().equals(encodedPassword)) {
 
-               throw new ForbiddenException("Nova senha não pode ser igual a anterior!");
+               throw new InvalidOperationException("Nova senha não pode ser igual a anterior!");
 
             } else {
                this.updateUserPassword(true, user.getUserId(), user.getRoleId(), user.getEmail(), password);
@@ -206,7 +196,7 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password)
-            throws ForbiddenException, NoSuchAlgorithmException {
+            throws InvalidOperationException, NoSuchAlgorithmException {
 
         String role = RolesEnum.getRoleById(roleId);
         UserModel user = this.userRepository.getById(userId);
@@ -215,7 +205,7 @@ public class UserService implements IUserService {
         if (role != null && (role.equals("store_employee") || role.equals("customer"))) {
 
             if (!(user.getEmail().equals(loggedEmail))) {
-                throw new ForbiddenException("Operação não autorizada");
+                throw new InvalidOperationException("Operação não autorizada");
             }
         }
 
@@ -230,14 +220,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUserProfile(int id) throws ForbiddenException, BatchUpdateException {
+    public void deleteUserProfile(int id) throws InvalidOperationException, BatchUpdateException {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserModel user = this.getUserByEmail(email);
 
         if (id != user.getUserId()) {
-            throw new ForbiddenException("Operação não permitida!");
+            throw new InvalidOperationException("Operação não permitida!");
         }
 
         ArrayList<Integer> ids = new ArrayList<>();

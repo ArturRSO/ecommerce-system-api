@@ -2,7 +2,6 @@ package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.AddressEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import org.springframework.stereotype.Repository;
@@ -32,14 +31,14 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public List<AddressModel> getAll() throws EmptySearchException {
+    public List<AddressModel> getAll() {
 
         String query = "FROM AddressEntity a WHERE a.isActive = true ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class);
         List<AddressEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhum endereço encontrado!");
+            return null;
         }
 
         ArrayList<AddressModel> addresses = new ArrayList<>();
@@ -60,7 +59,7 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public List<AddressModel> getAddressesByUserId(int userId) throws EmptySearchException {
+    public List<AddressModel> getAddressesByUserId(int userId) {
 
         String query = "FROM AddressEntity a WHERE a.isActive = true AND a.userId = :userId ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
@@ -68,7 +67,7 @@ public class AddressRepository implements IAddressRepository {
         List<AddressEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhum endereço encontrado!");
+            return null;
         }
 
         ArrayList<AddressModel> addresses = new ArrayList<>();

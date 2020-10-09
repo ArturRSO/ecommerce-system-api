@@ -1,6 +1,7 @@
 package ecommerce.system.api.controllers;
 
-import ecommerce.system.api.exceptions.EmptySearchException;
+import ecommerce.system.api.enums.MessagesEnum;
+import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.services.IAddressService;
@@ -36,7 +37,7 @@ public class AddressController {
             this.addressService.createAddress(address);
 
             response.setSuccess(true);
-            response.setMessage("Endereço criado com sucesso!");
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -46,8 +47,8 @@ public class AddressController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
-            response.setData(e.getMessage());
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -56,11 +57,18 @@ public class AddressController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllAdresses() {
 
+        BaseResponseModel<?> response;
+
         try {
 
             List<AddressModel> adresses = this.addressService.getAllAdresses();
 
-            BaseResponseModel<List<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", adresses);
+            if (adresses == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -68,22 +76,27 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return new ResponseEntity<>(response, httpStatus);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/all/user/{userId}")
     public ResponseEntity<?> getAdressesByUserId(@PathVariable("userId") int userId) {
 
+        BaseResponseModel<?> response;
+
         try {
 
             List<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
 
-            BaseResponseModel<List<AddressModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso", adresses);
+            if (adresses == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -91,22 +104,27 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return new ResponseEntity<>(response, httpStatus);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getAddressById(@PathVariable("id") int id) {
 
+        BaseResponseModel<?> response;
+
         try {
 
             AddressModel address = this.addressService.getAdressById(id);
 
-            BaseResponseModel<AddressModel> response = new BaseResponseModel<>(true, "Endereço encontrado com sucesso", address);
+            if (address == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -114,7 +132,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -130,7 +148,7 @@ public class AddressController {
             this.addressService.updateAddress(address);
 
             response.setSuccess(true);
-            response.setMessage("Endereço atualizado com sucesso!");
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -140,7 +158,7 @@ public class AddressController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -156,10 +174,8 @@ public class AddressController {
 
             this.addressService.deleteAdresses(ids);
 
-            String message = ids.size() > 1 ? "Endereços deletados com sucesso!" : "Endereço deletado com sucesso!";
-
             response.setSuccess(true);
-            response.setMessage(message);
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -168,9 +184,11 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
+            String message = e.getClass() == BatchUpdateException.class ? e.getMessage() : MessagesEnum.FAILURE.getMessage();
+
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
-            response.setData(e.getMessage());
+            response.setMessage(message);
+            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

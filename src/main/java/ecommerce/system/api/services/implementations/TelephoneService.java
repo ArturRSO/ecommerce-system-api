@@ -1,7 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import ecommerce.system.api.services.ITelephoneService;
@@ -32,13 +31,13 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public List<TelephoneModel> getAllTelephones() throws EmptySearchException {
+    public List<TelephoneModel> getAllTelephones() {
 
         return this.telephoneRepository.getAll();
     }
 
     @Override
-    public List<TelephoneModel> getTelephonesByUserId(int userId) throws EmptySearchException {
+    public List<TelephoneModel> getTelephonesByUserId(int userId) {
 
         return this.telephoneRepository.getTelephonesByUserId(userId);
     }

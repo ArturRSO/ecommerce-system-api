@@ -1,15 +1,20 @@
 package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserOptionModel {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int userOptionId;
+
     private String name;
     private String elementId;
     private String route;
     private String icon;
     private boolean samePage;
+
+    @JsonIgnore
     private boolean isActive;
 
     public UserOptionModel(int userOptionId, String name, String elementId, String route, String icon, boolean samePage, boolean isActive) {
@@ -22,7 +27,6 @@ public class UserOptionModel {
         this.isActive = isActive;
     }
 
-    @JsonIgnore
     public int getUserOptionId() {
         return userOptionId;
     }
@@ -71,7 +75,6 @@ public class UserOptionModel {
         this.samePage = samePage;
     }
 
-    @JsonIgnore
     public boolean isActive() {
         return isActive;
     }

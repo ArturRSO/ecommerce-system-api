@@ -1,7 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import ecommerce.system.api.services.IAddressService;
@@ -32,13 +31,13 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public List<AddressModel> getAllAdresses() throws EmptySearchException {
+    public List<AddressModel> getAllAdresses() {
 
         return this.addressRepository.getAll();
     }
 
     @Override
-    public List<AddressModel> getAdressesByUserId(int userId) throws EmptySearchException {
+    public List<AddressModel> getAdressesByUserId(int userId) {
 
         return this.addressRepository.getAddressesByUserId(userId);
     }

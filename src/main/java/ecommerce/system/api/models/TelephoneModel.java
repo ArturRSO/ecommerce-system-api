@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 public class TelephoneModel {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int telephoneId;
 
     @NotNull
@@ -28,8 +29,13 @@ public class TelephoneModel {
     @Size(min = 8, max = 9)
     private String number;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
+
+    @JsonIgnore
     private LocalDateTime lastUpdate;
+
+    @JsonIgnore
     private boolean isActive;
 
     public TelephoneModel(int telephoneId,
@@ -116,12 +122,10 @@ public class TelephoneModel {
         this.lastUpdate = lastUpdate;
     }
 
-    @JsonIgnore
     public boolean isActive() {
         return isActive;
     }
 
-    @JsonProperty
     public void setActive(boolean active) {
         isActive = active;
     }

@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.UserOptionEntity;
-import ecommerce.system.api.exceptions.EmptySearchException;
 import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.repositories.IUserOptionRepository;
 import org.springframework.stereotype.Repository;
@@ -21,7 +20,7 @@ public class UserOptionRepository implements IUserOptionRepository {
     EntityManager entityManager;
 
     @Override
-    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException {
+    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) {
 
         String query = "SELECT uo FROM UserOptionEntity uo, RoleUserOptionEntity ru WHERE uo.userOptionId = ru.id.userOptionId AND ru.id.roleId = :roleId AND uo.isActive = true";
         TypedQuery<UserOptionEntity> result = this.entityManager.createQuery(query, UserOptionEntity.class)
@@ -29,7 +28,7 @@ public class UserOptionRepository implements IUserOptionRepository {
         List<UserOptionEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
-            throw new EmptySearchException("Nenhuma opção encontrada!");
+            return null;
         }
 
         ArrayList<UserOptionModel> options = new ArrayList<>();

@@ -1,6 +1,7 @@
 package ecommerce.system.api.controllers;
 
-import ecommerce.system.api.exceptions.EmptySearchException;
+import ecommerce.system.api.enums.MessagesEnum;
+import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.services.ITelephoneService;
@@ -36,7 +37,7 @@ public class TelephoneController {
             this.telephoneService.createTelephone(telephone);
 
             response.setSuccess(true);
-            response.setMessage("Telefone criado com sucesso!");
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -46,7 +47,7 @@ public class TelephoneController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,11 +57,18 @@ public class TelephoneController {
     @GetMapping("/all")
     public ResponseEntity<?> getAllTelephones() {
 
+        BaseResponseModel<?> response;
+
         try {
 
             List<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
 
-            BaseResponseModel<List<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
+            if (telephones == null) {
+                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -68,22 +76,27 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return new ResponseEntity<>(response, httpStatus);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/all/user/{userId}")
     public ResponseEntity<?> getTelephonesByUserId(@PathVariable("userId") int userId) {
 
+        BaseResponseModel<?> response;
+
         try {
 
             List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
 
-            BaseResponseModel<List<TelephoneModel>> response = new BaseResponseModel<>(true, "Operação concluída com sucesso!", telephones);
+            if (telephones == null) {
+                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -91,22 +104,27 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
-            HttpStatus httpStatus = e.getClass() == EmptySearchException.class ? HttpStatus.OK : HttpStatus.INTERNAL_SERVER_ERROR;
-
-            return new ResponseEntity<>(response, httpStatus);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTelephoneById(@PathVariable("id") int id) {
 
+        BaseResponseModel<?> response;
+
         try {
 
             TelephoneModel telephone = this.telephoneService.getTelephoneById(id);
 
-            BaseResponseModel<TelephoneModel> response = new BaseResponseModel<>(true, "Telefone encontrado com sucesso", telephone);
+            if (telephone == null) {
+                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephone);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -114,7 +132,7 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, "Ocorreu um erro.", e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -130,7 +148,7 @@ public class TelephoneController {
             this.telephoneService.updateTelephone(telephone);
 
             response.setSuccess(true);
-            response.setMessage("Telefone atualizado com sucesso!");
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -140,7 +158,7 @@ public class TelephoneController {
             logger.error(e.getMessage());
 
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -156,10 +174,8 @@ public class TelephoneController {
 
             this.telephoneService.deleteTelephones(ids);
 
-            String message = ids.size() > 1 ? "Telefones deletados com sucesso!" : "Telefone deletado com sucesso!";
-
             response.setSuccess(true);
-            response.setMessage(message);
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -168,8 +184,10 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
+            String message = e.getClass() == BatchUpdateException.class ? e.getMessage() : MessagesEnum.FAILURE.getMessage();
+
             response.setSuccess(false);
-            response.setMessage("Ocorreu um erro.");
+            response.setMessage(message);
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

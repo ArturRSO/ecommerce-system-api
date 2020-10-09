@@ -1,8 +1,7 @@
 package ecommerce.system.api.services;
 
 import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.EmptySearchException;
-import ecommerce.system.api.exceptions.ForbiddenException;
+import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.models.UserOptionModel;
@@ -12,19 +11,18 @@ import java.util.List;
 
 public interface IUserService {
 
-    void createUser(UserModel user) throws NoSuchAlgorithmException, ForbiddenException, InactiveAccountException;
-    void createCustomer(UserModel user) throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException;
-    void createStoreAdmin(UserModel user) throws ForbiddenException, NoSuchAlgorithmException, InactiveAccountException;
-    List<UserModel> getAllUsers() throws EmptySearchException;
+    void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException, InactiveAccountException;
+    void createCustomer(UserModel user) throws InvalidOperationException, NoSuchAlgorithmException, InactiveAccountException;
+    List<UserModel> getAllUsers();
     UserModel getUserById(int id);
     UserModel getUserByEmail(String email);
-    List<UserOptionModel> getUserOptionsByRoleId(int roleId) throws EmptySearchException;
-    UserModel getUserProfile() throws EmptySearchException;
+    List<UserOptionModel> getUserOptionsByRoleId(int roleId);
+    UserModel getUserProfile();
     boolean sendPasswordRecoverEmail(String email) throws Exception;
     boolean checkPasswordRecoverToken(String token) throws Exception;
     void recoverPassword(String password, String token) throws Exception;
     void updateUser(UserModel user);
-    void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws ForbiddenException, NoSuchAlgorithmException;
-    void deleteUserProfile(int id) throws ForbiddenException, BatchUpdateException;
+    void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws InvalidOperationException, NoSuchAlgorithmException;
+    void deleteUserProfile(int id) throws InvalidOperationException, BatchUpdateException;
     void deleteUsers(List<Integer> ids) throws BatchUpdateException;
 }
