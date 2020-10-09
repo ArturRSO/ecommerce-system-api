@@ -106,7 +106,7 @@ public class UserRepository implements IUserRepository {
 
         try {
 
-            String query = "FROM UserEntity u WHERE u.email = :email;";
+            String query = "FROM UserEntity u WHERE u.email = :email";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", email);
 

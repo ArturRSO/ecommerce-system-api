@@ -1,7 +1,9 @@
 package ecommerce.system.api.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -47,6 +49,8 @@ public class UserModel {
     private int roleId;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
     private LocalDate birthday;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
