@@ -202,14 +202,12 @@ public class UserService implements IUserService {
         UserModel user = this.userRepository.getById(userId);
         String loggedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        if (role != null && (role.equals("store_employee") || role.equals("customer"))) {
+        if (role != null && (role.equals("store_admin") || role.equals("customer"))) {
 
             if (!(user.getEmail().equals(loggedEmail))) {
                 throw new InvalidOperationException("Operação não autorizada");
             }
         }
-
-        // TO DO - Flux to store_admin role
 
         String encodedPassword = this.shaEncoder.encode(password);
 

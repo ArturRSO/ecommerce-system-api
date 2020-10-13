@@ -37,6 +37,16 @@ public class TestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/error")
+    public ResponseEntity<?> testError() {
+
+        logger.info("Testing error...");
+
+        BaseResponseModel<String> response = new BaseResponseModel<>(true, MessagesEnum.FAILURE.getMessage(), "Returning error for test purposes.");
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @PostMapping("/mail")
     public ResponseEntity<?> simpleMailTest(@RequestBody SimpleMailModel mail) {
 
