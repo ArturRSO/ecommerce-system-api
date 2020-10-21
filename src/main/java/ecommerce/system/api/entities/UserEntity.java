@@ -48,8 +48,11 @@ public class UserEntity {
     @Column(name = "lastUpdate")
     private LocalDateTime lastUpdate;
 
+    @Column(name = "verifiedEmail")
+    private boolean verifiedEmail;
+
     @Column(name = "isActive")
-    private boolean isActive;
+    private boolean active;
 
     public UserEntity() {
     }
@@ -67,7 +70,8 @@ public class UserEntity {
         this.profileImagePath = user.getProfileImagePath();
         this.creationDate = user.getCreationDate();
         this.lastUpdate = user.getLastUpdate();
-        this.isActive = user.isActive();
+        this.verifiedEmail = user.isVerifiedEmail();
+        this.active = user.isActive();
     }
 
     public UserModel toModel() {
@@ -84,7 +88,8 @@ public class UserEntity {
                 this.profileImagePath,
                 this.creationDate,
                 this.lastUpdate,
-                this.isActive
+                this.verifiedEmail,
+                this.active
         );
     }
 
@@ -184,11 +189,19 @@ public class UserEntity {
         this.lastUpdate = lastUpdate;
     }
 
+    public boolean isVerifiedEmail() {
+        return verifiedEmail;
+    }
+
+    public void setVerifiedEmail(boolean verifiedEmail) {
+        this.verifiedEmail = verifiedEmail;
+    }
+
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        active = active;
     }
 }

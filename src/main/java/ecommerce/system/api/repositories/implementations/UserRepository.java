@@ -40,7 +40,7 @@ public class UserRepository implements IUserRepository {
 
         try {
 
-            String query = "FROM UserEntity u WHERE u.isActive = true ORDER BY u.userId ASC";
+            String query = "FROM UserEntity u WHERE u.active = true ORDER BY u.userId ASC";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
             List<UserEntity> entities = result.getResultList();
 
@@ -65,7 +65,7 @@ public class UserRepository implements IUserRepository {
     public UserModel getById(int id) {
 
         try {
-            String query = "FROM UserEntity u WHERE u.isActive = true AND u.userId = :userId";
+            String query = "FROM UserEntity u WHERE u.active = true AND u.userId = :userId";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("userId", id);
             UserEntity user = result.getSingleResult();
@@ -127,7 +127,7 @@ public class UserRepository implements IUserRepository {
 
         try {
 
-            String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.isActive = true";
+            String query = "FROM UserEntity u WHERE u.email = :email AND u.password = :password AND u.active = true";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", credentials.getEmail())
                     .setParameter("password", credentials.getPassword());
@@ -158,7 +158,7 @@ public class UserRepository implements IUserRepository {
     @Override
     public void delete(List<Integer> ids) throws BatchUpdateException {
         int result = 0;
-        String query = "UPDATE UserEntity SET isActive = false, lastUpdate = :date WHERE userId = :userId";
+        String query = "UPDATE UserEntity SET active = false, lastUpdate = :date WHERE userId = :userId";
 
         for (int id : ids) {
             Query update = entityManager.createQuery(query)

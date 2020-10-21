@@ -54,6 +54,7 @@ public class UserService implements IUserService {
         user.setPassword(encodedPassword);
         user.setCreationDate(LocalDateTime.now());
         user.setLastUpdate(null);
+        user.setVerifiedEmail(true);
         user.setActive(true);
 
         if (user.getProfileImagePath() == null) {
@@ -238,6 +239,7 @@ public class UserService implements IUserService {
         user.setRoleId(oldUser.getRoleId());
         user.setPassword(oldUser.getPassword());
         user.setCreationDate(oldUser.getCreationDate());
+        user.setVerifiedEmail(oldUser.isVerifiedEmail());
         user.setActive(oldUser.isActive());
         user.setLastUpdate(LocalDateTime.now());
 

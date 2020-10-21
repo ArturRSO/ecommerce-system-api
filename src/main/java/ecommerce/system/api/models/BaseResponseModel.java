@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class BaseResponseModel<T> {
 
-    private boolean isSuccess;
+    private boolean success;
     private String message;
     private T data;
     private LocalDateTime timestamp;
@@ -13,19 +13,19 @@ public class BaseResponseModel<T> {
         this.timestamp = LocalDateTime.now();
     }
 
-    public BaseResponseModel(boolean isSuccess, String message, T data) {
-        this.isSuccess = isSuccess;
+    public BaseResponseModel(boolean success, String message, T data) {
+        this.success = success;
         this.message = message;
         this.data = data;
         this.timestamp = LocalDateTime.now();
     }
 
     public boolean isSuccess() {
-        return isSuccess;
+        return success;
     }
 
     public void setSuccess(boolean success) {
-        isSuccess = success;
+        this.success = success;
     }
 
     public String getMessage() {

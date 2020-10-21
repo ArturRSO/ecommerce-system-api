@@ -63,6 +63,9 @@ public class UserModel {
     private LocalDateTime lastUpdate;
 
     @JsonIgnore
+    private boolean verifiedEmail;
+
+    @JsonIgnore
     private boolean active;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -80,6 +83,7 @@ public class UserModel {
                      String profileImagePath,
                      LocalDateTime creationDate,
                      LocalDateTime lastUpdate,
+                     boolean verifiedEmail,
                      boolean isActive) {
         this.userId = userId;
         this.firstName = firstName;
@@ -93,6 +97,7 @@ public class UserModel {
         this.profileImagePath = profileImagePath;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
+        this.verifiedEmail = verifiedEmail;
         this.active = isActive;
     }
 
@@ -192,12 +197,20 @@ public class UserModel {
         this.lastUpdate = lastUpdate;
     }
 
+    public boolean isVerifiedEmail() {
+        return verifiedEmail;
+    }
+
+    public void setVerifiedEmail(boolean verifiedEmail) {
+        this.verifiedEmail = verifiedEmail;
+    }
+
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
-        active = active;
+        this.active = active;
     }
 
     public List<UserOptionModel> getOptions() {
@@ -207,4 +220,5 @@ public class UserModel {
     public void setOptions(List<UserOptionModel> options) {
         this.options = options;
     }
+
 }
