@@ -63,7 +63,7 @@ public class UserModel {
     private LocalDateTime lastUpdate;
 
     @JsonIgnore
-    private boolean isActive;
+    private boolean active;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<UserOptionModel> options;
@@ -93,7 +93,7 @@ public class UserModel {
         this.profileImagePath = profileImagePath;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 
     public int getUserId() {
@@ -193,11 +193,11 @@ public class UserModel {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        active = active;
     }
 
     public List<UserOptionModel> getOptions() {

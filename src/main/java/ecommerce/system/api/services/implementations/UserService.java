@@ -186,6 +186,10 @@ public class UserService implements IUserService {
 
         UserModel oldUser = this.userRepository.getById(user.getUserId());
 
+        if (user.getProfileImagePath() == null) {
+            user.setProfileImagePath(this.defaultProfileImagePath);
+        }
+
         user.setPassword(oldUser.getPassword());
         user.setCreationDate(oldUser.getCreationDate());
         user.setActive(oldUser.isActive());
@@ -212,6 +216,29 @@ public class UserService implements IUserService {
         String encodedPassword = this.shaEncoder.encode(password);
 
         user.setPassword(encodedPassword);
+        user.setLastUpdate(LocalDateTime.now());
+
+        this.userRepository.update(user);
+    }
+
+    @Override
+    public void updateUserProfile(UserModel user) throws InvalidOperationException {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserModel oldUser = this.getUserByEmail(email);
+
+        if (oldUser.getUserId() != user.getUserId()) {
+            throw new InvalidOperationException("Operação não permitida!");
+        }
+
+        if (user.getProfileImagePath() == null) {
+            user.setProfileImagePath(this.defaultProfileImagePath);
+        }
+
+        user.setRoleId(oldUser.getRoleId());
+        user.setPassword(oldUser.getPassword());
+        user.setCreationDate(oldUser.getCreationDate());
+        user.setActive(oldUser.isActive());
         user.setLastUpdate(LocalDateTime.now());
 
         this.userRepository.update(user);

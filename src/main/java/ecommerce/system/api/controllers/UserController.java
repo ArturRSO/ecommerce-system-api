@@ -41,7 +41,7 @@ public class UserController {
             this.userService.createUser(user);
 
             response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setMessage("Usuário cadastrado com sucesso!");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -88,7 +88,7 @@ public class UserController {
             this.userService.createCustomer(user);
 
             response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setMessage("Cadastro concluído com sucesso! Faça login para utilizar o sistema.");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -258,17 +258,18 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserModel user) {
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable("userId") int userId, @RequestBody UserModel user) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
+            user.setUserId(userId);
             this.userService.updateUser(user);
 
             response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setMessage("Usuário atualizado com sucesso!");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -296,6 +297,44 @@ public class UserController {
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("update/profile/{userId}")
+    public ResponseEntity<?> updateUserProfile(@PathVariable("userId") int userId, @RequestBody UserModel user) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            user.setUserId(userId);
+            this.userService.updateUserProfile(user);
+
+            response.setSuccess(true);
+            response.setMessage("Perfil atualizado com sucesso!");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
