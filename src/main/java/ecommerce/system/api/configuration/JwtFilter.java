@@ -43,13 +43,13 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String token = this.jwtHandler.getTokenFromRequest(httpServletRequest);
 
-            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
-            String email = currentAuthentication == null ? this.jwtHandler.getTokenSubject(token) : currentAuthentication.getName();
-
             if (token == null) {
                 throw new InvalidTokenException("Token inválido ou nulo");
             }
+
+            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+            String email = currentAuthentication == null ? this.jwtHandler.getTokenSubject(token) : currentAuthentication.getName();
 
             if (this.jwtHandler.checkToken(email, token)) {
 

@@ -4,7 +4,9 @@ public enum RolesEnum {
     SYSTEM_ADMIN (1, "system_admin"),
     STORE_ADMIN (2, "store_admin"),
     STORE_EMPLOYEE (3, "store_employee"),
-    CUSTOMER (4, "customer");
+    CUSTOMER (4, "customer"),
+    DELIVER_SERVICE (5, "deliver_service"),
+    GUEST (6, "guest");
 
     private final int id;
     private final String name;
