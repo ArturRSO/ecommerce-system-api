@@ -81,6 +81,32 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public List<UserModel> getUsersByRoleId(int roleId) {
+
+        try {
+            String query = "FROM UserEntity u WHERE u.active = true AND u.roleId = :roleId";
+            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                    .setParameter("roleId", roleId);
+
+            List<UserEntity> entities = result.getResultList();
+
+            if (entities == null || entities.isEmpty()) {
+                return null;
+            }
+
+            ArrayList<UserModel> users = new ArrayList<>();
+            (entities).forEach((user) -> users.add(user.toModel()));
+
+            return users;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+
+            return null;
+        }
+    }
+
+    @Override
     public UserModel getUserByDocumentNumber(String documentNumber) {
 
         try {

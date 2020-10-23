@@ -14,6 +14,7 @@ public interface IUserService {
     void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException, InactiveAccountException;
     void createCustomer(UserModel user) throws InvalidOperationException, NoSuchAlgorithmException, InactiveAccountException;
     List<UserModel> getAllUsers();
+    List<UserModel> getUsersByRoleId(int roleId);
     UserModel getUserById(int id);
     UserModel getUserByEmail(String email);
     List<UserOptionModel> getUserOptionsByRoleId(int roleId);

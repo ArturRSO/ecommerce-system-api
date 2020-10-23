@@ -153,6 +153,34 @@ public class UserController {
         }
     }
 
+    @GetMapping("/role/{roleId}")
+    public ResponseEntity<?> getUsersByRoleId(@PathVariable("roleId") int roleId) {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<UserModel> users = this.userService.getUsersByRoleId(roleId);
+
+            if (users == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), users);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
 
