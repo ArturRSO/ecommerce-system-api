@@ -53,7 +53,7 @@ public class AddressModel {
     private LocalDateTime lastUpdate;
 
     @JsonIgnore
-    private boolean isActive;
+    private boolean active;
 
     public AddressModel(int addressId,
                         int userId,
@@ -67,7 +67,7 @@ public class AddressModel {
                         String complement,
                         LocalDateTime creationDate,
                         LocalDateTime lastUpdate,
-                        boolean isActive) {
+                        boolean active) {
         this.addressId = addressId;
         this.userId = userId;
         this.country = country;
@@ -80,7 +80,7 @@ public class AddressModel {
         this.complement = complement;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.isActive = isActive;
+        this.active = active;
     }
 
     public int getAddressId() {
@@ -180,10 +180,10 @@ public class AddressModel {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

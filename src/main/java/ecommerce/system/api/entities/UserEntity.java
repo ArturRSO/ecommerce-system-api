@@ -89,7 +89,8 @@ public class UserEntity {
                 this.creationDate,
                 this.lastUpdate,
                 this.verifiedEmail,
-                this.active
+                this.active,
+                null
         );
     }
 
@@ -202,6 +203,6 @@ public class UserEntity {
     }
 
     public void setActive(boolean active) {
-        active = active;
+        this.active = active;
     }
 }

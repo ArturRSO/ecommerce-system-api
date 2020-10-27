@@ -36,7 +36,7 @@ public class TelephoneModel {
     private LocalDateTime lastUpdate;
 
     @JsonIgnore
-    private boolean isActive;
+    private boolean active;
 
     public TelephoneModel(int telephoneId,
                           int userId,
@@ -46,7 +46,7 @@ public class TelephoneModel {
                           String number,
                           LocalDateTime creationDate,
                           LocalDateTime lastUpdate,
-                          boolean isActive) {
+                          boolean active) {
         this.telephoneId = telephoneId;
         this.userId = userId;
         this.telephoneTypeId = telephoneTypeId;
@@ -55,7 +55,7 @@ public class TelephoneModel {
         this.number = number;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.isActive = isActive;
+        this.active = active;
     }
 
     public int getTelephoneId() {
@@ -123,10 +123,10 @@ public class TelephoneModel {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

@@ -36,7 +36,7 @@ public class TelephoneEntity {
     private LocalDateTime lastUpdate;
 
     @Column(name = "isActive")
-    private boolean isActive;
+    private boolean active;
 
     public TelephoneEntity() {
     }
@@ -50,7 +50,7 @@ public class TelephoneEntity {
         this.number = telephone.getNumber();
         this.creationDate = telephone.getCreationDate();
         this.lastUpdate = telephone.getLastUpdate();
-        this.isActive = telephone.isActive();
+        this.active = telephone.isActive();
     }
 
     public TelephoneModel toModel() {
@@ -63,7 +63,7 @@ public class TelephoneEntity {
                 this.number,
                 this.creationDate,
                 this.lastUpdate,
-                this.isActive
+                this.active
         );
     }
 
@@ -132,10 +132,10 @@ public class TelephoneEntity {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

@@ -48,7 +48,7 @@ public class AddressEntity {
     private LocalDateTime lastUpdate;
 
     @Column(name = "isActive")
-    private boolean isActive;
+    private boolean active;
 
     public AddressEntity() {
     }
@@ -64,7 +64,7 @@ public class AddressEntity {
         this.complement = address.getComplement();
         this.creationDate = address.getCreationDate();
         this.lastUpdate = address.getLastUpdate();
-        this.isActive = address.isActive();
+        this.active = address.isActive();
     }
 
     public AddressModel toModel() {
@@ -81,7 +81,7 @@ public class AddressEntity {
                 this.complement,
                 this.creationDate,
                 this.lastUpdate,
-                this.isActive
+                this.active
         );
     }
 
@@ -182,10 +182,10 @@ public class AddressEntity {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

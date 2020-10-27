@@ -30,19 +30,19 @@ public class UserOptionEntity {
     private boolean samePage;
 
     @Column(name = "isActive")
-    private boolean isActive;
+    private boolean active;
 
     public UserOptionEntity() {
     }
 
-    public UserOptionEntity(int userOptionId, String name, String elementId, String route, String icon, boolean samePage, boolean isActive, Set<UserEntity> users) {
-        this.userOptionId = userOptionId;
-        this.name = name;
-        this.elementId = elementId;
-        this.route = route;
-        this.icon = icon;
-        this.samePage = samePage;
-        this.isActive = isActive;
+    public UserOptionEntity(UserOptionModel userOption) {
+        this.userOptionId = userOption.getUserOptionId();
+        this.name = userOption.getName();
+        this.elementId = userOption.getElementId();
+        this.route = userOption.getRoute();
+        this.icon = userOption.getIcon();
+        this.samePage = userOption.isSamePage();
+        this.active = userOption.isActive();
     }
 
     public UserOptionModel toModel() {
@@ -53,7 +53,7 @@ public class UserOptionEntity {
                 this.route,
                 this.icon,
                 this.samePage,
-                this.isActive
+                this.active
         );
     }
 
@@ -106,10 +106,10 @@ public class UserOptionEntity {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

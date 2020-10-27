@@ -84,7 +84,8 @@ public class UserModel {
                      LocalDateTime creationDate,
                      LocalDateTime lastUpdate,
                      boolean verifiedEmail,
-                     boolean isActive) {
+                     boolean active,
+                     List<UserOptionModel> options) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -98,7 +99,8 @@ public class UserModel {
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.verifiedEmail = verifiedEmail;
-        this.active = isActive;
+        this.active = active;
+        this.options = options;
     }
 
     public int getUserId() {
