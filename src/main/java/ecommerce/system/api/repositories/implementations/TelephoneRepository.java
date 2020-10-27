@@ -86,6 +86,7 @@ public class TelephoneRepository implements ITelephoneRepository {
 
     @Override
     public void delete(List<Integer> ids) throws BatchUpdateException {
+
         int result = 0;
         String query = "UPDATE TelephoneEntity SET isActive = false, lastUpdate = :date WHERE telephoneId = :telephoneId";
 
@@ -99,7 +100,7 @@ public class TelephoneRepository implements ITelephoneRepository {
         if (result != ids.size()) {
             int deleteFails = ids.size() - result;
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " telefones. Nenhum telefone deletado!");
+            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " telefone(s). Nenhum telefone deletado!");
         }
 
     }

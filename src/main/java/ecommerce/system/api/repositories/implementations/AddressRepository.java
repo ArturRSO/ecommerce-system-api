@@ -86,6 +86,7 @@ public class AddressRepository implements IAddressRepository {
 
     @Override
     public void delete(List<Integer> ids) throws BatchUpdateException {
+
         int result = 0;
         String query = "UPDATE AddressEntity SET isActive = false, lastUpdate = :date WHERE addressId = :addressId";
 
@@ -99,7 +100,7 @@ public class AddressRepository implements IAddressRepository {
         if (result != ids.size()) {
             int deleteFails = ids.size() - result;
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " endereços. Nenhum endereço deletado.");
+            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " endereço(s). Nenhum endereço deletado.");
         }
     }
 }

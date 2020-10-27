@@ -65,6 +65,7 @@ public class UserRepository implements IUserRepository {
     public UserModel getById(int id) {
 
         try {
+
             String query = "FROM UserEntity u WHERE u.active = true AND u.userId = :userId";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("userId", id);
@@ -183,6 +184,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void delete(List<Integer> ids) throws BatchUpdateException {
+
         int result = 0;
         String query = "UPDATE UserEntity SET active = false, lastUpdate = :date WHERE userId = :userId";
 
@@ -196,7 +198,7 @@ public class UserRepository implements IUserRepository {
         if (result != ids.size()) {
             int deleteFails = ids.size() - result;
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " usuários. Nenhum usuário deletado!");
+            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " usuário(s). Nenhum usuário deletado!");
         }
     }
 }
