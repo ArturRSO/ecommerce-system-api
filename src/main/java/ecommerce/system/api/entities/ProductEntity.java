@@ -20,6 +20,9 @@ public class ProductEntity {
     @Column(name = "fk_productSubtypeId")
     private int productSubtypeId;
 
+    @Column(name = "fk_storeId")
+    private int storeId;
+
     @Column(name = "name")
     private String name;
 
@@ -42,6 +45,7 @@ public class ProductEntity {
         this.productId = product.getProductId();
         this.productTypeId = product.getProductType().getProductTypeId();
         this.productSubtypeId = product.getProductSubtype().getProductSubtypeId();
+        this.storeId = product.getStoreId();
         this.name = product.getName();
         this.imagePath = product.getImagePath();
         this.creationDate = product.getCreationDate();
@@ -54,6 +58,7 @@ public class ProductEntity {
                 this.productId,
                 null,
                 null,
+                this.storeId,
                 this.name,
                 this.imagePath,
                 this.creationDate,
@@ -85,6 +90,14 @@ public class ProductEntity {
 
     public void setProductSubtypeId(int productSubtypeId) {
         this.productSubtypeId = productSubtypeId;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
     public String getName() {

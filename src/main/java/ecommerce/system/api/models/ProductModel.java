@@ -15,6 +15,8 @@ public class ProductModel {
 
     private ProductSubtypeModel productSubtype;
 
+    private int storeId;
+
     private String name;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -35,7 +37,9 @@ public class ProductModel {
             int productId,
             ProductTypeModel productType,
             ProductSubtypeModel productSubtype,
-            String name, String imagePath,
+            int storeId,
+            String name,
+            String imagePath,
             LocalDateTime creationDate,
             LocalDateTime lastUpdate,
             boolean active,
@@ -43,6 +47,7 @@ public class ProductModel {
         this.productId = productId;
         this.productType = productType;
         this.productSubtype = productSubtype;
+        this.storeId = storeId;
         this.name = name;
         this.imagePath = imagePath;
         this.creationDate = creationDate;
@@ -73,6 +78,14 @@ public class ProductModel {
 
     public void setProductSubtype(ProductSubtypeModel productSubtype) {
         this.productSubtype = productSubtype;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
     public String getName() {

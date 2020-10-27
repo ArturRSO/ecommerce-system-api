@@ -14,8 +14,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,6 @@ public class ProductRepository implements IProductRepository {
 
     @PersistenceContext
     EntityManager entityManager;
-
 
     @Override
     public void create(ProductModel object) {
@@ -69,17 +70,50 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public ProductModel getById(int id) {
-        return null;
+
+        try {
+
+            String query = "FROM ProductEntity p WHERE p.active = true AND p.productId = :productId";
+            TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+                    .setParameter("productId", id);
+            ProductEntity product = result.getSingleResult();
+
+            return product.toModel();
+
+        }  catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            return null;
+        }
     }
 
     @Override
     public void update(ProductModel object) {
 
+        ProductEntity updatedProduct = new ProductEntity(object);
+
+        this.entityManager.merge(updatedProduct);
     }
 
     @Override
     public void delete(List<Integer> ids) throws BatchUpdateException {
 
+        int result = 0;
+        String query = "UPDATE ProductEntity SET active = false, lastUpdate = :date WHERE productId = :productId";
+
+        for (int id : ids) {
+            Query update = entityManager.createQuery(query)
+                    .setParameter("productId", id)
+                    .setParameter("date", LocalDateTime.now());
+            result += update.executeUpdate();
+        }
+
+        if (result != ids.size()) {
+            int deleteFails = ids.size() - result;
+
+            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " produto(s). Nenhum produto deletado!");
+        }
     }
 
     @Override
