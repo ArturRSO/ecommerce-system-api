@@ -272,13 +272,6 @@ public class UserService implements IUserService {
     @Override
     public void deleteUsers(List<Integer> ids) throws BatchUpdateException {
 
-        logger.info("Deleting " + ids.size() + " users...");
-
-        (ids).forEach((id) -> {
-            UserModel user = this.userRepository.getById(id);
-            logger.info("User " + user.getUserId() + " found.");
-        });
-
         this.userRepository.delete(ids);
     }
 }
