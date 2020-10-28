@@ -1,5 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
@@ -91,7 +92,7 @@ public class UserService implements IUserService {
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
         if (userRole == null || (!userRole.equals("customer") && !userRole.equals("store_admin"))) {
-            throw new InvalidOperationException("Operação não permitida!");
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
         this.createUser(user);
@@ -205,7 +206,7 @@ public class UserService implements IUserService {
     public void updateUserProfile(UserModel user) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(user.getUserId())) {
-            throw new InvalidOperationException("Operação não permitida!");
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
         UserModel oldUser = this.getUserById(user.getUserId());
@@ -228,7 +229,7 @@ public class UserService implements IUserService {
         UserModel user = this.getUserByEmail(email);
 
         if (id != user.getUserId()) {
-            throw new InvalidOperationException("Operação não permitida!");
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
         ArrayList<Integer> ids = new ArrayList<>();

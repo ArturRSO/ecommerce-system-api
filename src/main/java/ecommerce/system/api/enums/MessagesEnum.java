@@ -3,7 +3,8 @@ package ecommerce.system.api.enums;
 public enum MessagesEnum {
     FAILURE("Ocorreu um erro. Tente novamente mais tarde."),
     SUCCESS("Operação concluída com sucesso!"),
-    NOT_FOUND("Nenhum resultado encontrado!");
+    NOT_FOUND("Nenhum resultado encontrado!"),
+    UNALLOWED("Operação não permitida!");
 
     private final String message;
 
