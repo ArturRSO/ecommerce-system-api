@@ -8,6 +8,7 @@ import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.tools.JwtHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
@@ -48,5 +49,18 @@ public class AuthenticationService implements IAuthenticationService {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isLoggedUser(int userId) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        UserModel user = this.userRepository.getUserByEmail(email);
+
+        if (user == null || !user.isActive() || user.getUserId() != userId) {
+            return false;
+        }
+
+        return true;
     }
 }

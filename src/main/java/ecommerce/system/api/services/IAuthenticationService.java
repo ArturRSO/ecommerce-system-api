@@ -8,4 +8,5 @@ import java.security.NoSuchAlgorithmException;
 public interface IAuthenticationService {
 
     TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
+    boolean isLoggedUser(int userId);
 }
