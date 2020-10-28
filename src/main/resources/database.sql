@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_user` (
   `fk_documentTypeId` INT NOT NULL,
   `fk_roleId` INT NOT NULL,
   `birthday` DATE NOT NULL,
-  `profileImagePath` VARCHAR(500) NOT NULL,
+  `profileImagePath` VARCHAR(500) NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
   `verifiedEmail` TINYINT NOT NULL,
@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_store` (
   `documentNumber` VARCHAR(14) NOT NULL,
   `fk_documentTypeId` INT NOT NULL,
   `fk_addressId` INT NOT NULL,
-  `profileImagePath` VARCHAR(500) NOT NULL,
+  `profileImagePath` VARCHAR(500) NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
   `isActive` TINYINT NOT NULL,
@@ -198,64 +198,6 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_store` (
   CONSTRAINT `fk_tb_store_tb_address1`
     FOREIGN KEY (`fk_addressId`)
     REFERENCES `db_e-commerce_system`.`tb_address` (`pk_addressId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_alert`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_alert` (
-  `pk_alertId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(500) NOT NULL,
-  `fk_roleId` INT NOT NULL,
-  PRIMARY KEY (`pk_alertId`),
-  INDEX `fk_tb_alert_tb_role1_idx` (`fk_roleId` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_alert_tb_role1`
-    FOREIGN KEY (`fk_roleId`)
-    REFERENCES `db_e-commerce_system`.`tb_role` (`pk_roleId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_alertParameterLabel`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_alertParameterLabel` (
-  `pk_alertParameterLabelId` INT NOT NULL,
-  `name` VARCHAR(500) NOT NULL,
-  PRIMARY KEY (`pk_alertParameterLabelId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_alertParameter`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_alertParameter` (
-  `pk_alertParamenteId` INT NOT NULL AUTO_INCREMENT,
-  `fk_alertId` INT NOT NULL,
-  `fk_storeId` INT NOT NULL,
-  `fk_alertParameterLabelId` INT NOT NULL,
-  `value` VARCHAR(500) NOT NULL,
-  PRIMARY KEY (`pk_alertParamenteId`),
-  INDEX `fk_tb_alertParameterLabel_tb_alert1_idx` (`fk_alertId` ASC) VISIBLE,
-  INDEX `fk_tb_alertParameterLabel_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
-  INDEX `fk_tb_alertParameterLabel_tb_alertParameter1_idx` (`fk_alertParameterLabelId` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_alertParameterLabel_tb_alert1`
-    FOREIGN KEY (`fk_alertId`)
-    REFERENCES `db_e-commerce_system`.`tb_alert` (`pk_alertId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_alertParameterLabel_tb_store1`
-    FOREIGN KEY (`fk_storeId`)
-    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_alertParameterLabel_tb_alertParameter1`
-    FOREIGN KEY (`fk_alertParameterLabelId`)
-    REFERENCES `db_e-commerce_system`.`tb_alertParameterLabel` (`pk_alertParameterLabelId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -284,17 +226,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_paymentMethod`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_paymentMethod` (
-  `pk_paymentMethodId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `isEnable` TINYINT NOT NULL,
-  PRIMARY KEY (`pk_paymentMethodId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `db_e-commerce_system`.`tb_orderStatus`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_orderStatus` (
@@ -305,39 +236,46 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_order`
+-- Table `db_e-commerce_system`.`tb_paymentMethod`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_order` (
-  `pk_orderId` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_paymentMethod` (
+  `pk_paymentMethodId` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(200) NOT NULL,
+  `maxInstallment` INT NOT NULL,
+  `isEnable` TINYINT NOT NULL,
+  PRIMARY KEY (`pk_paymentMethodId`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `db_e-commerce_system`.`tb_orderSummary`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_orderSummary` (
+  `pk_orderSummary` INT NOT NULL AUTO_INCREMENT,
   `fk_userId` INT NOT NULL,
-  `fk_storeId` INT NOT NULL,
   `fk_paymentMethodId` INT NOT NULL,
   `totalPrice` DECIMAL NOT NULL,
   `totalDiscountPercentage` DECIMAL NOT NULL,
+  `finalPrice` DECIMAL NOT NULL,
+  `installment` INT NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
   `fk_orderStatusId` INT NOT NULL,
-  PRIMARY KEY (`pk_orderId`),
-  INDEX `fk_tb_order_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
-  INDEX `fk_tb_order_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
-  INDEX `fk_tb_order_tb_paymentMethod1_idx` (`fk_paymentMethodId` ASC) VISIBLE,
-  INDEX `fk_tb_order_tb_orderStatus1_idx` (`fk_orderStatusId` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_order_tb_user1`
+  PRIMARY KEY (`pk_orderSummary`),
+  INDEX `fk_tb_orderSummary_tb_user1_idx` (`fk_userId` ASC) VISIBLE,
+  INDEX `fk_tb_orderSummary_tb_paymentMethod1_idx` (`fk_paymentMethodId` ASC) VISIBLE,
+  INDEX `fk_tb_orderSummary_tb_orderStatus1_idx` (`fk_orderStatusId` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_orderSummary_tb_user1`
     FOREIGN KEY (`fk_userId`)
     REFERENCES `db_e-commerce_system`.`tb_user` (`pk_userId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_order_tb_store1`
-    FOREIGN KEY (`fk_storeId`)
-    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_order_tb_paymentMethod1`
+  CONSTRAINT `fk_tb_orderSummary_tb_paymentMethod1`
     FOREIGN KEY (`fk_paymentMethodId`)
     REFERENCES `db_e-commerce_system`.`tb_paymentMethod` (`pk_paymentMethodId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_order_tb_orderStatus1`
+  CONSTRAINT `fk_tb_orderSummary_tb_orderStatus1`
     FOREIGN KEY (`fk_orderStatusId`)
     REFERENCES `db_e-commerce_system`.`tb_orderStatus` (`pk_orderStatusId`)
     ON DELETE NO ACTION
@@ -346,38 +284,53 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_orderPercentage`
+-- Table `db_e-commerce_system`.`tb_order`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_orderPercentage` (
-  `pk_orderPercentageId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `description` VARCHAR(500) NOT NULL,
-  `percentage` DECIMAL NOT NULL,
-  `isActive` TINYINT NOT NULL,
-  PRIMARY KEY (`pk_orderPercentageId`))
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_order` (
+  `pk_orderId` INT NOT NULL AUTO_INCREMENT,
+  `fk_orderSummary` INT NOT NULL,
+  `fk_storeId` INT NOT NULL,
+  `totalPrice` DECIMAL NOT NULL,
+  `totalDiscountPercentage` DECIMAL NOT NULL,
+  `finalPrice` DECIMAL NOT NULL,
+  `creationDate` DATETIME NOT NULL,
+  `lastUpdate` DATETIME NULL,
+  `fk_orderStatusId` INT NOT NULL,
+  PRIMARY KEY (`pk_orderId`),
+  INDEX `fk_tb_order_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
+  INDEX `fk_tb_order_tb_orderStatus1_idx` (`fk_orderStatusId` ASC) VISIBLE,
+  INDEX `fk_tb_order_tb_orderSummary1_idx` (`fk_orderSummary` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_order_tb_store1`
+    FOREIGN KEY (`fk_storeId`)
+    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_order_tb_orderStatus1`
+    FOREIGN KEY (`fk_orderStatusId`)
+    REFERENCES `db_e-commerce_system`.`tb_orderStatus` (`pk_orderStatusId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_order_tb_orderSummary1`
+    FOREIGN KEY (`fk_orderSummary`)
+    REFERENCES `db_e-commerce_system`.`tb_orderSummary` (`pk_orderSummary`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_cashFlow`
+-- Table `db_e-commerce_system`.`tb_systemCashFlow`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_cashFlow` (
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_systemCashFlow` (
   `pk_cashFlowId` INT NOT NULL AUTO_INCREMENT,
   `fk_orderId` INT NOT NULL,
-  `fk_orderPercentageId` INT NOT NULL,
   `value` DECIMAL NOT NULL,
   `timestamp` DATETIME NOT NULL,
   PRIMARY KEY (`pk_cashFlowId`),
   INDEX `fk_tb_cashFlow_tb_order1_idx` (`fk_orderId` ASC) VISIBLE,
-  INDEX `fk_tb_cashFlow_tb_orderPercentage1_idx` (`fk_orderPercentageId` ASC) VISIBLE,
   CONSTRAINT `fk_tb_cashFlow_tb_order1`
     FOREIGN KEY (`fk_orderId`)
     REFERENCES `db_e-commerce_system`.`tb_order` (`pk_orderId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_cashFlow_tb_orderPercentage1`
-    FOREIGN KEY (`fk_orderPercentageId`)
-    REFERENCES `db_e-commerce_system`.`tb_orderPercentage` (`pk_orderPercentageId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -398,8 +351,15 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_productSubType` (
   `pk_productSubTypeId` INT NOT NULL AUTO_INCREMENT,
+  `fk_productTypeId` INT NOT NULL,
   `name` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`pk_productSubTypeId`))
+  PRIMARY KEY (`pk_productSubTypeId`),
+  INDEX `fk_tb_productSubType_tb_productType1_idx` (`fk_productTypeId` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_productSubType_tb_productType1`
+    FOREIGN KEY (`fk_productTypeId`)
+    REFERENCES `db_e-commerce_system`.`tb_productType` (`pk_productTypeId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -410,14 +370,18 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product` (
   `pk_productId` INT NOT NULL AUTO_INCREMENT,
   `fk_productTypeId` INT NOT NULL,
   `fk_productSubTypeId` INT NOT NULL,
+  `fk_storeId` INT NOT NULL,
   `name` VARCHAR(200) NOT NULL,
   `imagePath` VARCHAR(500) NOT NULL,
+  `price` DECIMAL NOT NULL,
+  `quantity` INT NOT NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NOT NULL,
   `isActive` TINYINT NOT NULL,
   PRIMARY KEY (`pk_productId`),
   INDEX `fk_tb_product_tb_productType1_idx` (`fk_productTypeId` ASC) VISIBLE,
   INDEX `fk_tb_product_tb_productSubType1_idx` (`fk_productSubTypeId` ASC) VISIBLE,
+  INDEX `fk_tb_product_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
   CONSTRAINT `fk_tb_product_tb_productType1`
     FOREIGN KEY (`fk_productTypeId`)
     REFERENCES `db_e-commerce_system`.`tb_productType` (`pk_productTypeId`)
@@ -426,6 +390,11 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product` (
   CONSTRAINT `fk_tb_product_tb_productSubType1`
     FOREIGN KEY (`fk_productSubTypeId`)
     REFERENCES `db_e-commerce_system`.`tb_productSubType` (`pk_productSubTypeId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_product_tb_store1`
+    FOREIGN KEY (`fk_storeId`)
+    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -460,53 +429,6 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_productDetail` (
   CONSTRAINT `fk_tb_productDetail_tb_product1`
     FOREIGN KEY (`tb_product_pk_productId`)
     REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_product_store`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_store` (
-  `pk_fk_productId` INT NOT NULL,
-  `pk_fk_storeId` INT NOT NULL,
-  `price` DECIMAL NOT NULL,
-  `quantity` DECIMAL NOT NULL,
-  INDEX `fk_tb_product_store_tb_product1_idx` (`pk_fk_productId` ASC) VISIBLE,
-  INDEX `fk_tb_product_store_tb_store1_idx` (`pk_fk_storeId` ASC) VISIBLE,
-  PRIMARY KEY (`pk_fk_productId`, `pk_fk_storeId`),
-  CONSTRAINT `fk_tb_product_store_tb_product1`
-    FOREIGN KEY (`pk_fk_productId`)
-    REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_product_store_tb_store1`
-    FOREIGN KEY (`pk_fk_storeId`)
-    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_product_order`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_order` (
-  `tb_product_pk_productId` INT NOT NULL,
-  `tb_order_pk_orderId` INT NOT NULL,
-  `quantity` INT NOT NULL,
-  INDEX `fk_tb_product_order_tb_product1_idx` (`tb_product_pk_productId` ASC) VISIBLE,
-  INDEX `fk_tb_product_order_tb_order1_idx` (`tb_order_pk_orderId` ASC) VISIBLE,
-  PRIMARY KEY (`tb_product_pk_productId`, `tb_order_pk_orderId`),
-  CONSTRAINT `fk_tb_product_order_tb_product1`
-    FOREIGN KEY (`tb_product_pk_productId`)
-    REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_product_order_tb_order1`
-    FOREIGN KEY (`tb_order_pk_orderId`)
-    REFERENCES `db_e-commerce_system`.`tb_order` (`pk_orderId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -573,85 +495,43 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotionFrequency`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotionFrequency` (
-  `pk_promotionFrequencyId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `frequency` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`pk_promotionFrequencyId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotionRange`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotionRange` (
-  `pk_promotionRangeId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `range` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`pk_promotionRangeId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `db_e-commerce_system`.`tb_promotion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotion` (
   `pk_promotionId` INT NOT NULL AUTO_INCREMENT,
   `fk_promotionTypeId` INT NOT NULL,
-  `fk_promotionFrequencyId` INT NOT NULL,
-  `fk_promotionRangeId` INT NOT NULL,
-  `fk_storeId` INT NOT NULL,
   `name` VARCHAR(200) NOT NULL,
   `startDate` DATETIME NOT NULL,
   `endDate` DATETIME NOT NULL,
   `discount` DECIMAL NULL,
   `isPercentage` TINYINT NOT NULL,
-  `orderPriceMinimum` DECIMAL NOT NULL,
-  `orderPriceMaximum` DECIMAL NOT NULL,
+  `orderPriceMinimum` DECIMAL NULL,
+  `orderPriceMaximum` DECIMAL NULL,
   `creationDate` DATETIME NOT NULL,
   `lastUpdate` DATETIME NULL,
   `isActive` TINYINT NOT NULL,
   PRIMARY KEY (`pk_promotionId`),
   INDEX `fk_tb_promotion_tb_promotionType1_idx` (`fk_promotionTypeId` ASC) VISIBLE,
-  INDEX `fk_tb_promotion_tb_promotionFrequency1_idx` (`fk_promotionFrequencyId` ASC) VISIBLE,
-  INDEX `fk_tb_promotion_tb_promotionRange1_idx` (`fk_promotionRangeId` ASC) VISIBLE,
-  INDEX `fk_tb_promotion_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
   CONSTRAINT `fk_tb_promotion_tb_promotionType1`
     FOREIGN KEY (`fk_promotionTypeId`)
     REFERENCES `db_e-commerce_system`.`tb_promotionType` (`pk_promotionTypeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotion_tb_promotionFrequency1`
-    FOREIGN KEY (`fk_promotionFrequencyId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotionFrequency` (`pk_promotionFrequencyId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotion_tb_promotionRange1`
-    FOREIGN KEY (`fk_promotionRangeId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotionRange` (`pk_promotionRangeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotion_tb_store1`
-    FOREIGN KEY (`fk_storeId`)
-    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_product_promotion_order`
+-- Table `db_e-commerce_system`.`tb_product_order`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_promotion_order` (
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_order` (
   `pk_fk_productId` INT NOT NULL,
-  `pk_fk_promotionId` INT NOT NULL,
   `pk_fk_orderId` INT NOT NULL,
+  `quantity` INT NOT NULL,
+  `pk_fk_promotionId` INT NULL,
   INDEX `fk_tb_product_promotion_order_tb_product1_idx` (`pk_fk_productId` ASC) VISIBLE,
   INDEX `fk_tb_product_promotion_order_tb_promotion1_idx` (`pk_fk_promotionId` ASC) VISIBLE,
   INDEX `fk_tb_product_promotion_order_tb_order1_idx` (`pk_fk_orderId` ASC) VISIBLE,
-  PRIMARY KEY (`pk_fk_productId`, `pk_fk_promotionId`, `pk_fk_orderId`),
+  PRIMARY KEY (`pk_fk_productId`, `pk_fk_orderId`),
   CONSTRAINT `fk_tb_product_promotion_order_tb_product1`
     FOREIGN KEY (`pk_fk_productId`)
     REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
@@ -694,46 +574,25 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotion_productType`
+-- Table `db_e-commerce_system`.`tb_storeCashFlow`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotion_productType` (
-  `pk_fk_promotionId` INT NOT NULL,
-  `pk_fk_productTypeId` INT NOT NULL,
-  `discount` DECIMAL NOT NULL,
-  INDEX `fk_tb_promotion_productType_tb_promotion1_idx` (`pk_fk_promotionId` ASC) VISIBLE,
-  INDEX `fk_tb_promotion_productType_tb_productType1_idx` (`pk_fk_productTypeId` ASC) VISIBLE,
-  PRIMARY KEY (`pk_fk_productTypeId`, `pk_fk_promotionId`),
-  CONSTRAINT `fk_tb_promotion_productType_tb_promotion1`
-    FOREIGN KEY (`pk_fk_promotionId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotion` (`pk_promotionId`)
+CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_storeCashFlow` (
+  `pk_storeCashFlowId` INT NOT NULL AUTO_INCREMENT,
+  `fk_storeId` INT NOT NULL,
+  `fk_orderId` INT NOT NULL,
+  `value` DECIMAL NOT NULL,
+  `timestamp` DATETIME NOT NULL,
+  PRIMARY KEY (`pk_storeCashFlowId`),
+  INDEX `fk_tb_storeCashFlow_tb_store1_idx` (`fk_storeId` ASC) VISIBLE,
+  INDEX `fk_tb_storeCashFlow_tb_order1_idx` (`fk_orderId` ASC) VISIBLE,
+  CONSTRAINT `fk_tb_storeCashFlow_tb_store1`
+    FOREIGN KEY (`fk_storeId`)
+    REFERENCES `db_e-commerce_system`.`tb_store` (`pk_storeId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotion_productType_tb_productType1`
-    FOREIGN KEY (`pk_fk_productTypeId`)
-    REFERENCES `db_e-commerce_system`.`tb_productType` (`pk_productTypeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotion_productSubType`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotion_productSubType` (
-  `pk_fk_promotionId` INT NOT NULL,
-  `pk_fk_productSubTypeId` INT NOT NULL,
-  `discount` DECIMAL NOT NULL,
-  INDEX `fk_tb_promotionProductSubType_tb_promotion1_idx` (`pk_fk_promotionId` ASC) VISIBLE,
-  INDEX `fk_tb_promotionProductSubType_tb_productSubType1_idx` (`pk_fk_productSubTypeId` ASC) VISIBLE,
-  PRIMARY KEY (`pk_fk_productSubTypeId`, `pk_fk_promotionId`),
-  CONSTRAINT `fk_tb_promotionProductSubType_tb_promotion1`
-    FOREIGN KEY (`pk_fk_promotionId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotion` (`pk_promotionId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotionProductSubType_tb_productSubType1`
-    FOREIGN KEY (`pk_fk_productSubTypeId`)
-    REFERENCES `db_e-commerce_system`.`tb_productSubType` (`pk_productSubTypeId`)
+  CONSTRAINT `fk_tb_storeCashFlow_tb_order1`
+    FOREIGN KEY (`fk_orderId`)
+    REFERENCES `db_e-commerce_system`.`tb_order` (`pk_orderId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
