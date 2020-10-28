@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,12 +120,15 @@ public class AddressController {
 
             AddressModel address = this.addressService.getAdressById(id);
 
-            if (address == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+            response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
 
-            } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
-            }
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 

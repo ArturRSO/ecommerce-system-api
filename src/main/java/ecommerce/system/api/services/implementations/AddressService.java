@@ -1,6 +1,8 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.BatchUpdateException;
+import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import ecommerce.system.api.services.IAddressService;
@@ -24,7 +26,11 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public void createAddress(AddressModel address) {
+    public void createAddress(AddressModel address) throws InvalidOperationException {
+
+        if (!this.authenticationService.isLoggedUser(address.getUserId())) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
 
         address.setCreationDate(LocalDateTime.now());
         address.setLastUpdate(null);
@@ -46,21 +52,42 @@ public class AddressService implements IAddressService {
     }
 
     @Override
+    public List<AddressModel> getProfileAdresses(int userId) throws InvalidOperationException {
+
+        if (!this.authenticationService.isLoggedUser(userId)) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        return this.getAdressesByUserId(userId);
+    }
+
+    @Override
     public AddressModel getAdressById(int adddressId) {
 
         return this.addressRepository.getById(adddressId);
     }
 
     @Override
-    public void updateAddress(AddressModel address) {
+    public void updateAddress(AddressModel address) throws InvalidOperationException {
+
+        if (!this.authenticationService.isLoggedUser(address.getUserId())) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
 
         address.setLastUpdate(LocalDateTime.now());
-
         this.addressRepository.update(address);
     }
 
     @Override
-    public void deleteAdresses(List<Integer> ids) throws BatchUpdateException {
+    public void deleteAdresses(List<Integer> ids) throws BatchUpdateException, InvalidOperationException {
+
+        for (int id : ids) {
+            AddressModel address = this.getAdressById(id);
+
+            if (!this.authenticationService.isLoggedUser(address.getUserId())) {
+                throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+            }
+        }
 
         this.addressRepository.delete(ids);
     }
