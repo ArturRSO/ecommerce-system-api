@@ -4,6 +4,7 @@ import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import ecommerce.system.api.services.IAddressService;
+import ecommerce.system.api.services.IAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +14,12 @@ import java.util.List;
 @Service
 public class AddressService implements IAddressService {
 
+    private final IAuthenticationService authenticationService;
     private final IAddressRepository addressRepository;
 
     @Autowired
-    public AddressService(IAddressRepository addressRepository) {
+    public AddressService(IAuthenticationService authenticationService, IAddressRepository addressRepository) {
+        this.authenticationService = authenticationService;
         this.addressRepository = addressRepository;
     }
 

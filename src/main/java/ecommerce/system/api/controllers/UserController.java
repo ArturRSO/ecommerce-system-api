@@ -242,7 +242,7 @@ public class UserController {
 
         try {
 
-          boolean status =  this.userService.checkPasswordRecoverToken(token);
+          boolean status = this.userService.checkPasswordRecoverToken(token);
 
           BaseResponseModel<Boolean> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), status);
 
@@ -286,42 +286,14 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable("userId") int userId, @RequestBody UserModel user) {
+    @PutMapping("update/password/{userId}")
+    public ResponseEntity<?> updateUserPassword(@PathVariable("userId") int userId, @RequestBody String password) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            user.setUserId(userId);
-            this.userService.updateUser(user);
-
-            response.setSuccess(true);
-            response.setMessage("Usuário atualizado com sucesso!");
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("update/password")
-    public ResponseEntity<?> updateUserPassword(@RequestBody UserModel user) {
-
-        BaseResponseModel<String> response = new BaseResponseModel<>();
-
-        try {
-
-            this.userService.updateUserPassword(false, user.getUserId(), user.getRoleId(), user.getEmail(), user.getPassword());
+            this.userService.updateUserPassword(false, userId, password);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
@@ -351,14 +323,13 @@ public class UserController {
         }
     }
 
-    @PutMapping("update/profile/{userId}")
-    public ResponseEntity<?> updateUserProfile(@PathVariable("userId") int userId, @RequestBody UserModel user) {
+    @PutMapping("update/profile")
+    public ResponseEntity<?> updateUserProfile(@RequestBody UserModel user) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            user.setUserId(userId);
             this.userService.updateUserProfile(user);
 
             response.setSuccess(true);

@@ -19,11 +19,10 @@ public interface IUserService {
     UserModel getUserByEmail(String email);
     List<UserOptionModel> getUserOptionsByRoleId(int roleId);
     UserModel getUserProfile();
-    boolean sendPasswordRecoverEmail(String email) throws Exception;
     boolean checkPasswordRecoverToken(String token) throws Exception;
+    boolean sendPasswordRecoverEmail(String email) throws Exception;
     void recoverPassword(String password, String token) throws Exception;
-    void updateUser(UserModel user);
-    void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password) throws InvalidOperationException, NoSuchAlgorithmException;
+    void updateUserPassword(boolean isRecover, int userId, String password) throws InvalidOperationException, NoSuchAlgorithmException;
     void updateUserProfile(UserModel user) throws InvalidOperationException;
     void deleteUserProfile(int id) throws InvalidOperationException, BatchUpdateException;
     void deleteUsers(List<Integer> ids) throws BatchUpdateException;

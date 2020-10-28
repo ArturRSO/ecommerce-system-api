@@ -9,13 +9,11 @@ import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.repositories.IUserOptionRepository;
 import ecommerce.system.api.repositories.IUserRepository;
+import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IUserService;
 import ecommerce.system.api.tools.PasswordRecoverHandler;
 import ecommerce.system.api.tools.SHAEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,19 +25,19 @@ import java.util.List;
 @Service
 public class UserService implements IUserService {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final IAuthenticationService authenticationService;
     private final IUserRepository userRepository;
     private final IUserOptionRepository userOptionRepository;
     private final SHAEncoder shaEncoder;
     private final PasswordRecoverHandler passwordRecoverHandler;
 
-    @Value("${images.path.users.default}")
-    private String defaultProfileImagePath;
-
     @Autowired
-    public UserService(IUserRepository userRepository,
-                       IUserOptionRepository userOptionRepository, SHAEncoder shaEncoder,
+    public UserService(IAuthenticationService authenticationService,
+                       IUserRepository userRepository,
+                       IUserOptionRepository userOptionRepository,
+                       SHAEncoder shaEncoder,
                        PasswordRecoverHandler passwordRecoverHandler) {
+        this.authenticationService = authenticationService;
         this.userRepository = userRepository;
         this.userOptionRepository = userOptionRepository;
         this.shaEncoder = shaEncoder;
@@ -57,10 +55,6 @@ public class UserService implements IUserService {
         user.setVerifiedEmail(true);
         user.setActive(true);
 
-        if (user.getProfileImagePath() == null) {
-            user.setProfileImagePath(this.defaultProfileImagePath);
-        }
-
         UserModel checkedUser = this.userRepository.getUserByDocumentNumber(user.getDocumentNumber());
 
         if (checkedUser == null) {
@@ -68,8 +62,13 @@ public class UserService implements IUserService {
 
             if (checkedUser != null) {
 
-                checkedUser.setEmail(checkedUser.getEmail() + " [Inactive]");
-                this.userRepository.update(checkedUser);
+                if (!checkedUser.isActive()) {
+                    checkedUser.setEmail(checkedUser.getEmail() + " [Inactive]");
+                    this.userRepository.update(checkedUser);
+
+                } else {
+                    throw new InvalidOperationException("Já existe um usuário cadastrado com o e-mail informado.");
+                }
             }
 
             this.userRepository.create(user);
@@ -145,6 +144,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public boolean checkPasswordRecoverToken(String token) throws Exception {
+
+        return this.passwordRecoverHandler.validateToken(token);
+    }
+
+    @Override
     public boolean sendPasswordRecoverEmail(String email) throws Exception {
 
         UserModel user = this.getUserByEmail(email);
@@ -160,28 +165,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public boolean checkPasswordRecoverToken(String token) throws Exception {
-
-        return this.passwordRecoverHandler.validateToken(token);
-    }
-
-    @Override
-    public void recoverPassword(String password, String token)
-            throws Exception {
+    public void recoverPassword(String password, String token) throws Exception {
 
         if (this.checkPasswordRecoverToken(token)) {
 
             int userId = this.passwordRecoverHandler.extractId(token);
-            UserModel user = this.userRepository.getById(userId);
-            String encodedPassword = this.shaEncoder.encode(password);
 
-            if (user.getPassword().equals(encodedPassword)) {
-
-               throw new InvalidOperationException("Nova senha não pode ser igual a anterior!");
-
-            } else {
-               this.updateUserPassword(true, user.getUserId(), user.getRoleId(), user.getEmail(), password);
-            }
+            this.updateUserPassword(true, userId, password);
 
         } else {
             throw new InvalidTokenException("Token expirado");
@@ -189,38 +179,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(UserModel user) {
-
-        UserModel oldUser = this.userRepository.getById(user.getUserId());
-
-        if (user.getProfileImagePath() == null) {
-            user.setProfileImagePath(this.defaultProfileImagePath);
-        }
-
-        user.setPassword(oldUser.getPassword());
-        user.setCreationDate(oldUser.getCreationDate());
-        user.setActive(oldUser.isActive());
-        user.setLastUpdate(LocalDateTime.now());
-
-        this.userRepository.update(user);
-    }
-
-    @Override
-    public void updateUserPassword(boolean isRecover, int userId, int roleId, String email, String password)
+    public void updateUserPassword(boolean isRecover, int userId, String password)
             throws InvalidOperationException, NoSuchAlgorithmException {
 
-        String role = RolesEnum.getRoleById(roleId);
-        UserModel user = this.userRepository.getById(userId);
-        String loggedEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        if (role != null && (role.equals("store_admin") || role.equals("customer"))) {
-
-            if (!(user.getEmail().equals(loggedEmail))) {
+        if (!isRecover) {
+            if (!this.authenticationService.isLoggedUser(userId)) {
                 throw new InvalidOperationException("Operação não autorizada");
             }
         }
 
+        UserModel user = this.userRepository.getById(userId);
         String encodedPassword = this.shaEncoder.encode(password);
+
+        if (user.getPassword().equals(encodedPassword)) {
+            throw new InvalidOperationException("Nova senha não pode ser igual a anterior");
+        }
 
         user.setPassword(encodedPassword);
         user.setLastUpdate(LocalDateTime.now());
@@ -230,17 +203,12 @@ public class UserService implements IUserService {
 
     @Override
     public void updateUserProfile(UserModel user) throws InvalidOperationException {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserModel oldUser = this.getUserByEmail(email);
-
-        if (oldUser.getUserId() != user.getUserId()) {
+        if (!this.authenticationService.isLoggedUser(user.getUserId())) {
             throw new InvalidOperationException("Operação não permitida!");
         }
 
-        if (user.getProfileImagePath() == null) {
-            user.setProfileImagePath(this.defaultProfileImagePath);
-        }
+        UserModel oldUser = this.getUserById(user.getUserId());
 
         user.setRoleId(oldUser.getRoleId());
         user.setPassword(oldUser.getPassword());
