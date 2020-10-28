@@ -19,7 +19,7 @@ public class PasswordRecoverHandler {
     @Value("${password.recover.token.expiration.hours}")
     private int expirationHours;
 
-    @Value("${application.front.customer.url}")
+    @Value("${application.front.base-url}")
     private String baseUrl;
 
     @Value("${password.recover.token.key}")
