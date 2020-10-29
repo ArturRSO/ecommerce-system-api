@@ -4,8 +4,6 @@ import ecommerce.system.api.entities.ProductSubtypeEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.ProductSubtypeModel;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,13 +17,12 @@ import java.util.List;
 @Transactional(rollbackOn = {Exception.class})
 public class ProductSubtypeRepository implements IProductSubtypeRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
     public void create(ProductSubtypeModel object) {
+
         ProductSubtypeEntity productSubtype = new ProductSubtypeEntity(object);
 
         this.entityManager.persist(productSubtype);
@@ -34,27 +31,18 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
     @Override
     public List<ProductSubtypeModel> getAll() {
 
-        try {
+        String query = "FROM ProductSubtypeEntity p ORDER BY p.productTypeId ASC";
+        TypedQuery<ProductSubtypeEntity> result = this.entityManager.createQuery(query, ProductSubtypeEntity.class);
+        List<ProductSubtypeEntity> entities = result.getResultList();
 
-            String query = "FROM ProductSubtypeEntity p ORDER BY p.productTypeId ASC";
-            TypedQuery<ProductSubtypeEntity> result = this.entityManager.createQuery(query, ProductSubtypeEntity.class);
-            List<ProductSubtypeEntity> entities = result.getResultList();
-
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<ProductSubtypeModel> productSubtypes = new ArrayList<>();
-            (entities).forEach(productSubtype -> productSubtypes.add(productSubtype.toModel()));
-
-            return productSubtypes;
-
-        }  catch (Exception e) {
-
-            logger.error(e.getMessage());
-
+        if (entities == null || entities.isEmpty()) {
             return null;
         }
+
+        ArrayList<ProductSubtypeModel> productSubtypes = new ArrayList<>();
+        (entities).forEach(productSubtype -> productSubtypes.add(productSubtype.toModel()));
+
+        return productSubtypes;
     }
 
     @Override

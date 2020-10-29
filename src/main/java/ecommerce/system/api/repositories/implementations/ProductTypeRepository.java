@@ -4,8 +4,6 @@ import ecommerce.system.api.entities.ProductTypeEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.ProductTypeModel;
 import ecommerce.system.api.repositories.IProductTypeRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,8 +16,6 @@ import java.util.List;
 @Repository
 @Transactional(rollbackOn = {Exception.class})
 public class ProductTypeRepository implements IProductTypeRepository {
-
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
     EntityManager entityManager;
@@ -35,27 +31,18 @@ public class ProductTypeRepository implements IProductTypeRepository {
     @Override
     public List<ProductTypeModel> getAll() {
 
-        try {
+        String query = "FROM ProductTypeEntity p ORDER BY p.productTypeId ASC";
+        TypedQuery<ProductTypeEntity> result = this.entityManager.createQuery(query, ProductTypeEntity.class);
+        List<ProductTypeEntity> entities = result.getResultList();
 
-            String query = "FROM ProductTypeEntity p ORDER BY p.productTypeId ASC";
-            TypedQuery<ProductTypeEntity> result = this.entityManager.createQuery(query, ProductTypeEntity.class);
-            List<ProductTypeEntity> entities = result.getResultList();
-
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<ProductTypeModel> productTypes = new ArrayList<>();
-            (entities).forEach(productType -> productTypes.add(productType.toModel()));
-
-            return productTypes;
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
+        if (entities == null || entities.isEmpty()) {
             return null;
         }
+
+        ArrayList<ProductTypeModel> productTypes = new ArrayList<>();
+        (entities).forEach(productType -> productTypes.add(productType.toModel()));
+
+        return productTypes;
     }
 
     @Override
