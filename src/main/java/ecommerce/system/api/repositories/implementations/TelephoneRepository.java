@@ -4,12 +4,11 @@ import ecommerce.system.api.entities.TelephoneEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +17,8 @@ import java.util.List;
 @Repository
 @Transactional(rollbackOn = {Exception.class})
 public class TelephoneRepository implements ITelephoneRepository {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
     EntityManager entityManager;
@@ -50,12 +51,21 @@ public class TelephoneRepository implements ITelephoneRepository {
     @Override
     public TelephoneModel getById(int id) {
 
-        String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.telephone = :telephoneId";
-        TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
-                .setParameter("telephoneId", id);
-        TelephoneEntity telephone = result.getSingleResult();
+        try {
 
-        return telephone.toModel();
+            String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.telephone = :telephoneId";
+            TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
+                    .setParameter("telephoneId", id);
+            TelephoneEntity telephone = result.getSingleResult();
+
+            return telephone.toModel();
+
+        } catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
+            return null;
+        }
     }
 
     @Override

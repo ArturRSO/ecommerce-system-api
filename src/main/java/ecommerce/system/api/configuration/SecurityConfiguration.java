@@ -57,6 +57,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/addresses/update").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/addresses/delete").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/addresses/**").hasAnyRole("system_admin")
+                    .antMatchers("/telephones/create").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/telephones/all/profile/**").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/telephones/update").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/telephones/delete").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/telephone/**").hasAnyRole("system_admin")
                     .anyRequest().authenticated()
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

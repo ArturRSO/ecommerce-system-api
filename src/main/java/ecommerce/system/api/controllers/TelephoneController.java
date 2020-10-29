@@ -64,7 +64,7 @@ public class TelephoneController {
             List<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
 
             if (telephones == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
                 response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
@@ -92,7 +92,35 @@ public class TelephoneController {
             List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
 
             if (telephones == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all/profile/{userId}")
+    public ResponseEntity<?> getProfileTelephones(@PathVariable("userId") int userId) {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<TelephoneModel> telephones = this.telephoneService.getProfileTelephones(userId);
+
+            if (telephones == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
                 response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
@@ -120,7 +148,7 @@ public class TelephoneController {
             TelephoneModel telephone = this.telephoneService.getTelephoneById(id);
 
             if (telephone == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
                 response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephone);
