@@ -71,28 +71,19 @@ public class AddressRepository implements IAddressRepository {
     @Override
     public List<AddressModel> getAddressesByUserId(int userId) {
 
-        try {
+        String query = "FROM AddressEntity a WHERE a.active = true AND a.userId = :userId ORDER BY a.addressId ASC";
+        TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
+                .setParameter("userId", userId);
+        List<AddressEntity> entities = result.getResultList();
 
-            String query = "FROM AddressEntity a WHERE a.active = true AND a.userId = :userId ORDER BY a.addressId ASC";
-            TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
-                    .setParameter("userId", userId);
-            List<AddressEntity> entities = result.getResultList();
-
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<AddressModel> addresses = new ArrayList<>();
-            (entities).forEach((address) -> addresses.add(address.toModel()));
-
-            return addresses;
-
-        }  catch (NoResultException nre) {
-
-            logger.error(nre.getMessage());
-
+        if (entities == null || entities.isEmpty()) {
             return null;
         }
+
+        ArrayList<AddressModel> addresses = new ArrayList<>();
+        (entities).forEach((address) -> addresses.add(address.toModel()));
+
+        return addresses;
     }
 
     @Override
