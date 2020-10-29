@@ -4,12 +4,11 @@ import ecommerce.system.api.entities.AddressEntity;
 import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,6 +17,8 @@ import java.util.List;
 @Repository
 @Transactional(rollbackOn = {Exception.class})
 public class AddressRepository implements IAddressRepository {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @PersistenceContext
     EntityManager entityManager;
@@ -33,7 +34,7 @@ public class AddressRepository implements IAddressRepository {
     @Override
     public List<AddressModel> getAll() {
 
-        String query = "FROM AddressEntity a WHERE a.isActive = true ORDER BY a.addressId ASC";
+        String query = "FROM AddressEntity a WHERE a.active = true ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class);
         List<AddressEntity> entities = result.getResultList();
 
@@ -50,30 +51,48 @@ public class AddressRepository implements IAddressRepository {
     @Override
     public AddressModel getById(int id) {
 
-        String query = "FROM AddressEntity a WHERE a.isActive = true AND a.addressId = :addressId";
-        TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
-                .setParameter("addressId", id);
-        AddressEntity address = result.getSingleResult();
+        try {
 
-        return address.toModel();
+            String query = "FROM AddressEntity a WHERE a.active = true AND a.addressId = :addressId";
+            TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
+                    .setParameter("addressId", id);
+            AddressEntity address = result.getSingleResult();
+
+            return address.toModel();
+
+        } catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
+            return null;
+        }
     }
 
     @Override
     public List<AddressModel> getAddressesByUserId(int userId) {
 
-        String query = "FROM AddressEntity a WHERE a.isActive = true AND a.userId = :userId ORDER BY a.addressId ASC";
-        TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
-                .setParameter("userId", userId);
-        List<AddressEntity> entities = result.getResultList();
+        try {
 
-        if (entities == null || entities.isEmpty()) {
+            String query = "FROM AddressEntity a WHERE a.active = true AND a.userId = :userId ORDER BY a.addressId ASC";
+            TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
+                    .setParameter("userId", userId);
+            List<AddressEntity> entities = result.getResultList();
+
+            if (entities == null || entities.isEmpty()) {
+                return null;
+            }
+
+            ArrayList<AddressModel> addresses = new ArrayList<>();
+            (entities).forEach((address) -> addresses.add(address.toModel()));
+
+            return addresses;
+
+        }  catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
             return null;
         }
-
-        ArrayList<AddressModel> addresses = new ArrayList<>();
-        (entities).forEach((address) -> addresses.add(address.toModel()));
-
-        return addresses;
     }
 
     @Override
@@ -88,7 +107,7 @@ public class AddressRepository implements IAddressRepository {
     public void delete(List<Integer> ids) throws BatchUpdateException {
 
         int result = 0;
-        String query = "UPDATE AddressEntity SET isActive = false, lastUpdate = :date WHERE addressId = :addressId";
+        String query = "UPDATE AddressEntity SET active = false, lastUpdate = :date WHERE addressId = :addressId";
 
         for (int id : ids) {
             Query update = entityManager.createQuery(query)

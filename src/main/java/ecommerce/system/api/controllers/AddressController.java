@@ -2,6 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.BatchUpdateException;
+import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.services.IAddressService;
@@ -12,12 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/adresses")
+@RequestMapping("/addresses")
 public class AddressController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,6 +42,16 @@ public class AddressController {
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -111,6 +121,34 @@ public class AddressController {
         }
     }
 
+    @GetMapping("/all/profile/{userId}")
+    public ResponseEntity<?> getProfileAdresses(@PathVariable("userId") int userId) {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<AddressModel> adresses = this.addressService.getProfileAdresses(userId);
+
+            if (adresses == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getAddressById(@PathVariable("id") int id) {
 
@@ -120,15 +158,12 @@ public class AddressController {
 
             AddressModel address = this.addressService.getAdressById(id);
 
-            response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
+            if (address == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (NoResultException nre) {
-
-            logger.error(nre.getMessage());
-
-            response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -157,13 +192,23 @@ public class AddressController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
 
             logger.error(e.getMessage());
 
             response.setSuccess(false);
             response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData(e.getMessage());
+            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

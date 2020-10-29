@@ -52,6 +52,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/recover/password/**").permitAll()
                     .antMatchers("/users/delete/profile/**").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/users/**").hasAnyRole("system_admin")
+                    .antMatchers("/addresses/create").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/addresses/all/profile/**").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/addresses/update").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/addresses/delete").hasAnyRole("system_admin", "store_admin", "customer")
+                    .antMatchers("/addresses/**").hasAnyRole("system_admin")
                     .anyRequest().authenticated()
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
