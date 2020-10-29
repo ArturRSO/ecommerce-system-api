@@ -9,10 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,27 +35,18 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<UserModel> getAll() {
 
-        try {
+        String query = "FROM UserEntity u WHERE u.active = true ORDER BY u.userId ASC";
+        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
+        List<UserEntity> entities = result.getResultList();
 
-            String query = "FROM UserEntity u WHERE u.active = true ORDER BY u.userId ASC";
-            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
-            List<UserEntity> entities = result.getResultList();
-
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<UserModel> users = new ArrayList<>();
-            (entities).forEach((user) -> users.add(user.toModel()));
-
-            return users;
-
-        }  catch (Exception e) {
-
-            logger.error(e.getMessage());
-
+        if (entities == null || entities.isEmpty()) {
             return null;
         }
+
+        ArrayList<UserModel> users = new ArrayList<>();
+        (entities).forEach((user) -> users.add(user.toModel()));
+
+        return users;
     }
 
     @Override
@@ -73,9 +61,9 @@ public class UserRepository implements IUserRepository {
 
             return user.toModel();
 
-        }  catch (Exception e) {
+        } catch (NoResultException nre) {
 
-            logger.error(e.getMessage());
+            logger.error(nre.getMessage());
 
             return null;
         }
@@ -84,27 +72,20 @@ public class UserRepository implements IUserRepository {
     @Override
     public List<UserModel> getUsersByRoleId(int roleId) {
 
-        try {
-            String query = "FROM UserEntity u WHERE u.active = true AND u.roleId = :roleId";
-            TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
-                    .setParameter("roleId", roleId);
+        String query = "FROM UserEntity u WHERE u.active = true AND u.roleId = :roleId";
+        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                .setParameter("roleId", roleId);
 
-            List<UserEntity> entities = result.getResultList();
+        List<UserEntity> entities = result.getResultList();
 
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<UserModel> users = new ArrayList<>();
-            (entities).forEach((user) -> users.add(user.toModel()));
-
-            return users;
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-
+        if (entities == null || entities.isEmpty()) {
             return null;
         }
+
+        ArrayList<UserModel> users = new ArrayList<>();
+        (entities).forEach((user) -> users.add(user.toModel()));
+
+        return users;
     }
 
     @Override
@@ -120,9 +101,9 @@ public class UserRepository implements IUserRepository {
 
             return user.toModel();
 
-        } catch (Exception e) {
+        } catch (NoResultException nre) {
 
-            logger.error(e.getMessage());
+            logger.error(nre.getMessage());
 
             return null;
         }
@@ -141,9 +122,9 @@ public class UserRepository implements IUserRepository {
 
             return user.toModel();
 
-        } catch (Exception e) {
+        } catch (NoResultException nre) {
 
-            logger.error(e.getMessage());
+            logger.error(nre.getMessage());
 
             return null;
         }
@@ -165,10 +146,10 @@ public class UserRepository implements IUserRepository {
 
             return user.toModel();
 
-        } catch (Exception e) {
+        } catch (NoResultException nre) {
 
             logger.warn("Failed credentials check for e-mail " + credentials.getEmail());
-            logger.error(e.getMessage());
+            logger.error(nre.getMessage());
 
             return null;
         }
