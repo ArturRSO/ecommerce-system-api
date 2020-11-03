@@ -18,7 +18,6 @@ public class UserModel {
     private final String passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{8,16}$";
     private final String cpfCnpjRegex = "/(^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$)|(^\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}$)/";
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int userId;
 
     @NotNull
