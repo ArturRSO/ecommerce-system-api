@@ -59,6 +59,8 @@ public class AddressEntity {
         this.country = address.getCountry();
         this.postalCode = address.getPostalCode();
         this.address = address.getAddress();
+        this.number = address.getNumber();
+        this.stateCode = address.getStateCode();
         this.city = address.getCity();
         this.district = address.getDistrict();
         this.complement = address.getComplement();

@@ -115,7 +115,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -136,6 +136,14 @@ public class AddressController {
             } else {
                 response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
             }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
