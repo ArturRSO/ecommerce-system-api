@@ -4,7 +4,6 @@ import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.models.UserModel;
-import ecommerce.system.api.models.UserOptionModel;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -17,7 +16,6 @@ public interface IUserService {
     List<UserModel> getUsersByRoleId(int roleId);
     UserModel getUserById(int id);
     UserModel getUserByEmail(String email);
-    List<UserOptionModel> getUserOptionsByRoleId(int roleId);
     UserModel getUserProfile();
     boolean checkPasswordRecoverToken(String token) throws Exception;
     boolean sendPasswordRecoverEmail(String email) throws Exception;

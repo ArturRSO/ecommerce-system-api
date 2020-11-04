@@ -7,7 +7,6 @@ import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.UserModel;
-import ecommerce.system.api.models.UserOptionModel;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -253,34 +252,6 @@ public class UserController {
             logger.error(e.getMessage());
 
             BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/options/{roleId}")
-    public ResponseEntity<?> getUserOptionsByRoleId(@PathVariable("roleId") int roleId) {
-
-        BaseResponseModel<?> response;
-
-        try {
-
-            List<UserOptionModel> options = this.userService.getUserOptionsByRoleId(roleId);
-
-            if (options == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), options);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

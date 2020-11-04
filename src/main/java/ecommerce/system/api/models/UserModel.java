@@ -10,7 +10,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class UserModel {
 
@@ -67,9 +66,6 @@ public class UserModel {
     @JsonIgnore
     private boolean active;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<UserOptionModel> options;
-
     public UserModel(int userId,
                      String firstName,
                      String lastName,
@@ -83,8 +79,7 @@ public class UserModel {
                      LocalDateTime creationDate,
                      LocalDateTime lastUpdate,
                      boolean verifiedEmail,
-                     boolean active,
-                     List<UserOptionModel> options) {
+                     boolean active) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -99,7 +94,6 @@ public class UserModel {
         this.lastUpdate = lastUpdate;
         this.verifiedEmail = verifiedEmail;
         this.active = active;
-        this.options = options;
     }
 
     public int getUserId() {
@@ -213,13 +207,4 @@ public class UserModel {
     public void setActive(boolean active) {
         this.active = active;
     }
-
-    public List<UserOptionModel> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<UserOptionModel> options) {
-        this.options = options;
-    }
-
 }

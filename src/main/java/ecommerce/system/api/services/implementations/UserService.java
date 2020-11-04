@@ -7,8 +7,6 @@ import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
-import ecommerce.system.api.models.UserOptionModel;
-import ecommerce.system.api.repositories.IUserOptionRepository;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IUserService;
@@ -28,19 +26,16 @@ public class UserService implements IUserService {
 
     private final IAuthenticationService authenticationService;
     private final IUserRepository userRepository;
-    private final IUserOptionRepository userOptionRepository;
     private final SHAEncoder shaEncoder;
     private final PasswordRecoverHandler passwordRecoverHandler;
 
     @Autowired
     public UserService(IAuthenticationService authenticationService,
                        IUserRepository userRepository,
-                       IUserOptionRepository userOptionRepository,
                        SHAEncoder shaEncoder,
                        PasswordRecoverHandler passwordRecoverHandler) {
         this.authenticationService = authenticationService;
         this.userRepository = userRepository;
-        this.userOptionRepository = userOptionRepository;
         this.shaEncoder = shaEncoder;
         this.passwordRecoverHandler = passwordRecoverHandler;
     }
@@ -129,17 +124,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserOptionModel> getUserOptionsByRoleId(int roleId) {
-        return this.userOptionRepository.getUserOptionsByRoleId(roleId);
-    }
-
-    @Override
     public UserModel getUserProfile() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserModel user = this.getUserByEmail(email);
-
-        user.setOptions(this.getUserOptionsByRoleId(user.getRoleId()));
 
         return user;
     }

@@ -89,8 +89,7 @@ public class UserEntity {
                 this.creationDate,
                 this.lastUpdate,
                 this.verifiedEmail,
-                this.active,
-                null
+                this.active
         );
     }
 

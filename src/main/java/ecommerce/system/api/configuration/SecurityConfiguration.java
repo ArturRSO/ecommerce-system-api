@@ -46,7 +46,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/users/create/customer").permitAll()
                     .antMatchers("/users/profile").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/users/recover/password/status/**").permitAll()
-                    .antMatchers("/users/options/**").permitAll()
                     .antMatchers("/users/update/password/**").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/users/update/profile").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/recover/password/**").permitAll()
