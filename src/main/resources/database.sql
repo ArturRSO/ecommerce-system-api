@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_user` (
   `lastName` VARCHAR(500) NOT NULL,
   `email` VARCHAR(200) NOT NULL,
   `password` VARCHAR(128) NOT NULL,
-  `documentNumber` VARCHAR(14) NOT NULL,
+  `documentNumber` VARCHAR(25) NOT NULL,
   `fk_documentTypeId` INT NOT NULL,
   `fk_roleId` INT NOT NULL,
   `birthday` DATE NOT NULL,
@@ -133,42 +133,6 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_address` (
   CONSTRAINT `fk_tb_address_tb_user1`
     FOREIGN KEY (`fk_userId`)
     REFERENCES `db_e-commerce_system`.`tb_user` (`pk_userId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_userOption`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_userOption` (
-  `pk_userOptionId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `elementId` VARCHAR(50) NULL,
-  `route` VARCHAR(50) NULL,
-  `icon` VARCHAR(50) NULL,
-  `samePage` TINYINT NOT NULL,
-  `isActive` TINYINT NOT NULL,
-  PRIMARY KEY (`pk_userOptionId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_role_userOption`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_role_userOption` (
-  `pk_fk_roleId` INT NOT NULL,
-  `pk_fk_userOptionId` INT NOT NULL,
-  INDEX `fk_tb_role_userOption_tb_role1_idx` (`pk_fk_roleId` ASC) VISIBLE,
-  INDEX `fk_tb_role_userOption_tb_userOption1_idx` (`pk_fk_userOptionId` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_role_userOption_tb_role1`
-    FOREIGN KEY (`pk_fk_roleId`)
-    REFERENCES `db_e-commerce_system`.`tb_role` (`pk_roleId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_role_userOption_tb_userOption1`
-    FOREIGN KEY (`pk_fk_userOptionId`)
-    REFERENCES `db_e-commerce_system`.`tb_userOption` (`pk_userOptionId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -376,7 +340,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product` (
   `price` DECIMAL NOT NULL,
   `quantity` INT NOT NULL,
   `creationDate` DATETIME NOT NULL,
-  `lastUpdate` DATETIME NOT NULL,
+  `lastUpdate` DATETIME NULL,
   `isActive` TINYINT NOT NULL,
   PRIMARY KEY (`pk_productId`),
   INDEX `fk_tb_product_tb_productType1_idx` (`fk_productTypeId` ASC) VISIBLE,
@@ -416,18 +380,18 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_productDetail` (
   `pk_productDetailId` INT NOT NULL AUTO_INCREMENT,
   `fk_detailLabelId` INT NOT NULL,
-  `tb_product_pk_productId` INT NOT NULL,
+  `fk_productId` INT NOT NULL,
   `description` VARCHAR(500) NOT NULL,
   PRIMARY KEY (`pk_productDetailId`),
   INDEX `fk_tb_productDetail_tb_detailLabel1_idx` (`fk_detailLabelId` ASC) VISIBLE,
-  INDEX `fk_tb_productDetail_tb_product1_idx` (`tb_product_pk_productId` ASC) VISIBLE,
+  INDEX `fk_tb_productDetail_tb_product1_idx` (`fk_productId` ASC) VISIBLE,
   CONSTRAINT `fk_tb_productDetail_tb_detailLabel1`
     FOREIGN KEY (`fk_detailLabelId`)
     REFERENCES `db_e-commerce_system`.`tb_detailLabel` (`pk_detailLabelId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_productDetail_tb_product1`
-    FOREIGN KEY (`tb_product_pk_productId`)
+    FOREIGN KEY (`fk_productId`)
     REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
