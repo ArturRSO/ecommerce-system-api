@@ -1,6 +1,5 @@
 package ecommerce.system.api.services.implementations;
 
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.ProductModel;
 import ecommerce.system.api.repositories.IProductRepository;
@@ -56,12 +55,13 @@ public class ProductService implements IProductService {
         product.setLastUpdate(LocalDateTime.now());
         product.setActive(oldProduct.isActive());
 
+        // TODO
         this.productRepository.update(product);
     }
 
     @Override
-    public void deleteProducts(List<Integer> ids) throws BatchUpdateException {
+    public void deleteProducts(List<Integer> ids) {
 
-        this.productRepository.delete(ids);
+        // TODO
     }
 }

@@ -1,7 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
@@ -75,11 +74,16 @@ public class AddressService implements IAddressService {
         }
 
         address.setLastUpdate(LocalDateTime.now());
-        this.addressRepository.update(address);
+
+        if (!this.addressRepository.update(address)) {
+            throw new InvalidOperationException("Endereço não encontrado!");
+        }
     }
 
     @Override
-    public void deleteAdresses(List<Integer> ids) throws BatchUpdateException, InvalidOperationException {
+    public void deleteAdresses(List<Integer> ids) throws InvalidOperationException {
+
+        int deletionCount = 0;
 
         for (int id : ids) {
             AddressModel address = this.getAdressById(id);
@@ -87,8 +91,17 @@ public class AddressService implements IAddressService {
             if (!this.authenticationService.isLoggedUser(address.getUserId())) {
                 throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
             }
+
+            if (this.addressRepository.delete(id)) {
+                deletionCount++;
+            }
         }
 
-        this.addressRepository.delete(ids);
+        if (ids.size() != deletionCount) {
+
+            int deletionFails = ids.size() - deletionCount;
+
+            throw new InvalidOperationException("Erro: " + deletionCount + " endereço(s) deletado(s), " + deletionFails + " endereço(s) não encontrado(s).");
+        }
     }
 }

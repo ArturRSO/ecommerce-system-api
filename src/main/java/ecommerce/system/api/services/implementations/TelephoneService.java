@@ -1,7 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
@@ -81,7 +80,9 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public void deleteTelephones(List<Integer> ids) throws BatchUpdateException, InvalidOperationException {
+    public void deleteTelephones(List<Integer> ids) throws InvalidOperationException {
+
+        int deletionCount = 0;
 
         for (int id : ids) {
             TelephoneModel telephone = this.getTelephoneById(id);
@@ -89,8 +90,17 @@ public class TelephoneService implements ITelephoneService {
             if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
                 throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
             }
+
+            if (this.telephoneRepository.delete(id)) {
+                deletionCount++;
+            }
         }
 
-        this.telephoneRepository.delete(ids);
+        if (ids.size() != deletionCount) {
+
+            int deletionFails = ids.size() - deletionCount;
+
+            throw new InvalidOperationException("Erro: " + deletionCount + " telefone(s) deletado(s), " + deletionFails + " telefones(s) não encontrado(s).");
+        }
     }
 }

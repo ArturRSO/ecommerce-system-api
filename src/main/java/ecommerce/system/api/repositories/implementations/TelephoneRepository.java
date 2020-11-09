@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.TelephoneEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import org.slf4j.Logger;
@@ -87,31 +86,32 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public void update(TelephoneModel object) {
+    public boolean update(TelephoneModel object) {
+
+        TelephoneEntity telephone = this.entityManager.find(TelephoneEntity.class, object.getTelephoneId());
+
+        if (telephone == null || telephone.isActive()) {
+            return false;
+        }
 
         TelephoneEntity updatedTelephone = new TelephoneEntity(object);
-
         this.entityManager.merge(updatedTelephone);
+
+        return true;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id) {
 
-        int result = 0;
-        String query = "UPDATE TelephoneEntity SET isActive = false, lastUpdate = :date WHERE telephoneId = :telephoneId";
+        TelephoneEntity telephone = this.entityManager.find(TelephoneEntity.class, id);
 
-        for (int id : ids) {
-            Query update = entityManager.createQuery(query)
-                    .setParameter("telephoneId", id)
-                    .setParameter("date", LocalDateTime.now());
-            result += update.executeUpdate();
+        if (telephone == null || telephone.isActive()) {
+            return false;
         }
 
-        if (result != ids.size()) {
-            int deleteFails = ids.size() - result;
+        telephone.setActive(false);
+        telephone.setLastUpdate(LocalDateTime.now());
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " telefone(s). Nenhum telefone deletado!");
-        }
-
+        return true;
     }
 }

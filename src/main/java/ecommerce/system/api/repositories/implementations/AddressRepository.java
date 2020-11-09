@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.AddressEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import org.slf4j.Logger;
@@ -87,30 +86,34 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public void update(AddressModel object) {
+    public boolean update(AddressModel object) {
+
+        AddressEntity address = this.entityManager.find(AddressEntity.class, object.getAddressId());
+
+        if (address == null || !address.isActive()) {
+            return false;
+        }
 
         AddressEntity updatedAddress = new AddressEntity(object);
-
         this.entityManager.merge(updatedAddress);
+
+        return true;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id) {
 
-        int result = 0;
-        String query = "UPDATE AddressEntity SET active = false, lastUpdate = :date WHERE addressId = :addressId";
+        AddressEntity address = this.entityManager.find(AddressEntity.class, id);
 
-        for (int id : ids) {
-            Query update = entityManager.createQuery(query)
-                    .setParameter("addressId", id)
-                    .setParameter("date", LocalDateTime.now());
-            result += update.executeUpdate();
+        if (address == null || !address.isActive()) {
+            return false;
         }
 
-        if (result != ids.size()) {
-            int deleteFails = ids.size() - result;
+        address.setActive(false);
+        address.setLastUpdate(LocalDateTime.now());
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " endereço(s). Nenhum endereço deletado.");
-        }
+        this.entityManager.merge(address);
+
+        return true;
     }
 }

@@ -2,9 +2,7 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.RolesEnum;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +38,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException, InactiveAccountException {
+    public void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException {
 
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
@@ -74,15 +71,21 @@ public class UserService implements IUserService {
             if (checkedUser.isActive()) {
                 throw new InvalidOperationException("Já existe um usuário cadastrado com o número do documento informado.");
 
+            } else if (checkedUser.getEmail().equals(user.getEmail())) {
+                throw new InvalidOperationException("Já existe um usuário cadastrado com o e-mail informado.");
+
             } else {
-                throw new InactiveAccountException("Encontramos um cadastro inativo para o documento informado.");
+                checkedUser.setDocumentNumber(checkedUser.getDocumentNumber() + " [Inactive]");
+                this.userRepository.update(checkedUser);
+
+                this.userRepository.create(user);
             }
         }
     }
 
     @Override
     public void createCustomer(UserModel user)
-            throws InvalidOperationException, NoSuchAlgorithmException, InactiveAccountException {
+            throws InvalidOperationException, NoSuchAlgorithmException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
@@ -178,6 +181,11 @@ public class UserService implements IUserService {
         }
 
         UserModel user = this.userRepository.getById(userId);
+
+        if (user == null) {
+            throw new InvalidOperationException("Usuário não encontrado!");
+        }
+
         String encodedPassword = this.shaEncoder.encode(password);
 
         if (user.getPassword().equals(encodedPassword)) {
@@ -187,7 +195,9 @@ public class UserService implements IUserService {
         user.setPassword(encodedPassword);
         user.setLastUpdate(LocalDateTime.now());
 
-        this.userRepository.update(user);
+        if (!this.userRepository.update(user)) {
+            throw new InvalidOperationException("Usuário não encontrado!");
+        }
     }
 
     @Override
@@ -206,11 +216,13 @@ public class UserService implements IUserService {
         user.setActive(oldUser.isActive());
         user.setLastUpdate(LocalDateTime.now());
 
-        this.userRepository.update(user);
+        if (!this.userRepository.update(user)) {
+            throw new InvalidOperationException("Usuário não encontrado!");
+        }
     }
 
     @Override
-    public void deleteUserProfile(int id) throws InvalidOperationException, BatchUpdateException {
+    public void deleteUserProfile(int id) throws InvalidOperationException {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -220,15 +232,26 @@ public class UserService implements IUserService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        ArrayList<Integer> ids = new ArrayList<>();
-        ids.add(id);
-
-        this.userRepository.delete(ids);
+        this.userRepository.delete(id);
     }
 
     @Override
-    public void deleteUsers(List<Integer> ids) throws BatchUpdateException {
+    public void deleteUsers(List<Integer> ids) throws InvalidOperationException {
 
-        this.userRepository.delete(ids);
+        int deletionCount = 0;
+
+        for (int id : ids) {
+
+            if (this.userRepository.delete(id)) {
+                deletionCount++;
+            }
+        }
+
+        if (ids.size() != deletionCount) {
+
+            int deletionFails = ids.size() - deletionCount;
+
+            throw new InvalidOperationException("Erro: " + deletionCount + " usuário(s) deletado(s), " + deletionFails + " usuário(s) não encontrado(s).");
+        }
     }
 }

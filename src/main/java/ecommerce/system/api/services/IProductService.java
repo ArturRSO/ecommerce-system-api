@@ -1,6 +1,5 @@
 package ecommerce.system.api.services;
 
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.ProductModel;
 
@@ -12,5 +11,5 @@ public interface IProductService {
     List<ProductModel> getAllProducts();
     ProductModel getProductById(int productId);
     void updateProduct(ProductModel product) throws InvalidOperationException;
-    void deleteProducts(List<Integer> ids) throws BatchUpdateException;
+    void deleteProducts(List<Integer> ids);
 }

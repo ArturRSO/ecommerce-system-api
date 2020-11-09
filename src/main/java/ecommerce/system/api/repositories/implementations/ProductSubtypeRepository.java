@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.ProductSubtypeEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.ProductSubtypeModel;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
 import org.springframework.stereotype.Repository;
@@ -54,24 +53,18 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
     }
 
     @Override
-    public void update(ProductSubtypeModel object) {
+    public boolean update(ProductSubtypeModel object) {
 
         ProductSubtypeEntity updatedProductSubtype = new ProductSubtypeEntity(object);
 
         this.entityManager.merge(updatedProductSubtype);
+
+        return false;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id) {
 
-        for (int id : ids) {
-            ProductSubtypeEntity productSubtype = this.entityManager.find(ProductSubtypeEntity.class, id);
-
-            if (productSubtype == null) {
-                throw new BatchUpdateException("Erro ao deletar subtipo de produto. Nenhum subtipo de produto deletado!");
-            }
-
-            this.entityManager.remove(productSubtype);
-        }
+        return false;
     }
 }

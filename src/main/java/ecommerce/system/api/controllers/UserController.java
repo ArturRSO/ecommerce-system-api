@@ -1,8 +1,6 @@
 package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
-import ecommerce.system.api.exceptions.BatchUpdateException;
-import ecommerce.system.api.exceptions.InactiveAccountException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.BaseResponseModel;
@@ -45,16 +43,6 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
-        } catch (InactiveAccountException iae) {
-
-            logger.error(iae.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(iae.getMessage());
-            response.setData("Deseja reativar a conta?");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
         } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
@@ -91,16 +79,6 @@ public class UserController {
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-        } catch (InactiveAccountException iae) {
-
-            logger.error(iae.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(iae.getMessage());
-            response.setData("Deseja reativar a conta?");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (InvalidOperationException ioe) {
 
@@ -241,11 +219,11 @@ public class UserController {
 
         try {
 
-          boolean status = this.userService.checkPasswordRecoverToken(token);
+            boolean status = this.userService.checkPasswordRecoverToken(token);
 
-          BaseResponseModel<Boolean> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), status);
+            BaseResponseModel<Boolean> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), status);
 
-          return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -412,7 +390,7 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
 
@@ -449,14 +427,22 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
 
             logger.error(e.getMessage());
 
-            String message = e.getClass() == BatchUpdateException.class ? e.getMessage() : MessagesEnum.FAILURE.getMessage();
-
             response.setSuccess(false);
-            response.setMessage(message);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
             response.setData(e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);

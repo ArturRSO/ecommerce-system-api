@@ -1,6 +1,5 @@
 package ecommerce.system.api.services;
 
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.TelephoneModel;
 
@@ -14,5 +13,5 @@ public interface ITelephoneService {
     List<TelephoneModel> getProfileTelephones(int userId) throws InvalidOperationException;
     TelephoneModel getTelephoneById(int telephoneId);
     void updateTelephone(TelephoneModel telephone) throws InvalidOperationException;
-    void deleteTelephones(List<Integer> ids) throws BatchUpdateException, InvalidOperationException;
+    void deleteTelephones(List<Integer> ids) throws InvalidOperationException;
 }

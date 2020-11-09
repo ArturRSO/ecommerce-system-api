@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.ProductTypeEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.ProductTypeModel;
 import ecommerce.system.api.repositories.IProductTypeRepository;
 import org.springframework.stereotype.Repository;
@@ -54,24 +53,18 @@ public class ProductTypeRepository implements IProductTypeRepository {
     }
 
     @Override
-    public void update(ProductTypeModel object) {
+    public boolean update(ProductTypeModel object) {
 
         ProductTypeEntity updatedProductType = new ProductTypeEntity(object);
 
         this.entityManager.merge(updatedProductType);
+
+        return false;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id) {
 
-        for (int id : ids) {
-            ProductTypeEntity productType = this.entityManager.find(ProductTypeEntity.class, id);
-
-            if (productType == null) {
-                throw new BatchUpdateException("Erro ao deletar tipo de produto. Nenhum tipo de produto deletado!");
-            }
-
-            this.entityManager.remove(productType);
-        }
+        return false;
     }
 }

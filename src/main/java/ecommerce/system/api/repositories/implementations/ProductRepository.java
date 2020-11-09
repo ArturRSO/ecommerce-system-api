@@ -3,7 +3,6 @@ package ecommerce.system.api.repositories.implementations;
 import ecommerce.system.api.entities.DetailLabelEntity;
 import ecommerce.system.api.entities.ProductDetailEntity;
 import ecommerce.system.api.entities.ProductEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IProductRepository;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
@@ -101,31 +100,19 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public void update(ProductModel object) {
+    public boolean update(ProductModel object) {
 
         ProductEntity updatedProduct = new ProductEntity(object);
 
         this.entityManager.merge(updatedProduct);
+
+        return false;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id) {
 
-        int result = 0;
-        String query = "UPDATE ProductEntity SET active = false, lastUpdate = :date WHERE productId = :productId";
-
-        for (int id : ids) {
-            Query update = entityManager.createQuery(query)
-                    .setParameter("productId", id)
-                    .setParameter("date", LocalDateTime.now());
-            result += update.executeUpdate();
-        }
-
-        if (result != ids.size()) {
-            int deleteFails = ids.size() - result;
-
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " produto(s). Nenhum produto deletado!");
-        }
+        return false;
     }
 
     @Override

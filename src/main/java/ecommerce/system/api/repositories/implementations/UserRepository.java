@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.UserEntity;
-import ecommerce.system.api.exceptions.BatchUpdateException;
 import ecommerce.system.api.models.CredentialsModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
@@ -156,30 +155,34 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void update(UserModel object) {
+    public boolean update(UserModel object) {
+
+        UserEntity user = this.entityManager.find(UserEntity.class, object.getUserId());
+
+        if (user == null || !user.isActive()) {
+            return false;
+        }
 
         UserEntity updatedUser = new UserEntity(object);
-
         this.entityManager.merge(updatedUser);
+
+        return true;
     }
 
     @Override
-    public void delete(List<Integer> ids) throws BatchUpdateException {
+    public boolean delete(int id)  {
 
-        int result = 0;
-        String query = "UPDATE UserEntity SET active = false, lastUpdate = :date WHERE userId = :userId";
+        UserEntity user = this.entityManager.find(UserEntity.class, id);
 
-        for (int id : ids) {
-            Query update = entityManager.createQuery(query)
-                    .setParameter("userId", id)
-                    .setParameter("date", LocalDateTime.now());
-            result += update.executeUpdate();
+        if (user == null || !user.isActive()) {
+            return false;
         }
 
-        if (result != ids.size()) {
-            int deleteFails = ids.size() - result;
+        user.setActive(false);
+        user.setLastUpdate(LocalDateTime.now());
 
-            throw new BatchUpdateException("Erro ao deletar " + deleteFails + " usuário(s). Nenhum usuário deletado!");
-        }
+        this.entityManager.merge(user);
+
+        return true;
     }
 }
