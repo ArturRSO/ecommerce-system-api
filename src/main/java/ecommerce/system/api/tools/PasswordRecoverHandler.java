@@ -4,6 +4,7 @@ import ecommerce.system.api.models.SimpleMailModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriUtils;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -44,7 +45,7 @@ public class PasswordRecoverHandler {
         String base = this.createBase(userId);
         String encryptedParameter = this.aesCodec.encryptText(base, this.tokenKey);
 
-        return baseUrl + "/auth/recuperar-senha/" + encryptedParameter;
+        return baseUrl + "/auth/recuperar-senha/" + UriUtils.encode(encryptedParameter, "UTF-8");
     }
 
     public int extractId(String token) throws Exception {
@@ -72,7 +73,7 @@ public class PasswordRecoverHandler {
 
     public boolean validateToken(String token) throws Exception {
 
-        LocalDateTime expirationDate = this.extractExpirationDate(token);
+        LocalDateTime expirationDate = this.extractExpirationDate(UriUtils.decode(token, "UTF-8"));
 
         return LocalDateTime.now().isBefore(expirationDate);
     }

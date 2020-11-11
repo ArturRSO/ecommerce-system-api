@@ -7,13 +7,17 @@ import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
+import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.services.IUserService;
 import ecommerce.system.api.tools.PasswordRecoverHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,16 +26,19 @@ import java.util.List;
 public class UserService implements IUserService {
 
     private final IAuthenticationService authenticationService;
+    private final IFileService fileService;
     private final IUserRepository userRepository;
     private final SHAEncoder shaEncoder;
     private final PasswordRecoverHandler passwordRecoverHandler;
 
     @Autowired
     public UserService(IAuthenticationService authenticationService,
+                       IFileService fileService,
                        IUserRepository userRepository,
                        SHAEncoder shaEncoder,
                        PasswordRecoverHandler passwordRecoverHandler) {
         this.authenticationService = authenticationService;
+        this.fileService = fileService;
         this.userRepository = userRepository;
         this.shaEncoder = shaEncoder;
         this.passwordRecoverHandler = passwordRecoverHandler;
@@ -97,6 +104,24 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public void createProfileImage(MultipartFile file, int userId) throws InvalidOperationException, IOException {
+
+        if (!this.authenticationService.isLoggedUser(userId)) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        String imagePath = this.fileService.saveMultpartImage(file, "user", userId);
+
+        UserModel user = this.userRepository.getById(userId);
+        user.setProfileImagePath(imagePath);
+        user.setLastUpdate(LocalDateTime.now());
+
+        if (!this.userRepository.update(user)) {
+            throw new InvalidOperationException("Usuário não encontrado!");
+        }
+    }
+
+    @Override
     public List<UserModel> getAllUsers() {
 
         return this.userRepository.getAll();
@@ -130,9 +155,17 @@ public class UserService implements IUserService {
     public UserModel getUserProfile() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserModel user = this.getUserByEmail(email);
+        return this.getUserByEmail(email);
+    }
 
-        return user;
+    @Override
+    public String getUserProfileImage(int userId, String path) throws InvalidOperationException, IOException {
+
+        if (!this.authenticationService.isLoggedUser(userId)) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
     }
 
     @Override
@@ -176,7 +209,7 @@ public class UserService implements IUserService {
 
         if (!isRecover) {
             if (!this.authenticationService.isLoggedUser(userId)) {
-                throw new InvalidOperationException("Operação não autorizada");
+                throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
             }
         }
 
@@ -189,7 +222,7 @@ public class UserService implements IUserService {
         String encodedPassword = this.shaEncoder.encode(password);
 
         if (user.getPassword().equals(encodedPassword)) {
-            throw new InvalidOperationException("Nova senha não pode ser igual a anterior");
+            throw new InvalidOperationException("Nova senha não pode ser igual a anterior!");
         }
 
         user.setPassword(encodedPassword);

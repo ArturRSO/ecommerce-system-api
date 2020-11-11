@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<?> createUser(@RequestBody UserModel user) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -65,7 +66,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/create/customer")
+    @PostMapping("create/customer")
     public ResponseEntity<?> createCustomer(@RequestBody UserModel user) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -102,7 +103,44 @@ public class UserController {
         }
     }
 
-    @GetMapping("/all")
+    @PostMapping("create/image/{userId}")
+    public ResponseEntity<?> createProfileImage(@PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            this.userService.createProfileImage(file, userId);
+
+            response.setSuccess(true);
+            response.setMessage("Imagem cadastrada com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }  catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("all")
     public ResponseEntity<?> getAllUsers() {
 
         BaseResponseModel<?> response;
@@ -130,7 +168,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/role/{roleId}")
+    @GetMapping("role/{roleId}")
     public ResponseEntity<?> getUsersByRoleId(@PathVariable("roleId") int roleId) {
 
         BaseResponseModel<?> response;
@@ -158,7 +196,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
 
         BaseResponseModel<?> response;
@@ -186,7 +224,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/profile")
+    @GetMapping("profile")
     public ResponseEntity<?> getProfile() {
 
         BaseResponseModel<?> response;
@@ -214,8 +252,45 @@ public class UserController {
         }
     }
 
-    @GetMapping("/recover/password/status/{token}")
-    public ResponseEntity<?> getPasswordRecoverTokenStatus(@PathVariable("token") String token) {
+    @GetMapping("image/{userId}")
+    public ResponseEntity<?> getProfileImage(@PathVariable("userId") int userId, @RequestParam String path) {
+
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            String imageBase64 = this.userService.getUserProfileImage(userId, path);
+
+            response.setSuccess(true);
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setData(imageBase64);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("recover/password/status")
+    public ResponseEntity<?> getPasswordRecoverTokenStatus(@RequestParam("token") String token) {
 
         try {
 
@@ -309,8 +384,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("recover/password/{token}")
-    public ResponseEntity<?> recoverPassword(@RequestBody String password, @PathVariable String token) {
+    @PostMapping("recover/password")
+    public ResponseEntity<?> recoverPassword(@RequestBody String password, @RequestParam String token) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
@@ -319,17 +394,17 @@ public class UserController {
             this.userService.recoverPassword(password, token);
 
             response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
+            response.setMessage("Senha atualizada com sucesso! Faça login para utilizar o sistema.");
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        } catch (InvalidTokenException ite) {
+        } catch (InvalidOperationException | InvalidTokenException ie) {
 
-            logger.error(ite.getMessage());
+            logger.error(ie.getMessage());
 
             response.setSuccess(false);
-            response.setMessage(ite.getMessage());
+            response.setMessage(ie.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
