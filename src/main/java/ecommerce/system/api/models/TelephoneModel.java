@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 public class TelephoneModel {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int telephoneId;
 
     @NotNull

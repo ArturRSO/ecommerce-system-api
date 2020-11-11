@@ -31,6 +31,7 @@ public class TelephoneService implements ITelephoneService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
+        telephone.setInternationalCode("+55");
         telephone.setCreationDate(LocalDateTime.now());
         telephone.setLastUpdate(null);
         telephone.setActive(true);
@@ -73,10 +74,19 @@ public class TelephoneService implements ITelephoneService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        telephone.setLastUpdate(LocalDateTime.now());
-        telephone.setActive(true);
+        TelephoneModel oldTelephone = this.getTelephoneById(telephone.getTelephoneId());
 
-        this.telephoneRepository.update(telephone);
+        if (oldTelephone == null) {
+            throw new InvalidOperationException("Telefone não encontrado!");
+        }
+
+        telephone.setCreationDate(oldTelephone.getCreationDate());
+        telephone.setLastUpdate(LocalDateTime.now());
+        telephone.setActive(oldTelephone.isActive());
+
+        if (!this.telephoneRepository.update(telephone)) {
+            throw new InvalidOperationException("Telefone não encontrado!");
+        }
     }
 
     @Override

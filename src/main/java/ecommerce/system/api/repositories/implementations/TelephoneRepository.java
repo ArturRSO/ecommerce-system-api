@@ -33,7 +33,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     @Override
     public List<TelephoneModel> getAll() {
 
-        String query = "FROM TelephoneEntity t WHERE t.isActive = true ORDER by t.telephoneId ASC";
+        String query = "FROM TelephoneEntity t WHERE t.active = true ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class);
         List<TelephoneEntity> entities = result.getResultList();
 
@@ -52,7 +52,7 @@ public class TelephoneRepository implements ITelephoneRepository {
 
         try {
 
-            String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.telephone = :telephoneId";
+            String query = "FROM TelephoneEntity t WHERE t.active = true AND t.telephoneId = :telephoneId";
             TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
                     .setParameter("telephoneId", id);
             TelephoneEntity telephone = result.getSingleResult();
@@ -70,7 +70,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     @Override
     public List<TelephoneModel> getTelephonesByUserId(int userId) {
 
-        String query = "FROM TelephoneEntity t WHERE t.isActive = true AND t.userId = :userId ORDER by t.telephoneId ASC";
+        String query = "FROM TelephoneEntity t WHERE t.active = true AND t.userId = :userId ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
                 .setParameter("userId", userId);
         List<TelephoneEntity> entities = result.getResultList();
@@ -90,7 +90,7 @@ public class TelephoneRepository implements ITelephoneRepository {
 
         TelephoneEntity telephone = this.entityManager.find(TelephoneEntity.class, object.getTelephoneId());
 
-        if (telephone == null || telephone.isActive()) {
+        if (telephone == null || !telephone.isActive()) {
             return false;
         }
 
