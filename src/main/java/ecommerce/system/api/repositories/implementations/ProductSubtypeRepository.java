@@ -20,11 +20,14 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
     EntityManager entityManager;
 
     @Override
-    public void create(ProductSubtypeModel object) {
+    public int create(ProductSubtypeModel object) {
 
         ProductSubtypeEntity productSubtype = new ProductSubtypeEntity(object);
 
         this.entityManager.persist(productSubtype);
+        this.entityManager.flush();
+
+        return productSubtype.getProductSubtypeId();
     }
 
     @Override

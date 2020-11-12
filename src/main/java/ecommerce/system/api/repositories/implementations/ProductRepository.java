@@ -36,11 +36,14 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public void create(ProductModel object) {
+    public int create(ProductModel object) {
 
         ProductEntity product = new ProductEntity(object);
 
         this.entityManager.persist(product);
+        this.entityManager.flush();
+
+        return product.getProductId();
     }
 
     @Override

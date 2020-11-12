@@ -23,11 +23,14 @@ public class AddressRepository implements IAddressRepository {
     EntityManager entityManager;
 
     @Override
-    public void create(AddressModel object) {
+    public int create(AddressModel object) {
 
         AddressEntity address = new AddressEntity(object);
 
         this.entityManager.persist(address);
+        this.entityManager.flush();
+
+        return address.getAddressId();
     }
 
     @Override

@@ -23,11 +23,14 @@ public class TelephoneRepository implements ITelephoneRepository {
     EntityManager entityManager;
 
     @Override
-    public void create(TelephoneModel object) {
+    public int create(TelephoneModel object) {
 
         TelephoneEntity telephone = new TelephoneEntity(object);
 
         this.entityManager.persist(telephone);
+        this.entityManager.flush();
+
+        return telephone.getTelephoneId();
     }
 
     @Override
