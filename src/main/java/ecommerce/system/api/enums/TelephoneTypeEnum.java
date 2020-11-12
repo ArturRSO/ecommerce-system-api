@@ -1,9 +1,10 @@
 package ecommerce.system.api.enums;
 
 public enum TelephoneTypeEnum {
-    CELULAR (1, "Celular"),
-    TELEFONE_RESIDENCIAL (2, "Telefone residencial"),
-    TELEFONE_COMERCIAL (3, "Telefone comercial");
+    PERSONAL_CELLPHONE (1, "Celular pessoal"),
+    PERSONAL_TELEPHONE (2, "Telefone pessoal"),
+    COMMERCIAL_CELLPHONE (3, "Celular comercial"),
+    COMMERCIAL_TELEPHONE  (4, "Telefone comercial");
 
     private final int id;
     private final String name;
