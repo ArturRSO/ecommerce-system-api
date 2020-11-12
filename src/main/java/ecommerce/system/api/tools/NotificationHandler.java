@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 @Component
 public class NotificationHandler {
 
-    @Value("${application.front.base-url}")
+    @Value("${application.base-url-front}")
     private String baseUrl;
 
     private final AESCodec aesCodec;

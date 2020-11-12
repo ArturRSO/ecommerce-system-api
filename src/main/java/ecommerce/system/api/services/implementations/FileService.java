@@ -15,13 +15,13 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class FileService implements IFileService {
 
-    @Value("${images.path.products}")
+    @Value("${application.image-path-products}")
     private String productImagePath;
 
-    @Value("${images.path.stores}")
+    @Value("${application.image-path-stores}")
     private String storeImagePath;
 
-    @Value("${images.path.users}")
+    @Value("${application.image-path-users}")
     private String userImagePath;
 
     private final FileHandler fileHandler;
