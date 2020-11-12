@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IBaseRepository<T> {
 
-    void create(T object);
+    int create(T object);
     List<T> getAll();
     T getById(int id);
     boolean update(T object);
