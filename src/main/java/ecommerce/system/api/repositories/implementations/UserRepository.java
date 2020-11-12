@@ -24,11 +24,14 @@ public class UserRepository implements IUserRepository {
     EntityManager entityManager;
 
     @Override
-    public void create(UserModel object) {
+    public int create(UserModel object) {
 
         UserEntity user = new UserEntity(object);
 
         this.entityManager.persist(user);
+        this.entityManager.flush();
+
+        return user.getUserId();
     }
 
     @Override

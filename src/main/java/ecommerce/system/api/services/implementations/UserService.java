@@ -1,6 +1,7 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
+import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
@@ -9,7 +10,7 @@ import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.services.IUserService;
-import ecommerce.system.api.tools.PasswordRecoverHandler;
+import ecommerce.system.api.tools.NotificationHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,19 +30,19 @@ public class UserService implements IUserService {
     private final IFileService fileService;
     private final IUserRepository userRepository;
     private final SHAEncoder shaEncoder;
-    private final PasswordRecoverHandler passwordRecoverHandler;
+    private final NotificationHandler notificationHandler;
 
     @Autowired
     public UserService(IAuthenticationService authenticationService,
                        IFileService fileService,
                        IUserRepository userRepository,
                        SHAEncoder shaEncoder,
-                       PasswordRecoverHandler passwordRecoverHandler) {
+                       NotificationHandler notificationHandler) {
         this.authenticationService = authenticationService;
         this.fileService = fileService;
         this.userRepository = userRepository;
         this.shaEncoder = shaEncoder;
-        this.passwordRecoverHandler = passwordRecoverHandler;
+        this.notificationHandler = notificationHandler;
     }
 
     @Override
@@ -171,7 +172,7 @@ public class UserService implements IUserService {
     @Override
     public boolean checkPasswordRecoverToken(String token) throws Exception {
 
-        return this.passwordRecoverHandler.validateToken(token);
+        return this.notificationHandler.validateToken(token, NotificationsEnum.PASSWORD_RECOVER);
     }
 
     @Override
@@ -181,7 +182,7 @@ public class UserService implements IUserService {
 
         if (user != null) {
 
-            this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
+            this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.PASSWORD_RECOVER, null);
 
             return true;
         }
@@ -194,7 +195,7 @@ public class UserService implements IUserService {
 
         if (this.checkPasswordRecoverToken(token)) {
 
-            int userId = this.passwordRecoverHandler.extractId(token);
+            int userId = this.notificationHandler.extractUserId(token, NotificationsEnum.PASSWORD_RECOVER);
 
             this.updateUserPassword(true, userId, password);
 
