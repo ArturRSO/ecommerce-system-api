@@ -14,10 +14,10 @@ import java.util.Date;
 @Component
 public class JwtHandler {
 
-    @Value("${jwt.expiration.miliseconds}")
+    @Value("${token.jwt-expiration}")
     private long expirationMiliseconds;
 
-    @Value("${jwt.secret}")
+    @Value("${token.jwt-key}")
     private String secret;
 
     public boolean checkToken(String subject, String token) {
