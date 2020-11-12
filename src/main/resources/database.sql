@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product` (
   `fk_productSubTypeId` INT NOT NULL,
   `fk_storeId` INT NOT NULL,
   `name` VARCHAR(200) NOT NULL,
-  `imagePath` VARCHAR(500) NOT NULL,
+  `imagePath` VARCHAR(500) NULL,
   `price` DECIMAL NOT NULL,
   `quantity` INT NOT NULL,
   `creationDate` DATETIME NOT NULL,
@@ -448,52 +448,13 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotionType`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotionType` (
-  `pk_promotionTypeId` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  `type` VARCHAR(25) NOT NULL,
-  PRIMARY KEY (`pk_promotionTypeId`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotion`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotion` (
-  `pk_promotionId` INT NOT NULL AUTO_INCREMENT,
-  `fk_promotionTypeId` INT NOT NULL,
-  `name` VARCHAR(200) NOT NULL,
-  `startDate` DATETIME NOT NULL,
-  `endDate` DATETIME NOT NULL,
-  `discount` DECIMAL NULL,
-  `isPercentage` TINYINT NOT NULL,
-  `orderPriceMinimum` DECIMAL NULL,
-  `orderPriceMaximum` DECIMAL NULL,
-  `creationDate` DATETIME NOT NULL,
-  `lastUpdate` DATETIME NULL,
-  `isActive` TINYINT NOT NULL,
-  PRIMARY KEY (`pk_promotionId`),
-  INDEX `fk_tb_promotion_tb_promotionType1_idx` (`fk_promotionTypeId` ASC) VISIBLE,
-  CONSTRAINT `fk_tb_promotion_tb_promotionType1`
-    FOREIGN KEY (`fk_promotionTypeId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotionType` (`pk_promotionTypeId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `db_e-commerce_system`.`tb_product_order`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_order` (
   `pk_fk_productId` INT NOT NULL,
   `pk_fk_orderId` INT NOT NULL,
   `quantity` INT NOT NULL,
-  `pk_fk_promotionId` INT NULL,
   INDEX `fk_tb_product_promotion_order_tb_product1_idx` (`pk_fk_productId` ASC) VISIBLE,
-  INDEX `fk_tb_product_promotion_order_tb_promotion1_idx` (`pk_fk_promotionId` ASC) VISIBLE,
   INDEX `fk_tb_product_promotion_order_tb_order1_idx` (`pk_fk_orderId` ASC) VISIBLE,
   PRIMARY KEY (`pk_fk_productId`, `pk_fk_orderId`),
   CONSTRAINT `fk_tb_product_promotion_order_tb_product1`
@@ -501,37 +462,9 @@ CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_product_order` (
     REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_product_promotion_order_tb_promotion1`
-    FOREIGN KEY (`pk_fk_promotionId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotion` (`pk_promotionId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_tb_product_promotion_order_tb_order1`
     FOREIGN KEY (`pk_fk_orderId`)
     REFERENCES `db_e-commerce_system`.`tb_order` (`pk_orderId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_e-commerce_system`.`tb_promotion_product`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_e-commerce_system`.`tb_promotion_product` (
-  `pk_fk_productId` INT NOT NULL,
-  `pk_fk__promotionId` INT NOT NULL,
-  `discount` DECIMAL NOT NULL,
-  INDEX `fk_tb_promotion_product_tb_product1_idx` (`pk_fk_productId` ASC) VISIBLE,
-  INDEX `fk_tb_promotion_product_tb_promotion1_idx` (`pk_fk__promotionId` ASC) VISIBLE,
-  PRIMARY KEY (`pk_fk__promotionId`, `pk_fk_productId`),
-  CONSTRAINT `fk_tb_promotion_product_tb_product1`
-    FOREIGN KEY (`pk_fk_productId`)
-    REFERENCES `db_e-commerce_system`.`tb_product` (`pk_productId`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tb_promotion_product_tb_promotion1`
-    FOREIGN KEY (`pk_fk__promotionId`)
-    REFERENCES `db_e-commerce_system`.`tb_promotion` (`pk_promotionId`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
