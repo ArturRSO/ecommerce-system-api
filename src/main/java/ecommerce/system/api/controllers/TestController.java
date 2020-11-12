@@ -1,13 +1,14 @@
 package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
+import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.SimpleMailModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.tools.EmailSender;
-import ecommerce.system.api.tools.PasswordRecoverHandler;
+import ecommerce.system.api.tools.NotificationHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +18,23 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("test")
 public class TestController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final EmailSender emailSender;
     private final IFileService fileService;
-    private final PasswordRecoverHandler passwordRecoverHandler;
+    private final NotificationHandler notificationHandler;
 
     @Autowired
-    public TestController(EmailSender emailSender, IFileService fileService, PasswordRecoverHandler passwordRecoverHandler) {
+    public TestController(EmailSender emailSender, IFileService fileService, NotificationHandler notificationHandler) {
         this.emailSender = emailSender;
         this.fileService = fileService;
-        this.passwordRecoverHandler = passwordRecoverHandler;
+        this.notificationHandler = notificationHandler;
 
     }
 
-    @GetMapping("/check")
+    @GetMapping("check")
     public ResponseEntity<?> checkApplication() {
 
         logger.info("Checking if API is on...");
@@ -43,7 +44,7 @@ public class TestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/error")
+    @GetMapping("error")
     public ResponseEntity<?> testError() {
 
         logger.info("Testing error...");
@@ -53,7 +54,7 @@ public class TestController {
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @PostMapping("/mail")
+    @PostMapping("mail")
     public ResponseEntity<?> simpleMailTest(@RequestBody SimpleMailModel mail) {
 
         logger.info("Testing mail...");
@@ -83,7 +84,8 @@ public class TestController {
         logger.info("Testing recover password mail...");
 
         try {
-            SimpleMailModel mail = this.passwordRecoverHandler.sendEmail(user.getUserId(), user.getEmail());
+
+            SimpleMailModel mail = this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.PASSWORD_RECOVER, null);
 
             logger.info("Recover password mail tested with success!");
 
