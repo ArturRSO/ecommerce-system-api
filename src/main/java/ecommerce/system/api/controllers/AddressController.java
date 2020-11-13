@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/addresses")
+@RequestMapping("addresses")
 public class AddressController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,7 +27,7 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<?> createAddress(@RequestBody AddressModel address) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -64,7 +64,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("all")
     public ResponseEntity<?> getAllAdresses() {
 
         BaseResponseModel<?> response;
@@ -92,7 +92,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping("/all/user/{userId}")
+    @GetMapping("all/user/{userId}")
     public ResponseEntity<?> getAdressesByUserId(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -120,7 +120,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping("/all/profile/{userId}")
+    @GetMapping("all/profile/{userId}")
     public ResponseEntity<?> getProfileAdresses(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -156,7 +156,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> getAddressById(@PathVariable("id") int id) {
 
         BaseResponseModel<?> response;
@@ -184,7 +184,7 @@ public class AddressController {
         }
     }
 
-    @PutMapping("/update")
+    @PutMapping("update")
     public ResponseEntity<?> updateAddress(@RequestBody AddressModel address) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -221,7 +221,7 @@ public class AddressController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("delete")
     public ResponseEntity<?> deleteAddresses(@RequestBody ArrayList<Integer> ids) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();

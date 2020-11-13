@@ -184,7 +184,7 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -209,7 +209,7 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
 
@@ -246,7 +246,7 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
 
@@ -268,7 +268,7 @@ public class StoreController {
         }
     }
 
-    @DeleteMapping("/delete/user/{userId}")
+    @DeleteMapping("delete/user/{userId}")
     public ResponseEntity<?> deleteStores(@PathVariable("userId") int userId, @RequestBody ArrayList<Integer> ids) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();

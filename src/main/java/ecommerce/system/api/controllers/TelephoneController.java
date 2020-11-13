@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/telephones")
+@RequestMapping("telephones")
 public class TelephoneController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,7 +27,7 @@ public class TelephoneController {
         this.telephoneService = telephoneService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -54,7 +54,7 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping("all")
     public ResponseEntity<?> getAllTelephones() {
 
         BaseResponseModel<?> response;
@@ -82,7 +82,7 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("/all/user/{userId}")
+    @GetMapping("all/user/{userId}")
     public ResponseEntity<?> getTelephonesByUserId(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -110,7 +110,7 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("/all/profile/{userId}")
+    @GetMapping("all/profile/{userId}")
     public ResponseEntity<?> getProfileTelephones(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -138,7 +138,7 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<?> getTelephoneById(@PathVariable("id") int id) {
 
         BaseResponseModel<?> response;
@@ -166,7 +166,7 @@ public class TelephoneController {
         }
     }
 
-    @PutMapping("/update")
+    @PutMapping("update")
     public ResponseEntity<?> updateTelephone(@RequestBody TelephoneModel telephone) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
@@ -203,7 +203,7 @@ public class TelephoneController {
         }
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("delete")
     public ResponseEntity<?> deleteTelephones(@RequestBody ArrayList<Integer> ids) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();

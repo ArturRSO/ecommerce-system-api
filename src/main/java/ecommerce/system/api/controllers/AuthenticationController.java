@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 public class AuthenticationController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -27,7 +27,7 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<?> authenticateUser(@RequestBody CredentialsModel credentials) {
 
         BaseResponseModel<?> response;

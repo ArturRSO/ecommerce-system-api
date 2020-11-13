@@ -53,14 +53,14 @@ public class StoreService implements IStoreService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        String imagePath = this.fileService.saveMultpartImage(file, "store", userId);
+        String imagePath = this.fileService.saveMultpartImage(file, "store", storeId);
 
         StoreModel store = this.storeRepository.getById(storeId);
         store.setProfileImagePath(imagePath);
         store.setLastUpdate(LocalDateTime.now());
 
         if (!this.storeRepository.update(store)) {
-            throw new InvalidOperationException("Loja não encontrado!");
+            throw new InvalidOperationException("Loja não encontrada!");
         }
     }
 
