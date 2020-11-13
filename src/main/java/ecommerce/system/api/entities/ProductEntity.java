@@ -29,6 +29,12 @@ public class ProductEntity {
     @Column(name = "imagePath")
     private String imagePath;
 
+    @Column(name = "price")
+    private double price;
+
+    @Column(name = "quantity")
+    private int quantity;
+
     @Column(name = "creationDate")
     private LocalDateTime creationDate;
 
@@ -48,6 +54,8 @@ public class ProductEntity {
         this.storeId = product.getStoreId();
         this.name = product.getName();
         this.imagePath = product.getImagePath();
+        this.price = product.getPrice();
+        this.quantity = product.getQuantity();
         this.creationDate = product.getCreationDate();
         this.lastUpdate = product.getLastUpdate();
         this.active = product.isActive();
@@ -61,6 +69,8 @@ public class ProductEntity {
                 this.storeId,
                 this.name,
                 this.imagePath,
+                this.price,
+                this.quantity,
                 this.creationDate,
                 this.lastUpdate,
                 this.active,

@@ -22,6 +22,10 @@ public class ProductModel {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String imagePath;
 
+    private double price;
+
+    private int quantity;
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
 
@@ -40,6 +44,8 @@ public class ProductModel {
             int storeId,
             String name,
             String imagePath,
+            double price,
+            int quantity,
             LocalDateTime creationDate,
             LocalDateTime lastUpdate,
             boolean active,
@@ -50,6 +56,8 @@ public class ProductModel {
         this.storeId = storeId;
         this.name = name;
         this.imagePath = imagePath;
+        this.price = price;
+        this.quantity = quantity;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.active = active;
@@ -102,6 +110,22 @@ public class ProductModel {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public LocalDateTime getCreationDate() {
