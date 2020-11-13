@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,20 +56,22 @@ public class ProductRepository implements IProductRepository {
             return null;
         }
 
-        ArrayList<ProductModel> products = new ArrayList<>();
+        return this.buildProducts(entities);
+    }
 
-        (entities).forEach(entity -> {
-            List<ProductDetailModel> details = this.getProductDetailsByProductId(entity.getProductId());
-            ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
-            ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
-            ProductModel product = entity.toModel();
-            product.setDetails(details);
-            product.setProductType(productType);
-            product.setProductSubtype(productSubtype);
-            products.add(product);
-        });
+    @Override
+    public List<ProductModel> getProductsByStoreId(int storeId) {
 
-        return products;
+        String query = "FROM ProductEntity p WHERE p.storeId = :storeId AND p.active = true ORDER BY p.productId ASC";
+        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+                .setParameter("storeId", storeId);
+        List<ProductEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        return this.buildProducts(entities);
     }
 
     @Override
@@ -105,16 +106,22 @@ public class ProductRepository implements IProductRepository {
     @Override
     public boolean update(ProductModel object) {
 
+        ProductEntity product = this.entityManager.find(ProductEntity.class, object.getProductId());
+
+        if (product == null || !product.isActive()) {
+            return false;
+        }
+
         ProductEntity updatedProduct = new ProductEntity(object);
 
         this.entityManager.merge(updatedProduct);
 
-        return false;
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
-
+        // TODO
         return false;
     }
 
@@ -156,5 +163,23 @@ public class ProductRepository implements IProductRepository {
         DetailLabelEntity label = this.entityManager.find(DetailLabelEntity.class, labelId);
 
         return label == null ? null : label.toModel();
+    }
+
+    private List<ProductModel> buildProducts(List<ProductEntity> entities) {
+
+        ArrayList<ProductModel> products = new ArrayList<>();
+
+        (entities).forEach(entity -> {
+            List<ProductDetailModel> details = this.getProductDetailsByProductId(entity.getProductId());
+            ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
+            ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
+            ProductModel product = entity.toModel();
+            product.setDetails(details);
+            product.setProductType(productType);
+            product.setProductSubtype(productSubtype);
+            products.add(product);
+        });
+
+        return products;
     }
 }

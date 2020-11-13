@@ -68,6 +68,12 @@ public class ProductTypeRepository implements IProductTypeRepository {
     @Override
     public boolean delete(int id) {
 
-        return false;
+        ProductTypeEntity productType = this.entityManager.find(ProductTypeEntity.class, id);
+
+        if (productType == null) {
+            return false;
+        }
+
+        return true;
     }
 }

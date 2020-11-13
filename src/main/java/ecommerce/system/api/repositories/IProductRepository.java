@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface IProductRepository extends IBaseRepository<ProductModel> {
 
+    List<ProductModel> getProductsByStoreId(int storeId);
     List<ProductDetailModel> getProductDetailsByProductId(int productId);
     DetailLabelModel getLabelById(int labelId);
 }

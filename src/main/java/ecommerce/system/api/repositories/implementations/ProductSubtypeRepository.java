@@ -68,6 +68,15 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
     @Override
     public boolean delete(int id) {
 
-        return false;
+        ProductSubtypeEntity productSubtype = this.entityManager.find(ProductSubtypeEntity.class, id);
+
+        if (productSubtype == null) {
+
+            return false;
+        }
+
+        this.entityManager.remove(productSubtype);
+
+        return true;
     }
 }
