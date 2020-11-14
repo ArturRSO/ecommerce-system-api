@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity(name = "ProductOrderEntity")
 @Table(name = "tb_product_order")
@@ -23,6 +25,14 @@ public class ProductOrderEntity {
     public ProductOrderEntity(ProductOrderKey id, int quantity) {
         this.id = id;
         this.quantity = quantity;
+    }
+
+    public Map<String, Integer> toMap() {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("productId", this.id.getProductId());
+        map.put("quantity", this.quantity);
+
+        return map;
     }
 
     public ProductOrderKey getId() {

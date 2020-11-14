@@ -34,22 +34,24 @@ public class DeliveryEntity {
     public DeliveryEntity() {
     }
 
-    public DeliveryEntity(int deliveryId, int deliveryServiceId, int orderId, int senderAddressId, int receiverAddressId, double price, boolean success) {
-        this.deliveryId = deliveryId;
-        this.deliveryServiceId = deliveryServiceId;
-        this.orderId = orderId;
-        this.senderAddressId = senderAddressId;
-        this.receiverAddressId = receiverAddressId;
-        this.price = price;
-        this.success = success;
+    public DeliveryEntity(DeliveryModel delivery) {
+        this.deliveryId = delivery.getDeliveryId();
+        this.deliveryServiceId = delivery.getDeliveryServiceId();
+        this.orderId = delivery.getOrderId();
+        this.senderAddressId = delivery.getSenderAddressId();
+        this.receiverAddressId = delivery.getReceiverAddressId();
+        this.price = delivery.getPrice();
+        this.success = delivery.isSuccess();
     }
 
     public DeliveryModel toModel() {
 
         return new DeliveryModel(
                 this.deliveryId,
-                null,
-                null,
+                this.deliveryServiceId,
+                this.orderId,
+                this.senderAddressId,
+                this.receiverAddressId,
                 this.price,
                 this.success
         );

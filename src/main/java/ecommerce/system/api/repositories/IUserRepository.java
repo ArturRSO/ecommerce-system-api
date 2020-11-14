@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface IUserRepository extends IBaseRepository<UserModel> {
     List<UserModel> getUsersByRoleId(int roleId);
+    List<UserModel> getUsersByStoreId(int storeId);
     UserModel getUserByDocumentNumber(String document);
     UserModel getUserByEmail(String email);
     UserModel getUserByCredentials(CredentialsModel credentials);

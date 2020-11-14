@@ -27,8 +27,7 @@ public class StoreCashFlowEntity {
     public StoreCashFlowEntity() {
     }
 
-    public StoreCashFlowEntity(int storeCashFlowId, int storeId, int orderId, double value, LocalDateTime timestamp) {
-        this.storeCashFlowId = storeCashFlowId;
+    public StoreCashFlowEntity(int storeId, int orderId, double value, LocalDateTime timestamp) {
         this.storeId = storeId;
         this.orderId = orderId;
         this.value = value;

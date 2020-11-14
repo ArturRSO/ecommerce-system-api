@@ -15,6 +15,7 @@ public interface IUserService {
     void createProfileImage(MultipartFile file, int userId) throws InvalidOperationException, IOException;
     List<UserModel> getAllUsers();
     List<UserModel> getUsersByRoleId(int roleId);
+    List<UserModel> getUsersByStoreId(int storeId);
     UserModel getUserById(int id);
     UserModel getUserByEmail(String email);
     UserModel getUserProfile();

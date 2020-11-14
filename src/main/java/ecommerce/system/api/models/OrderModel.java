@@ -1,5 +1,8 @@
 package ecommerce.system.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -7,17 +10,38 @@ import java.util.Map;
 public class OrderModel {
 
     private int orderId;
+
     private int userId;
+
     private int paymentMethodId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double totalPrice;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double totalDiscountPercentage;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private double finalPrice;
+
     private int installment;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
+
+    @JsonIgnore
     private LocalDateTime lastUpdate;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int orderStatusId;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private int addressId;
+
     private List<Map<String, Integer>> products;
+
+    public OrderModel() {
+    }
 
     public OrderModel(int orderId, int userId, int paymentMethodId, double totalPrice, double totalDiscountPercentage, double finalPrice, int installment, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
         this.orderId = orderId;
@@ -110,6 +134,14 @@ public class OrderModel {
 
     public void setOrderStatusId(int orderStatusId) {
         this.orderStatusId = orderStatusId;
+    }
+
+    public int getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public List<Map<String, Integer>> getProducts() {

@@ -24,8 +24,7 @@ public class SystemCashFlowEntity {
     public SystemCashFlowEntity() {
     }
 
-    public SystemCashFlowEntity(int systemCashFlowId, int orderId, double value, LocalDateTime timestamp) {
-        this.systemCashFlowId = systemCashFlowId;
+    public SystemCashFlowEntity(int orderId, double value, LocalDateTime timestamp) {
         this.orderId = orderId;
         this.value = value;
         this.timestamp = timestamp;

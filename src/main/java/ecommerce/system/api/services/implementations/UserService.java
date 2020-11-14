@@ -135,6 +135,12 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public List<UserModel> getUsersByStoreId(int storeId) {
+
+        return this.userRepository.getUsersByStoreId(storeId);
+    }
+
+    @Override
     public UserModel getUserById(int id) {
 
         return this.userRepository.getById(id);

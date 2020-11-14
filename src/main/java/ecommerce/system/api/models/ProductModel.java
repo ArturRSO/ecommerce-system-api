@@ -37,6 +37,9 @@ public class ProductModel {
 
     private List<ProductDetailModel> details;
 
+    @JsonIgnore
+    private int orderQuantity;
+
     public ProductModel(
             int productId,
             ProductTypeModel productType,
@@ -158,5 +161,13 @@ public class ProductModel {
 
     public void setDetails(List<ProductDetailModel> details) {
         this.details = details;
+    }
+
+    public int getOrderQuantity() {
+        return orderQuantity;
+    }
+
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
     }
 }

@@ -91,6 +91,25 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
+    public List<UserModel> getUsersByStoreId(int storeId) {
+
+        String query = "SELECT u FROM UserEntity u, StoreUserEntity su WHERE u.userId = su.id.userId AND su.id.storeId = :storeId AND u.active = true";
+        TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
+                .setParameter("storeId", storeId);
+
+        List<UserEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        ArrayList<UserModel> users = new ArrayList<>();
+        (entities).forEach((user) -> users.add(user.toModel()));
+
+        return users;
+    }
+
+    @Override
     public UserModel getUserByDocumentNumber(String documentNumber) {
 
         try {
