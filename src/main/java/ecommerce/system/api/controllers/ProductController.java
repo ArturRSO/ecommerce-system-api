@@ -66,14 +66,14 @@ public class ProductController {
         }
     }
 
-    @PostMapping("create/image/{productId}/{userId}")
-    public ResponseEntity<?> createProfileImage(@PathVariable("productId") int productId, @PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
+    @PostMapping("create/image/{productId}")
+    public ResponseEntity<?> createProfileImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.productService.createProductImage(file, productId, userId);
+            this.productService.createProductImage(file, productId);
 
             response.setSuccess(true);
             response.setMessage("Imagem cadastrada com sucesso!");
@@ -131,14 +131,14 @@ public class ProductController {
         }
     }
 
-    @GetMapping("store/{storeId}/{userId}")
-    public ResponseEntity<?> getProductsByStoreId(@PathVariable("storeId") int storeId, @PathVariable("userId") int userId) {
+    @GetMapping("store/{storeId}")
+    public ResponseEntity<?> getProductsByStoreId(@PathVariable("storeId") int storeId) {
 
         BaseResponseModel<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsByStoreId(storeId, userId);
+            List<ProductModel> products = this.productService.getProductsByStoreId(storeId);
 
             if (products == null) {
                 response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -195,14 +195,14 @@ public class ProductController {
         }
     }
 
-    @GetMapping("image/{productId}/{userId}")
-    public ResponseEntity<?> getProductImage(@PathVariable("productId") int productId, @PathVariable("userId") int userId, @RequestParam String path) {
+    @GetMapping("image/{productId}")
+    public ResponseEntity<?> getProductImage(@PathVariable("productId") int productId, @RequestParam String path) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            String imageBase64 = this.productService.getProductImage(productId, userId, path);
+            String imageBase64 = this.productService.getProductImage(productId, path);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
@@ -232,14 +232,14 @@ public class ProductController {
         }
     }
 
-    @PutMapping("update/user/{userId}")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductModel product, @PathVariable("userId") int userId) {
+    @PutMapping("update")
+    public ResponseEntity<?> updateProduct(@RequestBody ProductModel product) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.productService.updateProduct(product, userId);
+            this.productService.updateProduct(product);
 
             response.setSuccess(true);
             response.setMessage("Loja atualizada com sucesso!");
@@ -269,8 +269,8 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("delete/user/{userId}")
-    public ResponseEntity<?> deleteStores(@PathVariable("userId") int userId, @RequestBody ArrayList<Integer> ids) {
+    @DeleteMapping("delete}")
+    public ResponseEntity<?> deleteProducts(@RequestBody ArrayList<Integer> ids) {
 
         // TODO
         return null;

@@ -1,10 +1,8 @@
 package ecommerce.system.api.services.implementations;
 
-import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.ProductModel;
 import ecommerce.system.api.repositories.IProductRepository;
-import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +17,11 @@ import java.util.List;
 @Service
 public class ProductService implements IProductService {
 
-    private final IAuthenticationService authenticationService;
     private final IFileService fileService;
     private final IProductRepository productRepository;
 
     @Autowired
-    public ProductService(IAuthenticationService authenticationService, IFileService fileService, IProductRepository productRepository) {
-        this.authenticationService = authenticationService;
+    public ProductService(IFileService fileService, IProductRepository productRepository) {
         this.fileService = fileService;
         this.productRepository = productRepository;
     }
@@ -42,11 +38,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void createProductImage(MultipartFile file, int productId, int userId) throws InvalidOperationException, IOException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException {
 
         String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
 
@@ -66,11 +58,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductModel> getProductsByStoreId(int storeId, int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public List<ProductModel> getProductsByStoreId(int storeId) {
 
         return this.productRepository.getProductsByStoreId(storeId);
     }
@@ -82,21 +70,13 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public String getProductImage(int productId, int userId, String path) throws InvalidOperationException, IOException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public String getProductImage(String path) throws IOException {
 
         return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
     }
 
     @Override
-    public void updateProduct(ProductModel product, int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public void updateProduct(ProductModel product) throws InvalidOperationException {
 
         ProductModel oldProduct = this.productRepository.getById(product.getProductId());
 
@@ -110,11 +90,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProducts(List<Integer> ids, int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public void deleteProducts(List<Integer> ids) throws InvalidOperationException {
 
         int deletionCount = 0;
 

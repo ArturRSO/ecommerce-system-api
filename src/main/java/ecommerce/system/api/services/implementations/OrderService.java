@@ -38,7 +38,7 @@ public class OrderService implements IOrderService {
         this.storeService = storeService;
     }
 
-    private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int userId, int addressId) throws Exception {
+    private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int addressId) throws Exception {
 
         for (Map.Entry<Integer, List<ProductModel>> entry : productsByStore.entrySet()) {
 
@@ -55,7 +55,7 @@ public class OrderService implements IOrderService {
                     this.alertService.sendStockAlert(product);
                 }
 
-                this.productService.updateProduct(product, userId);
+                this.productService.updateProduct(product);
             }
 
             OrderModel order = new OrderModel();
@@ -128,7 +128,7 @@ public class OrderService implements IOrderService {
 
         int orderSummaryId = this.orderRepository.createOrderSummary(order);
 
-        this.createOrdersByStore(productsByStore, orderSummaryId, order.getUserId(), order.getAddressId());
+        this.createOrdersByStore(productsByStore, orderSummaryId, order.getAddressId());
     }
 
     @Override
