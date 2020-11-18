@@ -34,7 +34,26 @@ public class DeliveryRepository implements IDeliveryRepository {
     public List<DeliveryModel> getDeliveriesByOrderId(int orderId) {
 
         String query = "FROM DeliveryEntity d WHERE d.orderId = :orderId";
-        TypedQuery<DeliveryEntity> result = this.entityManager.createQuery(query, DeliveryEntity.class);
+        TypedQuery<DeliveryEntity> result = this.entityManager.createQuery(query, DeliveryEntity.class)
+                .setParameter("orderId", orderId);
+        List<DeliveryEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        ArrayList<DeliveryModel> deliveries = new ArrayList<>();
+        (entities).forEach((delivery) -> deliveries.add(delivery.toModel()));
+
+        return deliveries;
+    }
+
+    @Override
+    public List<DeliveryModel> getDeliveriesByOrderSummaryId(int orderSummaryId) {
+
+        String query = "SELECT d FROM DeliveryEntity d, OrderEntity o, OrderSummaryEntity os WHERE d.orderId = o.orderId AND o.orderSummaryId = os.orderSummaryId AND os.orderSummaryId = :orderId";
+        TypedQuery<DeliveryEntity> result = this.entityManager.createQuery(query, DeliveryEntity.class)
+                .setParameter("orderSummaryId", orderSummaryId);
         List<DeliveryEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {

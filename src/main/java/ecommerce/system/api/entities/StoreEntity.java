@@ -44,6 +44,7 @@ public class StoreEntity {
     public StoreEntity(StoreModel store) {
         this.storeId = store.getStoreId();
         this.name = store.getName();
+        this.documentNumber = store.getDocumentNumber();
         this.documentTypeId = store.getDocumentTypeId();
         this.addressId = store.getAddressId();
         this.profileImagePath = store.getProfileImagePath();

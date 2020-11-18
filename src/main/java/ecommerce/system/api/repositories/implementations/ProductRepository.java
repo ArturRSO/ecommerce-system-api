@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,8 +122,17 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public boolean delete(int id) {
-        // TODO
-        return false;
+
+        ProductEntity product = this.entityManager.find(ProductEntity.class, id);
+
+        if (product == null || !product.isActive()) {
+            return false;
+        }
+
+        product.setActive(false);
+        product.setLastUpdate(LocalDateTime.now());
+
+        return true;
     }
 
     @Override

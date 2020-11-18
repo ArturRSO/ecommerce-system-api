@@ -16,5 +16,5 @@ public interface IProductService {
     ProductModel getProductById(int productId);
     String getProductImage(int productId, int userId, String path) throws InvalidOperationException, IOException;
     void updateProduct(ProductModel product, int userId) throws InvalidOperationException;
-    void deleteProducts(List<Integer> ids);
+    void deleteProducts(List<Integer> ids, int userId) throws InvalidOperationException;
 }

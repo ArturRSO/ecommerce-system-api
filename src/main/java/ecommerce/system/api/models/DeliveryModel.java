@@ -18,6 +18,9 @@ public class DeliveryModel {
     @JsonIgnore
     private int receiverAddressId;
 
+    public DeliveryModel() {
+    }
+
     public DeliveryModel(int deliveryId, int deliveryServiceId, int orderId, int senderAddressId, int receiverAddressId, double price, boolean success) {
         this.deliveryId = deliveryId;
         this.deliveryServiceId = deliveryServiceId;

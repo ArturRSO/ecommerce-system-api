@@ -1,6 +1,7 @@
 package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
@@ -11,9 +12,13 @@ public class StoreModel {
     private String documentNumber;
     private int documentTypeId;
     private int addressId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String profileImagePath;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private AddressModel address;
+
     private LocalDateTime creationDate;
 
     @JsonIgnore
@@ -104,5 +109,13 @@ public class StoreModel {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public AddressModel getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressModel adddress) {
+        this.address = adddress;
     }
 }

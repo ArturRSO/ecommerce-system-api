@@ -110,8 +110,26 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProducts(List<Integer> ids) {
+    public void deleteProducts(List<Integer> ids, int userId) throws InvalidOperationException {
 
-        // TODO
+        if (!this.authenticationService.isLoggedUser(userId)) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        int deletionCount = 0;
+
+        for (int id : ids) {
+
+            if (this.productRepository.delete(id)) {
+                deletionCount++;
+            }
+        }
+
+        if (ids.size() != deletionCount) {
+
+            int deletionFails = ids.size() - deletionCount;
+
+            throw new InvalidOperationException("Erro: " + deletionCount + " produto(s) deletado(s), " + deletionFails + " produto(s) não encontrado(s).");
+        }
     }
 }

@@ -2,14 +2,13 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
+import ecommerce.system.api.models.DeliveryModel;
 import ecommerce.system.api.models.OrderModel;
 import ecommerce.system.api.models.ProductModel;
+import ecommerce.system.api.models.StoreModel;
 import ecommerce.system.api.repositories.ICashFlowRepository;
 import ecommerce.system.api.repositories.IOrderRepository;
-import ecommerce.system.api.services.IAlertService;
-import ecommerce.system.api.services.IDeliveryService;
-import ecommerce.system.api.services.IOrderService;
-import ecommerce.system.api.services.IProductService;
+import ecommerce.system.api.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +26,19 @@ public class OrderService implements IOrderService {
     private final IDeliveryService deliveryService;
     private final IOrderRepository orderRepository;
     private final IProductService productService;
+    private final IStoreService storeService;
 
     @Autowired
-    public OrderService(IAlertService alertService, ICashFlowRepository cashFlowRepositoy, IDeliveryService deliveryService, IOrderRepository orderRepository, IProductService productService) {
+    public OrderService(IAlertService alertService, ICashFlowRepository cashFlowRepositoy, IDeliveryService deliveryService, IOrderRepository orderRepository, IProductService productService, IStoreService storeService) {
         this.alertService = alertService;
         this.cashFlowRepository = cashFlowRepositoy;
         this.deliveryService = deliveryService;
         this.orderRepository = orderRepository;
         this.productService = productService;
+        this.storeService = storeService;
     }
 
-    private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int userId) throws Exception {
+    private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int userId, int addressId) throws Exception {
 
         for (Map.Entry<Integer, List<ProductModel>> entry : productsByStore.entrySet()) {
 
@@ -71,6 +72,16 @@ public class OrderService implements IOrderService {
             for (ProductModel product : entry.getValue()) {
                 this.orderRepository.createProductOrder(product.getProductId(), orderId, product.getOrderQuantity());
             }
+
+            StoreModel store = this.storeService.getStoreById(entry.getKey());
+
+            DeliveryModel delivery = new DeliveryModel();
+            delivery.setDeliveryServiceId(1); // Hardcoded
+            delivery.setOrderId(orderId);
+            delivery.setSenderAddressId(store.getAddressId());
+            delivery.setReceiverAddressId(addressId);
+
+            this.deliveryService.createDelivery(delivery);
 
             double commission = totalPrice * 0.10;
             double storeProfit = totalPrice - commission;
@@ -117,7 +128,7 @@ public class OrderService implements IOrderService {
 
         int orderSummaryId = this.orderRepository.createOrderSummary(order);
 
-        this.createOrdersByStore(productsByStore, orderSummaryId, order.getUserId());
+        this.createOrdersByStore(productsByStore, orderSummaryId, order.getUserId(), order.getAddressId());
     }
 
     @Override

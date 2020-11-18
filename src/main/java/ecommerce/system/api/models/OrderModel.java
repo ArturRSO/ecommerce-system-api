@@ -13,6 +13,7 @@ public class OrderModel {
 
     private int userId;
 
+    @JsonIgnore
     private int paymentMethodId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

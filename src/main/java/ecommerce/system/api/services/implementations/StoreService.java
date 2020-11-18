@@ -2,8 +2,10 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
+import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.models.StoreModel;
 import ecommerce.system.api.repositories.IStoreRepository;
+import ecommerce.system.api.services.IAddressService;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.services.IStoreService;
@@ -20,12 +22,14 @@ import java.util.List;
 public class StoreService implements IStoreService {
 
     private final IAuthenticationService authenticationService;
+    private final IAddressService addressService;
     private final IFileService fileService;
     private final IStoreRepository storeRepository;
 
     @Autowired
-    public StoreService(IAuthenticationService authenticationService, IFileService fileService, IStoreRepository storeRepository) {
+    public StoreService(IAuthenticationService authenticationService, IAddressService addressService, IFileService fileService, IStoreRepository storeRepository) {
         this.authenticationService = authenticationService;
+        this.addressService = addressService;
         this.fileService = fileService;
         this.storeRepository = storeRepository;
     }
@@ -67,7 +71,13 @@ public class StoreService implements IStoreService {
     @Override
     public List<StoreModel> getAllStores() {
 
-        return this.storeRepository.getAll();
+        List<StoreModel> stores = this.storeRepository.getAll();
+
+        if (stores != null) {
+            stores.forEach((store) -> store.setAddress(this.addressService.getAdressById(store.getAddressId())));
+        }
+
+        return stores;
     }
 
     @Override
@@ -77,13 +87,21 @@ public class StoreService implements IStoreService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        return this.storeRepository.getStoresByUserId(userId);
+        List<StoreModel> stores = this.storeRepository.getStoresByUserId(userId);
+
+        if (stores != null) {
+            stores.forEach((store) -> store.setAddress(this.addressService.getAdressById(store.getAddressId())));
+        }
+
+        return stores;
     }
 
     @Override
     public StoreModel getStoreById(int storeId) {
 
-        return this.storeRepository.getById(storeId);
+        StoreModel store = this.storeRepository.getById(storeId);
+
+        return store;
     }
 
     @Override

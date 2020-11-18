@@ -60,6 +60,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/telephones/update").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/telephones/delete").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/telephone/**").hasAnyRole("system_admin")
+                    .antMatchers("/stores/create/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/stores/user/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/stores/image/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/stores/update/**").hasAnyRole("system_admin", "store_admin")
                     .anyRequest().authenticated()
                     .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -77,7 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         final CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Collections.unmodifiableList(Arrays.asList("*")));
-        configuration.setAllowedMethods(Collections.unmodifiableList(Arrays.asList("HEAD","GET", "POST", "PUT", "DELETE", "PATCH")));
+        configuration.setAllowedMethods(Collections.unmodifiableList(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH")));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Collections.unmodifiableList(Arrays.asList("Authorization", "Cache-Control", "Content-Type")));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

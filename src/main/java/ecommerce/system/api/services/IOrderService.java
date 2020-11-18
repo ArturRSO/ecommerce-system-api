@@ -1,6 +1,5 @@
 package ecommerce.system.api.services;
 
-import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.OrderModel;
 
 import java.util.List;
