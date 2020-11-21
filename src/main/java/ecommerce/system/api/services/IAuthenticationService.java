@@ -9,4 +9,5 @@ public interface IAuthenticationService {
 
     TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
     boolean isLoggedUser(int userId);
+    boolean isSystemAdmin();
 }

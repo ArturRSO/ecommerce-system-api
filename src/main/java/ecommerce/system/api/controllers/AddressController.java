@@ -91,7 +91,7 @@ public class AddressController {
         }
     }
 
-    @GetMapping("all/user/{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<?> getAdressesByUserId(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -99,34 +99,6 @@ public class AddressController {
         try {
 
             List<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
-
-            if (adresses == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("all/profile/{userId}")
-    public ResponseEntity<?> getProfileAdresses(@PathVariable("userId") int userId) {
-
-        BaseResponseModel<?> response;
-
-        try {
-
-            List<AddressModel> adresses = this.addressService.getProfileAdresses(userId);
 
             if (adresses == null) {
                 response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -149,7 +121,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

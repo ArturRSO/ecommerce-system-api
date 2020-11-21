@@ -49,19 +49,13 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public List<AddressModel> getAdressesByUserId(int userId) {
+    public List<AddressModel> getAdressesByUserId(int userId) throws InvalidOperationException {
 
-        return this.addressRepository.getAddressesByUserId(userId);
-    }
-
-    @Override
-    public List<AddressModel> getProfileAdresses(int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
+        if (!this.authenticationService.isLoggedUser(userId) || !this.authenticationService.isSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        return this.getAdressesByUserId(userId);
+        return this.addressRepository.getAddressesByUserId(userId);
     }
 
     @Override

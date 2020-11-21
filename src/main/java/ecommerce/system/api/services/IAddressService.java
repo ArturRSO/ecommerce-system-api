@@ -9,8 +9,7 @@ public interface IAddressService {
 
     void createAddress(AddressModel address) throws InvalidOperationException;
     List<AddressModel> getAllAdresses();
-    List<AddressModel> getAdressesByUserId(int userId);
-    List<AddressModel> getProfileAdresses(int userId) throws InvalidOperationException;
+    List<AddressModel> getAdressesByUserId(int userId) throws InvalidOperationException;
     AddressModel getAdressById(int addressId);
     void updateAddress(AddressModel address) throws InvalidOperationException;
     void deleteAdress(int addressId) throws InvalidOperationException;

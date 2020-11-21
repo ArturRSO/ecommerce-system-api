@@ -14,8 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("test")
@@ -33,6 +38,20 @@ public class TestController {
         this.notificationHandler = notificationHandler;
 
     }
+
+    @GetMapping("auth")
+    public ResponseEntity<?> checkAuth() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        Set<String> roles = authentication.getAuthorities().stream()
+                .map(r -> r.getAuthority()).collect(Collectors.toSet());
+
+        BaseResponseModel<Set<String>> response = new BaseResponseModel<>(true, "", roles);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 
     @GetMapping("check")
     public ResponseEntity<?> checkApplication() {
