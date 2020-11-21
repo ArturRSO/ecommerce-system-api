@@ -25,6 +25,5 @@ public interface IUserService {
     void recoverPassword(String password, String token) throws Exception;
     void updateUserPassword(boolean isRecover, int userId, String password) throws InvalidOperationException, NoSuchAlgorithmException;
     void updateUserProfile(UserModel user) throws InvalidOperationException;
-    void deleteUserProfile(int id) throws InvalidOperationException;
-    void deleteUsers(List<Integer> ids) throws InvalidOperationException;
+    void deleteUserProfile(int userId) throws InvalidOperationException;
 }

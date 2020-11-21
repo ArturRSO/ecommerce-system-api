@@ -2,14 +2,14 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.NotificationsEnum;
+import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
+import ecommerce.system.api.models.OrderModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
-import ecommerce.system.api.services.IAuthenticationService;
-import ecommerce.system.api.services.IFileService;
-import ecommerce.system.api.services.IUserService;
+import ecommerce.system.api.services.*;
 import ecommerce.system.api.tools.NotificationHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,8 @@ public class UserService implements IUserService {
 
     private final IAuthenticationService authenticationService;
     private final IFileService fileService;
+    private final IOrderService orderService;
+    private final IStoreService storeService;
     private final IUserRepository userRepository;
     private final SHAEncoder shaEncoder;
     private final NotificationHandler notificationHandler;
@@ -35,11 +37,15 @@ public class UserService implements IUserService {
     @Autowired
     public UserService(IAuthenticationService authenticationService,
                        IFileService fileService,
+                       IOrderService orderService,
+                       IStoreService storeService,
                        IUserRepository userRepository,
                        SHAEncoder shaEncoder,
                        NotificationHandler notificationHandler) {
         this.authenticationService = authenticationService;
         this.fileService = fileService;
+        this.orderService = orderService;
+        this.storeService = storeService;
         this.userRepository = userRepository;
         this.shaEncoder = shaEncoder;
         this.notificationHandler = notificationHandler;
@@ -262,36 +268,32 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUserProfile(int id) throws InvalidOperationException {
+    public void deleteUserProfile(int userId) throws InvalidOperationException {
 
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserModel user = this.userRepository.getById(userId);
 
-        UserModel user = this.getUserByEmail(email);
-
-        if (id != user.getUserId()) {
+        if (!this.authenticationService.isLoggedUser(userId) || user.getRoleId() != RolesEnum.SYSTEM_ADMIN.getId()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        this.userRepository.delete(id);
-    }
+        if (user.getRoleId() == RolesEnum.STORE_ADMIN.getId()) {
 
-    @Override
-    public void deleteUsers(List<Integer> ids) throws InvalidOperationException {
+            if (this.storeService.getStoresByUserId(userId) != null) {
+                throw new InvalidOperationException("Não é possível desativar um perfil associado a uma loja ativa.");
+            }
 
-        int deletionCount = 0;
+        } else if (user.getRoleId() == RolesEnum.CUSTOMER.getId()) {
 
-        for (int id : ids) {
+            List<OrderModel> orders = this.orderService.getOrderSummariesByUserId(userId);
 
-            if (this.userRepository.delete(id)) {
-                deletionCount++;
+            for (OrderModel order : orders) {
+
+                if (order.getOrderStatusId() != OrderStatusEnum.FINISHED.getId()) {
+                    throw new InvalidOperationException("Não é possível desativar um perfil com pedidos em aberto.");
+                }
             }
         }
 
-        if (ids.size() != deletionCount) {
-
-            int deletionFails = ids.size() - deletionCount;
-
-            throw new InvalidOperationException("Erro: " + deletionCount + " usuário(s) deletado(s), " + deletionFails + " usuário(s) não encontrado(s).");
-        }
+        this.userRepository.delete(userId);
     }
 }

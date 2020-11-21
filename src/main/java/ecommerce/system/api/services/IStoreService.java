@@ -12,7 +12,7 @@ public interface IStoreService {
     void createStore(StoreModel store, int userId) throws InvalidOperationException;
     void createProfileImage(MultipartFile file, int storeId, int userId) throws InvalidOperationException, IOException;
     List<StoreModel> getAllStores();
-    List<StoreModel> getStoresByUserId(int userId) throws InvalidOperationException;
+    List<StoreModel> getStoresByUserId(int userId);
     StoreModel getStoreById(int storeId);
     String getProfileImage(int storeId, int userId, String path) throws InvalidOperationException, IOException;
     void updateStore(StoreModel store, int userId) throws InvalidOperationException;

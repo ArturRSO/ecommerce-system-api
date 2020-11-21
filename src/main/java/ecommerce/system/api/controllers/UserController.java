@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -450,51 +449,14 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/delete/profile/{id}")
-    public ResponseEntity<?> deleteProfile(@PathVariable int id) {
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<?> deleteUserProfile(@PathVariable("userId") int userId) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.userService.deleteUserProfile(id);
-
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUsers(@RequestBody ArrayList<Integer> ids) {
-
-        BaseResponseModel<String> response = new BaseResponseModel<>();
-
-        try {
-
-            this.userService.deleteUsers(ids);
+            this.userService.deleteUserProfile(userId);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());

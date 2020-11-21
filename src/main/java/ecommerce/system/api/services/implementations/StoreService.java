@@ -81,11 +81,7 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public List<StoreModel> getStoresByUserId(int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
+    public List<StoreModel> getStoresByUserId(int userId) {
 
         List<StoreModel> stores = this.storeRepository.getStoresByUserId(userId);
 
