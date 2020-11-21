@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -82,7 +81,7 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("all/user/{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<?> getTelephonesByUserId(@PathVariable("userId") int userId) {
 
         BaseResponseModel<?> response;
@@ -90,34 +89,6 @@ public class TelephoneController {
         try {
 
             List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
-
-            if (telephones == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("all/profile/{userId}")
-    public ResponseEntity<?> getProfileTelephones(@PathVariable("userId") int userId) {
-
-        BaseResponseModel<?> response;
-
-        try {
-
-            List<TelephoneModel> telephones = this.telephoneService.getProfileTelephones(userId);
 
             if (telephones == null) {
                 response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -203,14 +174,14 @@ public class TelephoneController {
         }
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<?> deleteTelephones(@RequestBody ArrayList<Integer> ids) {
+    @DeleteMapping("delete/{telephoneId}")
+    public ResponseEntity<?> deleteTelephones(@PathVariable("telephoneId") int telephoneId) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.telephoneService.deleteTelephones(ids);
+            this.telephoneService.deleteTelephone(telephoneId);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());

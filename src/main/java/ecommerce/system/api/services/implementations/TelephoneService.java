@@ -2,9 +2,11 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
+import ecommerce.system.api.models.StoreModel;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import ecommerce.system.api.services.IAuthenticationService;
+import ecommerce.system.api.services.IStoreService;
 import ecommerce.system.api.services.ITelephoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,13 @@ public class TelephoneService implements ITelephoneService {
 
     private final IAuthenticationService authenticationService;
     private final ITelephoneRepository telephoneRepository;
+    private final IStoreService storeService;
 
     @Autowired
-    public TelephoneService(IAuthenticationService authenticationService, ITelephoneRepository telephoneRepository) {
+    public TelephoneService(IAuthenticationService authenticationService, ITelephoneRepository telephoneRepository, IStoreService storeService) {
         this.authenticationService = authenticationService;
         this.telephoneRepository = telephoneRepository;
+        this.storeService = storeService;
     }
 
     @Override
@@ -46,19 +50,13 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public List<TelephoneModel> getTelephonesByUserId(int userId) {
+    public List<TelephoneModel> getTelephonesByUserId(int userId) throws InvalidOperationException {
 
-        return this.telephoneRepository.getTelephonesByUserId(userId);
-    }
-
-    @Override
-    public List<TelephoneModel> getProfileTelephones(int userId) throws InvalidOperationException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
+        if (!this.authenticationService.isLoggedUser(userId) || !this.authenticationService.isSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        return this.getTelephonesByUserId(userId);
+        return this.telephoneRepository.getTelephonesByUserId(userId);
     }
 
     @Override
@@ -90,27 +88,25 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public void deleteTelephones(List<Integer> ids) throws InvalidOperationException {
+    public void deleteTelephone(int telephoneId) throws InvalidOperationException {
 
-        int deletionCount = 0;
+        TelephoneModel telephone = this.getTelephoneById(telephoneId);
 
-        for (int id : ids) {
-            TelephoneModel telephone = this.getTelephoneById(id);
-
-            if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
-                throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-            }
-
-            if (this.telephoneRepository.delete(id)) {
-                deletionCount++;
-            }
+        if (telephone == null) {
+            throw new InvalidOperationException("Telefone não encontrado!");
         }
 
-        if (ids.size() != deletionCount) {
+        if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
 
-            int deletionFails = ids.size() - deletionCount;
+        List<StoreModel> stores = this.storeService.getStoresByUserId(telephone.getUserId());
 
-            throw new InvalidOperationException("Erro: " + deletionCount + " telefone(s) deletado(s), " + deletionFails + " telefones(s) não encontrado(s).");
+        for (StoreModel store : stores) {
+
+            if (store.getTelephoneId() == telephoneId) {
+                throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
+            }
         }
     }
 }
