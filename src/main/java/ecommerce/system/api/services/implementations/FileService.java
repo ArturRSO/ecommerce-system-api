@@ -50,7 +50,8 @@ public class FileService implements IFileService {
                 throw new InvalidOperationException("Objeto desconhecido!");
         }
 
-        String extension = file.getOriginalFilename().split("\\.")[1];
+        String[] splittedName = file.getOriginalFilename().split("\\.");
+        String extension = splittedName[splittedName.length - 1];
 
         path += id + "." + extension;
 

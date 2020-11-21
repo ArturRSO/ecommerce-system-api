@@ -20,17 +20,6 @@ public class ProductTypeRepository implements IProductTypeRepository {
     EntityManager entityManager;
 
     @Override
-    public int create(ProductTypeModel object) {
-
-        ProductTypeEntity productType = new ProductTypeEntity(object);
-
-        this.entityManager.persist(productType);
-        this.entityManager.flush();
-
-        return productType.getProductTypeId();
-    }
-
-    @Override
     public List<ProductTypeModel> getAll() {
 
         String query = "FROM ProductTypeEntity p ORDER BY p.productTypeId ASC";
@@ -53,27 +42,5 @@ public class ProductTypeRepository implements IProductTypeRepository {
         ProductTypeEntity productType = this.entityManager.find(ProductTypeEntity.class, id);
 
         return productType == null ? null : productType.toModel();
-    }
-
-    @Override
-    public boolean update(ProductTypeModel object) {
-
-        ProductTypeEntity updatedProductType = new ProductTypeEntity(object);
-
-        this.entityManager.merge(updatedProductType);
-
-        return false;
-    }
-
-    @Override
-    public boolean delete(int id) {
-
-        ProductTypeEntity productType = this.entityManager.find(ProductTypeEntity.class, id);
-
-        if (productType == null) {
-            return false;
-        }
-
-        return true;
     }
 }

@@ -2,5 +2,10 @@ package ecommerce.system.api.repositories;
 
 import ecommerce.system.api.models.ProductSubtypeModel;
 
-public interface IProductSubtypeRepository extends IBaseRepository<ProductSubtypeModel> {
+import java.util.List;
+
+public interface IProductSubtypeRepository {
+
+    List<ProductSubtypeModel> getByProductTypeId(int productTypeId);
+    ProductSubtypeModel getById(int id);
 }

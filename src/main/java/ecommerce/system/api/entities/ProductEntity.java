@@ -26,6 +26,9 @@ public class ProductEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "imagePath")
     private String imagePath;
 
@@ -53,6 +56,7 @@ public class ProductEntity {
         this.productSubtypeId = product.getProductSubtype().getProductSubtypeId();
         this.storeId = product.getStoreId();
         this.name = product.getName();
+        this.description = product.getDescription();
         this.imagePath = product.getImagePath();
         this.price = product.getPrice();
         this.quantity = product.getQuantity();
@@ -68,13 +72,13 @@ public class ProductEntity {
                 null,
                 this.storeId,
                 this.name,
+                this.description,
                 this.imagePath,
                 this.price,
                 this.quantity,
                 this.creationDate,
                 this.lastUpdate,
-                this.active,
-                null
+                this.active
         );
     }
 
@@ -118,12 +122,36 @@ public class ProductEntity {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getImagePath() {
         return imagePath;
     }
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public LocalDateTime getCreationDate() {

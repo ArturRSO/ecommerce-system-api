@@ -20,21 +20,11 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
     EntityManager entityManager;
 
     @Override
-    public int create(ProductSubtypeModel object) {
+    public List<ProductSubtypeModel> getByProductTypeId(int productTypeId) {
 
-        ProductSubtypeEntity productSubtype = new ProductSubtypeEntity(object);
-
-        this.entityManager.persist(productSubtype);
-        this.entityManager.flush();
-
-        return productSubtype.getProductSubtypeId();
-    }
-
-    @Override
-    public List<ProductSubtypeModel> getAll() {
-
-        String query = "FROM ProductSubtypeEntity p ORDER BY p.productTypeId ASC";
-        TypedQuery<ProductSubtypeEntity> result = this.entityManager.createQuery(query, ProductSubtypeEntity.class);
+        String query = "FROM ProductSubtypeEntity p WHERE p.productTypeId = :productTypeId ORDER BY p.productTypeId ASC";
+        TypedQuery<ProductSubtypeEntity> result = this.entityManager.createQuery(query, ProductSubtypeEntity.class)
+                .setParameter("productTypeId", productTypeId);
         List<ProductSubtypeEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
@@ -53,30 +43,5 @@ public class ProductSubtypeRepository implements IProductSubtypeRepository {
         ProductSubtypeEntity productSubtype = this.entityManager.find(ProductSubtypeEntity.class, id);
 
         return productSubtype == null ? null : productSubtype.toModel();
-    }
-
-    @Override
-    public boolean update(ProductSubtypeModel object) {
-
-        ProductSubtypeEntity updatedProductSubtype = new ProductSubtypeEntity(object);
-
-        this.entityManager.merge(updatedProductSubtype);
-
-        return false;
-    }
-
-    @Override
-    public boolean delete(int id) {
-
-        ProductSubtypeEntity productSubtype = this.entityManager.find(ProductSubtypeEntity.class, id);
-
-        if (productSubtype == null) {
-
-            return false;
-        }
-
-        this.entityManager.remove(productSubtype);
-
-        return true;
     }
 }

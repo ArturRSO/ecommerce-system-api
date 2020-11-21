@@ -4,6 +4,8 @@ import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.BaseResponseModel;
 import ecommerce.system.api.models.ProductModel;
+import ecommerce.system.api.models.ProductSubtypeModel;
+import ecommerce.system.api.models.ProductTypeModel;
 import ecommerce.system.api.services.IProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +44,6 @@ public class ProductController {
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-            // TODO
-//        }  catch (InvalidOperationException ioe) {
-//
-//            logger.error(ioe.getMessage());
-//
-//            response.setSuccess(false);
-//            response.setMessage(ioe.getMessage());
-//            response.setData("");
-//
-//            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
 
@@ -149,11 +140,31 @@ public class ProductController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (Exception e) {
 
-            logger.error(ioe.getMessage());
+            logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("sell")
+    public ResponseEntity<?> getProductsToSell() {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<ProductModel> products = this.productService.getProductsToSell();
+
+            if (products == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+            }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -195,28 +206,18 @@ public class ProductController {
         }
     }
 
-    @GetMapping("image/{productId}")
-    public ResponseEntity<?> getProductImage(@PathVariable("productId") int productId, @RequestParam String path) {
+    @GetMapping("image")
+    public ResponseEntity<?> getProductImage(@RequestParam String path) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            String imageBase64 = this.productService.getProductImage(productId, path);
+            String imageBase64 = this.productService.getProductImage(path);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData(imageBase64);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -227,6 +228,62 @@ public class ProductController {
             response.setSuccess(false);
             response.setMessage(MessagesEnum.FAILURE.getMessage());
             response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("type/all")
+    public ResponseEntity<?> getAllProductTypes() {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<ProductTypeModel> productTypes = this.productService.getAllProductTypes();
+
+            if (productTypes == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), productTypes);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("type/{productTypeId}/subtypes/all")
+    public ResponseEntity<?> getProductSubtypesByProductTypeId(@PathVariable("productTypeId") int productTypeId) {
+
+        BaseResponseModel<?> response;
+
+        try {
+
+            List<ProductSubtypeModel> productSubtypes = this.productService.getProductSubtypesByProductTypeId(productTypeId);
+
+            if (productSubtypes == null) {
+                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), productSubtypes);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -2,7 +2,11 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.ProductModel;
+import ecommerce.system.api.models.ProductSubtypeModel;
+import ecommerce.system.api.models.ProductTypeModel;
 import ecommerce.system.api.repositories.IProductRepository;
+import ecommerce.system.api.repositories.IProductSubtypeRepository;
+import ecommerce.system.api.repositories.IProductTypeRepository;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.services.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +23,15 @@ public class ProductService implements IProductService {
 
     private final IFileService fileService;
     private final IProductRepository productRepository;
+    private final IProductTypeRepository productTypeRepository;
+    private final IProductSubtypeRepository productSubtypeRepository;
 
     @Autowired
-    public ProductService(IFileService fileService, IProductRepository productRepository) {
+    public ProductService(IFileService fileService, IProductRepository productRepository, IProductTypeRepository productTypeRepository, IProductSubtypeRepository productSubtypeRepository) {
         this.fileService = fileService;
         this.productRepository = productRepository;
+        this.productTypeRepository = productTypeRepository;
+        this.productSubtypeRepository = productSubtypeRepository;
     }
 
     @Override
@@ -64,6 +72,12 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductModel> getProductsToSell() {
+
+        return this.productRepository.getProductsToSell();
+    }
+
+    @Override
     public ProductModel getProductById(int productId) {
 
         return this.productRepository.getById(productId);
@@ -73,6 +87,18 @@ public class ProductService implements IProductService {
     public String getProductImage(String path) throws IOException {
 
         return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
+    }
+
+    @Override
+    public List<ProductTypeModel> getAllProductTypes() {
+
+        return this.productTypeRepository.getAll();
+    }
+
+    @Override
+    public List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId) {
+
+        return this.productSubtypeRepository.getByProductTypeId(productTypeId);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class ProductModel {
 
@@ -18,6 +17,8 @@ public class ProductModel {
     private int storeId;
 
     private String name;
+
+    private String description;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String imagePath;
@@ -35,8 +36,6 @@ public class ProductModel {
     @JsonIgnore
     private boolean active;
 
-    private List<ProductDetailModel> details;
-
     @JsonIgnore
     private int orderQuantity;
 
@@ -46,25 +45,25 @@ public class ProductModel {
             ProductSubtypeModel productSubtype,
             int storeId,
             String name,
+            String description,
             String imagePath,
             double price,
             int quantity,
             LocalDateTime creationDate,
             LocalDateTime lastUpdate,
-            boolean active,
-            List<ProductDetailModel> details) {
+            boolean active) {
         this.productId = productId;
         this.productType = productType;
         this.productSubtype = productSubtype;
         this.storeId = storeId;
         this.name = name;
+        this.description = description;
         this.imagePath = imagePath;
         this.price = price;
         this.quantity = quantity;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.active = active;
-        this.details = details;
     }
 
     public int getProductId() {
@@ -105,6 +104,14 @@ public class ProductModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getImagePath() {
@@ -153,14 +160,6 @@ public class ProductModel {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public List<ProductDetailModel> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<ProductDetailModel> details) {
-        this.details = details;
     }
 
     public int getOrderQuantity() {

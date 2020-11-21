@@ -1,7 +1,5 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.DetailLabelEntity;
-import ecommerce.system.api.entities.ProductDetailEntity;
 import ecommerce.system.api.entities.ProductEntity;
 import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IProductRepository;
@@ -76,6 +74,20 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
+    public List<ProductModel> getProductsToSell() {
+
+        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity > 0 ORDER BY p.productId ASC";
+        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class);
+        List<ProductEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        return this.buildProducts(entities);
+    }
+
+    @Override
     public ProductModel getById(int id) {
 
         try {
@@ -86,11 +98,9 @@ public class ProductRepository implements IProductRepository {
             ProductEntity entity = result.getSingleResult();
 
             ProductModel product = entity.toModel();
-            List<ProductDetailModel> details = this.getProductDetailsByProductId(entity.getProductId());
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
 
-            product.setDetails(details);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
 
@@ -135,56 +145,14 @@ public class ProductRepository implements IProductRepository {
         return true;
     }
 
-    @Override
-    public List<ProductDetailModel> getProductDetailsByProductId(int productId) {
-
-        try {
-
-            String query = "FROM ProductDetailEntity p WHERE p.productId = :productId";
-            TypedQuery<ProductDetailEntity> result = this.entityManager.createQuery(query, ProductDetailEntity.class);
-            List<ProductDetailEntity> entities = result.getResultList();
-
-            if (entities == null || entities.isEmpty()) {
-                return null;
-            }
-
-            ArrayList<ProductDetailModel> details = new ArrayList<>();
-
-            (entities).forEach((entity) -> {
-                DetailLabelModel label = this.getLabelById(entity.getDetailLabelId());
-                ProductDetailModel detail = entity.toModel();
-                detail.setLabel(label);
-                details.add(detail);
-            });
-
-            return details;
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            return null;
-        }
-    }
-
-    @Override
-    public DetailLabelModel getLabelById(int labelId) {
-
-        DetailLabelEntity label = this.entityManager.find(DetailLabelEntity.class, labelId);
-
-        return label == null ? null : label.toModel();
-    }
-
     private List<ProductModel> buildProducts(List<ProductEntity> entities) {
 
         ArrayList<ProductModel> products = new ArrayList<>();
 
         (entities).forEach(entity -> {
-            List<ProductDetailModel> details = this.getProductDetailsByProductId(entity.getProductId());
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
             ProductModel product = entity.toModel();
-            product.setDetails(details);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
             products.add(product);
