@@ -99,6 +99,14 @@ public class TelephoneController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
         } catch (Exception e) {
 
             logger.error(e.getMessage());

@@ -52,7 +52,7 @@ public class TelephoneService implements ITelephoneService {
     @Override
     public List<TelephoneModel> getTelephonesByUserId(int userId) throws InvalidOperationException {
 
-        if (!this.authenticationService.isLoggedUser(userId) || !this.authenticationService.isSystemAdmin()) {
+        if (!this.authenticationService.isLoggedUser(userId) && !this.authenticationService.isSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 

@@ -51,7 +51,7 @@ public class AddressService implements IAddressService {
     @Override
     public List<AddressModel> getAdressesByUserId(int userId) throws InvalidOperationException {
 
-        if (!this.authenticationService.isLoggedUser(userId) || !this.authenticationService.isSystemAdmin()) {
+        if (!this.authenticationService.isLoggedUser(userId) && !this.authenticationService.isSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 

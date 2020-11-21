@@ -22,6 +22,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final JwtHandler jwtHandler;
     private final SHAEncoder shaEncoder;
 
+
     @Autowired
     public AuthenticationService(
             IUserRepository userRepository,
@@ -58,11 +59,7 @@ public class AuthenticationService implements IAuthenticationService {
 
         UserModel user = this.userRepository.getUserByEmail(email);
 
-        if (user == null || !user.isActive() || user.getUserId() != userId) {
-            return false;
-        }
-
-        return true;
+        return user != null && user.isActive() && user.getUserId() == userId;
     }
 
     @Override
