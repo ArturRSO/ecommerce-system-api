@@ -65,14 +65,14 @@ public class StoreController {
         }
     }
 
-    @PostMapping("create/image/{storeId}/{userId}")
-    public ResponseEntity<?> createProfileImage(@PathVariable("storeId") int storeId, @PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
+    @PostMapping("create/image/{storeId}")
+    public ResponseEntity<?> createProfileImage(@PathVariable("storeId") int storeId, @RequestParam("file") MultipartFile file) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.storeService.createProfileImage(file, storeId, userId);
+            this.storeService.createProfileImage(file, storeId);
 
             response.setSuccess(true);
             response.setMessage("Imagem cadastrada com sucesso!");
@@ -148,14 +148,6 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
         } catch (Exception e) {
 
             logger.error(e.getMessage());
@@ -194,28 +186,18 @@ public class StoreController {
         }
     }
 
-    @GetMapping("image/{storeId}/{userId}")
-    public ResponseEntity<?> getProfileImage(@PathVariable("storeId") int storeId, @PathVariable("userId") int userId, @RequestParam String path) {
+    @GetMapping("image")
+    public ResponseEntity<?> getProfileImage(@RequestParam String path) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            String imageBase64 = this.storeService.getProfileImage(storeId, userId, path);
+            String imageBase64 = this.storeService.getProfileImage(path);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData(imageBase64);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -231,14 +213,14 @@ public class StoreController {
         }
     }
 
-    @PutMapping("update/user/{userId}")
-    public ResponseEntity<?> updateStore(@RequestBody StoreModel store, @PathVariable("userId") int userId) {
+    @PutMapping("update")
+    public ResponseEntity<?> updateStore(@RequestBody StoreModel store) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.storeService.updateStore(store, userId);
+            this.storeService.updateStore(store);
 
             response.setSuccess(true);
             response.setMessage("Loja atualizada com sucesso!");
@@ -268,14 +250,14 @@ public class StoreController {
         }
     }
 
-    @DeleteMapping("delete/user/{userId}")
-    public ResponseEntity<?> deleteStores(@PathVariable("userId") int userId, @RequestBody ArrayList<Integer> ids) {
+    @DeleteMapping("delete/{storeId}")
+    public ResponseEntity<?> deleteStore(@PathVariable("storeId") int storeId) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.storeService.deleteStores(ids, userId);
+            this.storeService.deleteStore(storeId);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());

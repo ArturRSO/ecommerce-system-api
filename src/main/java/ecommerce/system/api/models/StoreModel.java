@@ -8,17 +8,21 @@ import java.time.LocalDateTime;
 public class StoreModel {
 
     private int storeId;
+
     private String name;
+
     private String documentNumber;
+
     private int documentTypeId;
+
     private int addressId;
+
+    private int telephoneId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String profileImagePath;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private AddressModel address;
-
     private LocalDateTime creationDate;
 
     @JsonIgnore
@@ -27,12 +31,13 @@ public class StoreModel {
     @JsonIgnore
     private boolean active;
 
-    public StoreModel(int storeId, String name, String documentNumber, int documentTypeId, int addressId, String profileImagePath, LocalDateTime creationDate, LocalDateTime lastUpdate, boolean active) {
+    public StoreModel(int storeId, String name, String documentNumber, int documentTypeId, int addressId, int telephoneId, String profileImagePath, LocalDateTime creationDate, LocalDateTime lastUpdate, boolean active) {
         this.storeId = storeId;
         this.name = name;
         this.documentNumber = documentNumber;
         this.documentTypeId = documentTypeId;
         this.addressId = addressId;
+        this.telephoneId = telephoneId;
         this.profileImagePath = profileImagePath;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
@@ -79,6 +84,14 @@ public class StoreModel {
         this.addressId = addressId;
     }
 
+    public int getTelephoneId() {
+        return telephoneId;
+    }
+
+    public void setTelephoneId(int telephoneId) {
+        this.telephoneId = telephoneId;
+    }
+
     public String getProfileImagePath() {
         return profileImagePath;
     }
@@ -111,11 +124,4 @@ public class StoreModel {
         this.active = active;
     }
 
-    public AddressModel getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressModel adddress) {
-        this.address = adddress;
-    }
 }

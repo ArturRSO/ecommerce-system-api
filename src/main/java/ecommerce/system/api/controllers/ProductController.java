@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -326,10 +325,40 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("delete}")
-    public ResponseEntity<?> deleteProducts(@RequestBody ArrayList<Integer> ids) {
+    @DeleteMapping("delete/{productId}")
+    public ResponseEntity<?> deleteProducts(@PathVariable("productId") int productId) {
 
-        // TODO
-        return null;
+        BaseResponseModel<String> response = new BaseResponseModel<>();
+
+        try {
+
+            this.productService.deleteProduct(productId);
+
+            response.setSuccess(true);
+            response.setMessage("Produto deletado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

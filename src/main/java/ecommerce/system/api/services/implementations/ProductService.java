@@ -106,32 +106,21 @@ public class ProductService implements IProductService {
 
         ProductModel oldProduct = this.productRepository.getById(product.getProductId());
 
+        if (oldProduct == null) {
+            throw new InvalidOperationException("Produto não encontrado!");
+        }
         product.setCreationDate(oldProduct.getCreationDate());
         product.setLastUpdate(LocalDateTime.now());
         product.setActive(oldProduct.isActive());
 
-        if (!this.productRepository.update(product)) {
-            throw new InvalidOperationException("Produto não encontrado!");
-        }
+        this.productRepository.update(product);
     }
 
     @Override
-    public void deleteProducts(List<Integer> ids) throws InvalidOperationException {
+    public void deleteProduct(int productId) throws InvalidOperationException {
 
-        int deletionCount = 0;
-
-        for (int id : ids) {
-
-            if (this.productRepository.delete(id)) {
-                deletionCount++;
-            }
-        }
-
-        if (ids.size() != deletionCount) {
-
-            int deletionFails = ids.size() - deletionCount;
-
-            throw new InvalidOperationException("Erro: " + deletionCount + " produto(s) deletado(s), " + deletionFails + " produto(s) não encontrado(s).");
+        if (!this.productRepository.delete(productId)) {
+            throw new InvalidOperationException("Produto não encontrado!");
         }
     }
 }

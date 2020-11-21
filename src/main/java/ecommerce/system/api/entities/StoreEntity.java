@@ -26,6 +26,9 @@ public class StoreEntity {
     @Column(name = "fk_addressId")
     private int addressId;
 
+    @Column(name = "fk_telephoneId")
+    private int telephoneId;
+
     @Column(name = "profileImagePath")
     private String profileImagePath;
 
@@ -60,6 +63,7 @@ public class StoreEntity {
                 this.documentNumber,
                 this.documentTypeId,
                 this.addressId,
+                this.telephoneId,
                 this.profileImagePath,
                 this.creationDate,
                 this.lastUpdate,

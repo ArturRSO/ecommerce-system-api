@@ -10,11 +10,11 @@ import java.util.List;
 public interface IStoreService {
 
     void createStore(StoreModel store, int userId) throws InvalidOperationException;
-    void createProfileImage(MultipartFile file, int storeId, int userId) throws InvalidOperationException, IOException;
+    void createProfileImage(MultipartFile file, int storeId) throws IOException, InvalidOperationException;
     List<StoreModel> getAllStores();
     List<StoreModel> getStoresByUserId(int userId);
     StoreModel getStoreById(int storeId);
-    String getProfileImage(int storeId, int userId, String path) throws InvalidOperationException, IOException;
-    void updateStore(StoreModel store, int userId) throws InvalidOperationException;
-    void deleteStores(List<Integer> ids, int userId);
+    String getProfileImage(String path) throws IOException;
+    void updateStore(StoreModel store) throws InvalidOperationException;
+    void deleteStore(int storeId);
 }

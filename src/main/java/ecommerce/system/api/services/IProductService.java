@@ -21,5 +21,5 @@ public interface IProductService {
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);
     void updateProduct(ProductModel product) throws InvalidOperationException;
-    void deleteProducts(List<Integer> ids) throws InvalidOperationException;
+    void deleteProduct(int productId) throws InvalidOperationException;
 }
