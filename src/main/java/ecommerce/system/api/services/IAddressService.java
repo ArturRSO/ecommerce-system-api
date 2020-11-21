@@ -13,5 +13,5 @@ public interface IAddressService {
     List<AddressModel> getProfileAdresses(int userId) throws InvalidOperationException;
     AddressModel getAdressById(int addressId);
     void updateAddress(AddressModel address) throws InvalidOperationException;
-    void deleteAdresses(List<Integer> ids) throws InvalidOperationException;
+    void deleteAdress(int addressId) throws InvalidOperationException;
 }

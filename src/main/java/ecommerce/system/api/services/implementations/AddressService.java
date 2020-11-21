@@ -3,9 +3,11 @@ package ecommerce.system.api.services.implementations;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.AddressModel;
+import ecommerce.system.api.models.StoreModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import ecommerce.system.api.services.IAddressService;
 import ecommerce.system.api.services.IAuthenticationService;
+import ecommerce.system.api.services.IStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +19,13 @@ public class AddressService implements IAddressService {
 
     private final IAuthenticationService authenticationService;
     private final IAddressRepository addressRepository;
+    private final IStoreService storeService;
 
     @Autowired
-    public AddressService(IAuthenticationService authenticationService, IAddressRepository addressRepository) {
+    public AddressService(IAuthenticationService authenticationService, IAddressRepository addressRepository, IStoreService storeService) {
         this.authenticationService = authenticationService;
         this.addressRepository = addressRepository;
+        this.storeService = storeService;
     }
 
     @Override
@@ -81,27 +85,27 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public void deleteAdresses(List<Integer> ids) throws InvalidOperationException {
+    public void deleteAdress(int addressId) throws InvalidOperationException {
 
-        int deletionCount = 0;
+        AddressModel address = this.getAdressById(addressId);
 
-        for (int id : ids) {
-            AddressModel address = this.getAdressById(id);
+        if (address == null) {
+            throw new InvalidOperationException("Endereço não encontrado!");
+        }
 
-            if (!this.authenticationService.isLoggedUser(address.getUserId())) {
-                throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-            }
+        if (!this.authenticationService.isLoggedUser(address.getUserId())) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
 
-            if (this.addressRepository.delete(id)) {
-                deletionCount++;
+        List<StoreModel> stores = this.storeService.getStoresByUserId(address.getUserId());
+
+        for (StoreModel store : stores) {
+
+            if (store.getAddressId() == addressId) {
+                throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
             }
         }
 
-        if (ids.size() != deletionCount) {
-
-            int deletionFails = ids.size() - deletionCount;
-
-            throw new InvalidOperationException("Erro: " + deletionCount + " endereço(s) deletado(s), " + deletionFails + " endereço(s) não encontrado(s).");
-        }
+        this.addressRepository.delete(addressId);
     }
 }

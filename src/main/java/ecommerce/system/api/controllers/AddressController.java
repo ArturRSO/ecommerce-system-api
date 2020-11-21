@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -221,14 +220,14 @@ public class AddressController {
         }
     }
 
-    @DeleteMapping("delete")
-    public ResponseEntity<?> deleteAddresses(@RequestBody ArrayList<Integer> ids) {
+    @DeleteMapping("delete/{addressId}")
+    public ResponseEntity<?> deleteAddresses(@PathVariable("addressId") int addressId) {
 
         BaseResponseModel<String> response = new BaseResponseModel<>();
 
         try {
 
-            this.addressService.deleteAdresses(ids);
+            this.addressService.deleteAdress(addressId);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
