@@ -272,6 +272,10 @@ public class UserService implements IUserService {
 
         UserModel user = this.userRepository.getById(userId);
 
+        if (user == null) {
+            throw new InvalidOperationException("Usuário não encontrado.");
+        }
+
         if (!this.authenticationService.isLoggedUser(userId) || user.getRoleId() != RolesEnum.SYSTEM_ADMIN.getId()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
