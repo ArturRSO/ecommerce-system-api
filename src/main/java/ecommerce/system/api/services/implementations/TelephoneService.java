@@ -102,11 +102,14 @@ public class TelephoneService implements ITelephoneService {
 
         List<StoreModel> stores = this.storeService.getStoresByUserId(telephone.getUserId());
 
-        for (StoreModel store : stores) {
-
-            if (store.getTelephoneId() == telephoneId) {
-                throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
+        if (stores != null) {
+            for (StoreModel store : stores) {
+                if (store.getTelephoneId() == telephoneId) {
+                    throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
+                }
             }
         }
+
+        this.telephoneRepository.delete(telephoneId);
     }
 }

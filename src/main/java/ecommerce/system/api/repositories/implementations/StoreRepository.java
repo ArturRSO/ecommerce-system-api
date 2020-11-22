@@ -112,6 +112,7 @@ public class StoreRepository implements IStoreRepository {
         }
 
         StoreEntity updatedStore = new StoreEntity(object);
+
         this.entityManager.merge(updatedStore);
 
         return true;

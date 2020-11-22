@@ -50,6 +50,7 @@ public class StoreEntity {
         this.documentNumber = store.getDocumentNumber();
         this.documentTypeId = store.getDocumentTypeId();
         this.addressId = store.getAddressId();
+        this.telephoneId = store.getTelephoneId();
         this.profileImagePath = store.getProfileImagePath();
         this.creationDate = store.getCreationDate();
         this.lastUpdate = store.getLastUpdate();
@@ -101,6 +102,14 @@ public class StoreEntity {
 
     public void setDocumentTypeId(int documentTypeId) {
         this.documentTypeId = documentTypeId;
+    }
+
+    public int getTelephoneId() {
+        return telephoneId;
+    }
+
+    public void setTelephoneId(int telephoneId) {
+        this.telephoneId = telephoneId;
     }
 
     public int getAddressId() {

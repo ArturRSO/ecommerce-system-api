@@ -48,17 +48,18 @@ public class StoreService implements IStoreService {
 
     @Override
     public void createProfileImage(MultipartFile file, int storeId) throws InvalidOperationException, IOException {
-
-        String imagePath = this.fileService.saveMultpartImage(file, "store", storeId);
-
         StoreModel store = this.storeRepository.getById(storeId);
 
         if (store == null) {
             throw new InvalidOperationException("Loja não encontrada!");
         }
 
+        String imagePath = this.fileService.saveMultpartImage(file, "store", storeId);
+
         store.setProfileImagePath(imagePath);
         store.setLastUpdate(LocalDateTime.now());
+
+        this.storeRepository.update(store);
     }
 
     @Override
@@ -88,11 +89,17 @@ public class StoreService implements IStoreService {
     @Override
     public void updateStore(StoreModel store) throws InvalidOperationException {
 
-        store.setLastUpdate(LocalDateTime.now());
+        StoreModel oldStore = this.getStoreById(store.getStoreId());
 
-        if (!this.storeRepository.update(store)) {
+        if (oldStore == null) {
             throw new InvalidOperationException("Loja não encontrada!");
         }
+
+        store.setCreationDate(oldStore.getCreationDate());
+        store.setLastUpdate(LocalDateTime.now());
+        store.setActive(store.isActive());
+
+        this.storeRepository.update(store);
     }
 
     @Override

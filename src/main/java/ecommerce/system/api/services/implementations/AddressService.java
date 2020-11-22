@@ -93,10 +93,12 @@ public class AddressService implements IAddressService {
 
         List<StoreModel> stores = this.storeService.getStoresByUserId(address.getUserId());
 
-        for (StoreModel store : stores) {
+        if (stores != null) {
+            for (StoreModel store : stores) {
 
-            if (store.getAddressId() == addressId) {
-                throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
+                if (store.getAddressId() == addressId) {
+                    throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
+                }
             }
         }
 

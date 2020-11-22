@@ -51,12 +51,15 @@ public class ProductService implements IProductService {
         String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
 
         ProductModel product = this.productRepository.getById(productId);
+
+        if (product == null) {
+            throw new InvalidOperationException("Produto não encontrado!");
+        }
+
         product.setImagePath(imagePath);
         product.setLastUpdate(LocalDateTime.now());
 
-        if (!this.productRepository.update(product)) {
-            throw new InvalidOperationException("Produto não encontrado!");
-        }
+        this.productRepository.update(product);
     }
 
     @Override

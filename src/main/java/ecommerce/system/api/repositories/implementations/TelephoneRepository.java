@@ -108,12 +108,14 @@ public class TelephoneRepository implements ITelephoneRepository {
 
         TelephoneEntity telephone = this.entityManager.find(TelephoneEntity.class, id);
 
-        if (telephone == null || telephone.isActive()) {
+        if (telephone == null || !telephone.isActive()) {
             return false;
         }
 
         telephone.setActive(false);
         telephone.setLastUpdate(LocalDateTime.now());
+
+        this.entityManager.merge(telephone);
 
         return true;
     }

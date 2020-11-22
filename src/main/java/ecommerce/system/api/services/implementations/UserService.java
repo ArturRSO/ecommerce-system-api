@@ -256,6 +256,7 @@ public class UserService implements IUserService {
         UserModel oldUser = this.getUserById(user.getUserId());
 
         user.setRoleId(oldUser.getRoleId());
+        user.setProfileImagePath(oldUser.getProfileImagePath());
         user.setPassword(oldUser.getPassword());
         user.setCreationDate(oldUser.getCreationDate());
         user.setVerifiedEmail(oldUser.isVerifiedEmail());
