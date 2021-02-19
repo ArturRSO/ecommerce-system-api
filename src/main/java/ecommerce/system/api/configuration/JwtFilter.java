@@ -47,9 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new InvalidTokenException("Token inválido ou nulo");
             }
 
-            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-
-            String email = currentAuthentication == null ? this.jwtHandler.getTokenSubject(token) : currentAuthentication.getName();
+            String email =  this.jwtHandler.getTokenSubject(token);
 
             if (this.jwtHandler.checkToken(email, token)) {
 
