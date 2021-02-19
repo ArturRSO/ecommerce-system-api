@@ -5,7 +5,7 @@ import ecommerce.system.api.models.UserModel;
 
 import java.util.List;
 
-public interface IUserRepository extends IBaseRepository<UserModel> {
+public interface IUserRepository extends ICrudRepository<UserModel> {
     List<UserModel> getUsersByRoleId(int roleId);
     List<UserModel> getUsersByStoreId(int storeId);
     UserModel getUserByDocumentNumber(String document);

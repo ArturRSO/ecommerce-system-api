@@ -2,7 +2,7 @@ package ecommerce.system.api.repositories;
 
 import java.util.List;
 
-public interface IBaseRepository<T> {
+public interface ICrudRepository<T> {
 
     int create(T object);
     List<T> getAll();

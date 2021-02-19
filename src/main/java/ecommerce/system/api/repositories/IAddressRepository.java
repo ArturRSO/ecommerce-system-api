@@ -4,7 +4,7 @@ import ecommerce.system.api.models.AddressModel;
 
 import java.util.List;
 
-public interface IAddressRepository extends IBaseRepository<AddressModel> {
+public interface IAddressRepository extends ICrudRepository<AddressModel> {
 
     List<AddressModel> getAddressesByUserId(int userId);
 }
