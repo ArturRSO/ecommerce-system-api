@@ -1,13 +1,13 @@
-package ecommerce.system.api.models;
+package ecommerce.system.api.dto;
 
 import java.time.LocalDateTime;
 
-public class TokenModel {
+public class TokenDTO {
 
     private String token;
     private LocalDateTime expiration;
 
-    public TokenModel(String token, LocalDateTime expiration) {
+    public TokenDTO(String token, LocalDateTime expiration) {
         this.token = token;
         this.expiration = expiration;
     }

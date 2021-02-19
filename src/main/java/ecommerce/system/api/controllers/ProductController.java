@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.ProductModel;
 import ecommerce.system.api.models.ProductSubtypeModel;
 import ecommerce.system.api.models.ProductTypeModel;
@@ -32,7 +32,7 @@ public class ProductController {
     @PostMapping("create")
     public ResponseEntity<?> createProduct(@RequestBody ProductModel product) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -59,7 +59,7 @@ public class ProductController {
     @PostMapping("create/image/{productId}")
     public ResponseEntity<?> createProfileImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -96,17 +96,17 @@ public class ProductController {
     @GetMapping("all")
     public ResponseEntity<?> getAllProducts() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<ProductModel> products = this.productService.getAllProducts();
 
             if (products == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -115,7 +115,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -124,17 +124,17 @@ public class ProductController {
     @GetMapping("store/{storeId}")
     public ResponseEntity<?> getProductsByStoreId(@PathVariable("storeId") int storeId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<ProductModel> products = this.productService.getProductsByStoreId(storeId);
 
             if (products == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -143,7 +143,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -152,17 +152,17 @@ public class ProductController {
     @GetMapping("sell")
     public ResponseEntity<?> getProductsToSell() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<ProductModel> products = this.productService.getProductsToSell();
 
             if (products == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -171,7 +171,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -180,17 +180,17 @@ public class ProductController {
     @GetMapping("{id}")
     public ResponseEntity<?> getProductById(@PathVariable("id") int id) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             ProductModel product = this.productService.getProductById(id);
 
             if (product == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), product);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), product);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -199,7 +199,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -208,7 +208,7 @@ public class ProductController {
     @GetMapping("image")
     public ResponseEntity<?> getProductImage(@RequestParam String path) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -235,17 +235,17 @@ public class ProductController {
     @GetMapping("type/all")
     public ResponseEntity<?> getAllProductTypes() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<ProductTypeModel> productTypes = this.productService.getAllProductTypes();
 
             if (productTypes == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), productTypes);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), productTypes);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -254,7 +254,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -263,17 +263,17 @@ public class ProductController {
     @GetMapping("type/{productTypeId}/subtypes/all")
     public ResponseEntity<?> getProductSubtypesByProductTypeId(@PathVariable("productTypeId") int productTypeId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<ProductSubtypeModel> productSubtypes = this.productService.getProductSubtypesByProductTypeId(productTypeId);
 
             if (productSubtypes == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), productSubtypes);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), productSubtypes);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -282,7 +282,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -291,7 +291,7 @@ public class ProductController {
     @PutMapping("update")
     public ResponseEntity<?> updateProduct(@RequestBody ProductModel product) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -328,7 +328,7 @@ public class ProductController {
     @DeleteMapping("delete/{productId}")
     public ResponseEntity<?> deleteProducts(@PathVariable("productId") int productId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 

@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.StoreModel;
 import ecommerce.system.api.services.IStoreService;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,7 +30,7 @@ public class StoreController {
     @PostMapping("create/{userId}")
     public ResponseEntity<?> createStore(@RequestBody StoreModel store, @PathVariable("userId") int userId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -68,7 +67,7 @@ public class StoreController {
     @PostMapping("create/image/{storeId}")
     public ResponseEntity<?> createProfileImage(@PathVariable("storeId") int storeId, @RequestParam("file") MultipartFile file) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -105,17 +104,17 @@ public class StoreController {
     @GetMapping("all")
     public ResponseEntity<?> getAllStores() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<StoreModel> stores = this.storeService.getAllStores();
 
             if (stores == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), stores);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), stores);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -124,7 +123,7 @@ public class StoreController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -133,17 +132,17 @@ public class StoreController {
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getStoresByUserId(@PathVariable("userId") int userId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<StoreModel> stores = this.storeService.getStoresByUserId(userId);
 
             if (stores == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), stores);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), stores);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -152,7 +151,7 @@ public class StoreController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -161,17 +160,17 @@ public class StoreController {
     @GetMapping("{id}")
     public ResponseEntity<?> getStoreById(@PathVariable("id") int id) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             StoreModel store = this.storeService.getStoreById(id);
 
             if (store == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), store);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), store);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -180,7 +179,7 @@ public class StoreController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -189,7 +188,7 @@ public class StoreController {
     @GetMapping("image")
     public ResponseEntity<?> getProfileImage(@RequestParam String path) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -216,7 +215,7 @@ public class StoreController {
     @PutMapping("update")
     public ResponseEntity<?> updateStore(@RequestBody StoreModel store) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -253,7 +252,7 @@ public class StoreController {
     @DeleteMapping("delete/{storeId}")
     public ResponseEntity<?> deleteStore(@PathVariable("storeId") int storeId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 

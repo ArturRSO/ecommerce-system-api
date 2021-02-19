@@ -1,7 +1,7 @@
 package ecommerce.system.api.services.implementations;
 
-import ecommerce.system.api.models.CredentialsModel;
-import ecommerce.system.api.models.TokenModel;
+import ecommerce.system.api.dto.CredentialsDTO;
+import ecommerce.system.api.dto.TokenDTO;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
@@ -35,7 +35,7 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException {
+    public TokenDTO authenticateUser(CredentialsDTO credentials) throws NoSuchAlgorithmException {
 
         String encodedPassword = this.shaEncoder.encode(credentials.getPassword());
         credentials.setPassword(encodedPassword);
@@ -47,7 +47,7 @@ public class AuthenticationService implements IAuthenticationService {
             String token = this.jwtHandler.getToken(user.getEmail());
             LocalDateTime expirationDate = this.jwtHandler.getExpirationFromToken(token);
 
-            return new TokenModel(token, expirationDate);
+            return new TokenDTO(token, expirationDate);
         }
 
         return null;

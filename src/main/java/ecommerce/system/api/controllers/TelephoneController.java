@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.services.ITelephoneService;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class TelephoneController {
     @PostMapping("create")
     public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -56,17 +56,17 @@ public class TelephoneController {
     @GetMapping("all")
     public ResponseEntity<?> getAllTelephones() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
 
             if (telephones == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -75,7 +75,7 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -84,17 +84,17 @@ public class TelephoneController {
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getTelephonesByUserId(@PathVariable("userId") int userId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
 
             if (telephones == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -103,7 +103,7 @@ public class TelephoneController {
 
             logger.error(ioe.getMessage());
 
-            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -111,7 +111,7 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -120,17 +120,17 @@ public class TelephoneController {
     @GetMapping("{id}")
     public ResponseEntity<?> getTelephoneById(@PathVariable("id") int id) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             TelephoneModel telephone = this.telephoneService.getTelephoneById(id);
 
             if (telephone == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), telephone);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephone);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -139,7 +139,7 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -148,7 +148,7 @@ public class TelephoneController {
     @PutMapping("update")
     public ResponseEntity<?> updateTelephone(@RequestBody TelephoneModel telephone) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -185,7 +185,7 @@ public class TelephoneController {
     @DeleteMapping("delete/{telephoneId}")
     public ResponseEntity<?> deleteTelephones(@PathVariable("telephoneId") int telephoneId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 

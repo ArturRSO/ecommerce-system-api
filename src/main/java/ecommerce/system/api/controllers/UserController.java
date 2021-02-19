@@ -3,7 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping("create")
     public ResponseEntity<?> createUser(@RequestBody UserModel user) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -68,7 +68,7 @@ public class UserController {
     @PostMapping("create/customer")
     public ResponseEntity<?> createCustomer(@RequestBody UserModel user) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -105,7 +105,7 @@ public class UserController {
     @PostMapping("create/image/{userId}")
     public ResponseEntity<?> createProfileImage(@PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -142,17 +142,17 @@ public class UserController {
     @GetMapping("all")
     public ResponseEntity<?> getAllUsers() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<UserModel> users = this.userService.getAllUsers();
 
             if (users == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), users);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), users);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -161,7 +161,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -170,17 +170,17 @@ public class UserController {
     @GetMapping("role/{roleId}")
     public ResponseEntity<?> getUsersByRoleId(@PathVariable("roleId") int roleId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<UserModel> users = this.userService.getUsersByRoleId(roleId);
 
             if (users == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), users);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), users);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -189,7 +189,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -198,17 +198,17 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<?> getUserById(@PathVariable("id") int id) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             UserModel user = this.userService.getUserById(id);
 
             if (user == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), user);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), user);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -217,7 +217,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -226,17 +226,17 @@ public class UserController {
     @GetMapping("profile")
     public ResponseEntity<?> getProfile() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             UserModel user = this.userService.getUserProfile();
 
             if (user == null) {
-                response = new BaseResponseModel<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), user);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), user);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -245,7 +245,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -254,7 +254,7 @@ public class UserController {
     @GetMapping("image/{userId}")
     public ResponseEntity<?> getProfileImage(@PathVariable("userId") int userId, @RequestParam String path) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -295,7 +295,7 @@ public class UserController {
 
             boolean status = this.userService.checkPasswordRecoverToken(token);
 
-            BaseResponseModel<Boolean> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), status);
+            BaseResponseDTO<Boolean> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), status);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -303,7 +303,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            BaseResponseDTO<String> response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -312,7 +312,7 @@ public class UserController {
     @PutMapping("update/password/{userId}")
     public ResponseEntity<?> updateUserPassword(@PathVariable("userId") int userId, @RequestBody String password) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -349,7 +349,7 @@ public class UserController {
     @PutMapping("update/profile")
     public ResponseEntity<?> updateUserProfile(@RequestBody UserModel user) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -386,7 +386,7 @@ public class UserController {
     @PostMapping("recover/password")
     public ResponseEntity<?> recoverPassword(@RequestBody String password, @RequestParam String token) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -423,7 +423,7 @@ public class UserController {
     @PostMapping("recover/password/mail")
     public ResponseEntity<?> sendRecoverPasswordMail(@RequestBody String email) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -452,7 +452,7 @@ public class UserController {
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> deleteUserProfile(@PathVariable("userId") int userId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 

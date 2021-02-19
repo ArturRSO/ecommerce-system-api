@@ -1,13 +1,13 @@
 package ecommerce.system.api.services;
 
-import ecommerce.system.api.models.CredentialsModel;
-import ecommerce.system.api.models.TokenModel;
+import ecommerce.system.api.dto.CredentialsDTO;
+import ecommerce.system.api.dto.TokenDTO;
 
 import java.security.NoSuchAlgorithmException;
 
 public interface IAuthenticationService {
 
-    TokenModel authenticateUser(CredentialsModel credentials) throws NoSuchAlgorithmException;
+    TokenDTO authenticateUser(CredentialsDTO credentials) throws NoSuchAlgorithmException;
     boolean isLoggedUser(int userId);
     boolean isSystemAdmin();
 }

@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.OrderModel;
 import ecommerce.system.api.services.IOrderService;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class OrderController {
     @PostMapping("create")
     public ResponseEntity<?> createOrder(@RequestBody OrderModel order) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -66,17 +66,17 @@ public class OrderController {
     @GetMapping("store/{storeId}")
     public ResponseEntity<?> getOrdersByStoreId(@PathVariable("storeId") int storeId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<OrderModel> orders = this.orderService.getOrdersByStoreId(storeId);
 
             if (orders == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), orders);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), orders);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class OrderController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -94,17 +94,17 @@ public class OrderController {
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getOrdersByUserId(@PathVariable("userId") int userId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<OrderModel> orders = this.orderService.getOrderSummariesByUserId(userId);
 
             if (orders == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), orders);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), orders);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -113,7 +113,7 @@ public class OrderController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

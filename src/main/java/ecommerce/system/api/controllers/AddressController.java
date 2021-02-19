@@ -3,7 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.AddressModel;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.services.IAddressService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class AddressController {
     @PostMapping("create")
     public ResponseEntity<?> createAddress(@RequestBody AddressModel address) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -66,17 +66,17 @@ public class AddressController {
     @GetMapping("all")
     public ResponseEntity<?> getAllAdresses() {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<AddressModel> adresses = this.addressService.getAllAdresses();
 
             if (adresses == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -94,17 +94,17 @@ public class AddressController {
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getAdressesByUserId(@PathVariable("userId") int userId) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             List<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
 
             if (adresses == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -113,7 +113,7 @@ public class AddressController {
 
             logger.error(ioe.getMessage());
 
-            response = new BaseResponseModel<>(false, ioe.getMessage(), "");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -121,7 +121,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -130,17 +130,17 @@ public class AddressController {
     @GetMapping("{id}")
     public ResponseEntity<?> getAddressById(@PathVariable("id") int id) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
 
             AddressModel address = this.addressService.getAdressById(id);
 
             if (address == null) {
-                response = new BaseResponseModel<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
 
             } else {
-                response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), address);
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), address);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -149,7 +149,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -158,7 +158,7 @@ public class AddressController {
     @PutMapping("update")
     public ResponseEntity<?> updateAddress(@RequestBody AddressModel address) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -195,7 +195,7 @@ public class AddressController {
     @DeleteMapping("delete/{addressId}")
     public ResponseEntity<?> deleteAddresses(@PathVariable("addressId") int addressId) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 

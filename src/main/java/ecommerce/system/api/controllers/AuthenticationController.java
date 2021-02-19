@@ -1,9 +1,9 @@
 package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
-import ecommerce.system.api.models.BaseResponseModel;
-import ecommerce.system.api.models.CredentialsModel;
-import ecommerce.system.api.models.TokenModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
+import ecommerce.system.api.dto.CredentialsDTO;
+import ecommerce.system.api.dto.TokenDTO;
 import ecommerce.system.api.services.IAuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,18 +28,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<?> authenticateUser(@RequestBody CredentialsModel credentials) {
+    public ResponseEntity<?> authenticateUser(@RequestBody CredentialsDTO credentials) {
 
-        BaseResponseModel<?> response;
+        BaseResponseDTO<?> response;
 
         try {
-            TokenModel token = this.authenticationService.authenticateUser(credentials);
+            TokenDTO token = this.authenticationService.authenticateUser(credentials);
 
             if (token == null) {
-                response = new BaseResponseModel<>(false, "E-mail ou senha incorretos.", "");
+                response = new BaseResponseDTO<>(false, "E-mail ou senha incorretos.", "");
 
             } else {
-                response = new BaseResponseModel<>(true, "Autenticação realizada com sucesso!", token);
+                response = new BaseResponseDTO<>(true, "Autenticação realizada com sucesso!", token);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -48,7 +48,7 @@ public class AuthenticationController {
 
             logger.error(e.getMessage());
 
-            response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), e.getMessage());
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

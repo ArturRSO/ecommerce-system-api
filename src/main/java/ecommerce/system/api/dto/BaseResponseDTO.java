@@ -1,19 +1,19 @@
-package ecommerce.system.api.models;
+package ecommerce.system.api.dto;
 
 import java.time.LocalDateTime;
 
-public class BaseResponseModel<T> {
+public class BaseResponseDTO<T> {
 
     private boolean success;
     private String message;
     private T data;
     private LocalDateTime timestamp;
 
-    public BaseResponseModel() {
+    public BaseResponseDTO() {
         this.timestamp = LocalDateTime.now();
     }
 
-    public BaseResponseModel(boolean success, String message, T data) {
+    public BaseResponseDTO(boolean success, String message, T data) {
         this.success = success;
         this.message = message;
         this.data = data;

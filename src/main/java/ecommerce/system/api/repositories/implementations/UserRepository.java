@@ -1,7 +1,7 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.UserEntity;
-import ecommerce.system.api.models.CredentialsModel;
+import ecommerce.system.api.dto.CredentialsDTO;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IUserRepository;
 import org.slf4j.Logger;
@@ -152,7 +152,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public UserModel getUserByCredentials(CredentialsModel credentials) {
+    public UserModel getUserByCredentials(CredentialsDTO credentials) {
 
         try {
 

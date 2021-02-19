@@ -3,7 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.BaseResponseModel;
+import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.models.SimpleMailModel;
 import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.services.IFileService;
@@ -47,7 +47,7 @@ public class TestController {
         Set<String> roles = authentication.getAuthorities().stream()
                 .map(r -> r.getAuthority()).collect(Collectors.toSet());
 
-        BaseResponseModel<Set<String>> response = new BaseResponseModel<>(true, "", roles);
+        BaseResponseDTO<Set<String>> response = new BaseResponseDTO<>(true, "", roles);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class TestController {
 
         logger.info("Checking if API is on...");
 
-        BaseResponseModel<String> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), "Hello world!");
+        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), "Hello world!");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -68,7 +68,7 @@ public class TestController {
 
         logger.info("Testing error...");
 
-        BaseResponseModel<String> response = new BaseResponseModel<>(true, MessagesEnum.FAILURE.getMessage(), "Returning error for test purposes.");
+        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.FAILURE.getMessage(), "Returning error for test purposes.");
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -83,7 +83,7 @@ public class TestController {
 
             logger.info("Mail tested with success!");
 
-            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
+            BaseResponseDTO<SimpleMailModel> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -91,7 +91,7 @@ public class TestController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            BaseResponseDTO<String> response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -108,7 +108,7 @@ public class TestController {
 
             logger.info("Recover password mail tested with success!");
 
-            BaseResponseModel<SimpleMailModel> response = new BaseResponseModel<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
+            BaseResponseDTO<SimpleMailModel> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -116,7 +116,7 @@ public class TestController {
 
             logger.error(e.getMessage());
 
-            BaseResponseModel<String> response = new BaseResponseModel<>(false, MessagesEnum.FAILURE.getMessage(), "");
+            BaseResponseDTO<String> response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -125,7 +125,7 @@ public class TestController {
     @GetMapping("images")
     public ResponseEntity<?> getImage(@RequestParam("path") String path) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
@@ -152,7 +152,7 @@ public class TestController {
     @PostMapping("images/create/{object}/{id}")
     public ResponseEntity<?> createImage(@PathVariable("object") String object, @PathVariable("id") int id, @RequestParam("file") MultipartFile file) {
 
-        BaseResponseModel<String> response = new BaseResponseModel<>();
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
