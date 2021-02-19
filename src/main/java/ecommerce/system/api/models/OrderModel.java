@@ -39,6 +39,7 @@ public class OrderModel {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int addressId;
 
+    // TODO remover list
     private List<Map<String, Integer>> products;
 
     public OrderModel() {
