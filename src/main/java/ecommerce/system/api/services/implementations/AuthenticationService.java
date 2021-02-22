@@ -47,7 +47,7 @@ public class AuthenticationService implements IAuthenticationService {
             String token = this.jwtHandler.getToken(user.getEmail());
             LocalDateTime expirationDate = this.jwtHandler.getExpirationFromToken(token);
 
-            return new TokenDTO(token, expirationDate);
+            return new TokenDTO(token, expirationDate, user.getRoleId());
         }
 
         return null;

@@ -39,7 +39,7 @@ public class UserEntity {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Column(name = "profileImagePath")
+    @Column(name = "imagePath")
     private String profileImagePath;
 
     @Column(name = "creationDate")

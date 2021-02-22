@@ -38,11 +38,13 @@ public class AuthenticationController {
             if (token == null) {
                 response = new BaseResponseDTO<>(false, "E-mail ou senha incorretos.", "");
 
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+
             } else {
                 response = new BaseResponseDTO<>(true, "Autenticação realizada com sucesso!", token);
-            }
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            }
 
         } catch (Exception e) {
 
