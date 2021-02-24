@@ -44,6 +44,7 @@ public class UserModel {
     private int documentTypeId;
 
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int roleId;
 
     @NotNull
