@@ -7,11 +7,13 @@ public class TokenDTO {
     private String token;
     private LocalDateTime expiration;
     private int roleId;
+    private int userId;
 
-    public TokenDTO(String token, LocalDateTime expiration, int roleId) {
+    public TokenDTO(String token, LocalDateTime expiration, int roleId, int userId) {
         this.token = token;
         this.expiration = expiration;
         this.roleId = roleId;
+        this.userId = userId;
     }
 
     public String getToken() {
@@ -36,5 +38,13 @@ public class TokenDTO {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }
