@@ -65,43 +65,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("create/customer")
-    public ResponseEntity<?> createCustomer(@RequestBody UserModel user) {
-
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
-
-        try {
-
-            this.userService.createCustomer(user);
-
-            response.setSuccess(true);
-            response.setMessage("Cadastro concluído com sucesso! Faça login para utilizar o sistema.");
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-
-        } catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("create/image/{userId}")
     public ResponseEntity<?> createProfileImage(@PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
 
@@ -251,43 +214,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("image/{userId}")
-    public ResponseEntity<?> getProfileImage(@PathVariable("userId") int userId, @RequestParam String path) {
-
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
-
-        try {
-
-            String imageBase64 = this.userService.getUserProfileImage(userId, path);
-
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData(imageBase64);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (InvalidOperationException ioe) {
-
-            logger.error(ioe.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("recover/password/status")
     public ResponseEntity<?> getPasswordRecoverTokenStatus(@RequestParam("token") String token) {
 
@@ -346,14 +272,14 @@ public class UserController {
         }
     }
 
-    @PutMapping("update/profile")
-    public ResponseEntity<?> updateUserProfile(@RequestBody UserModel user) {
+    @PutMapping("update")
+    public ResponseEntity<?> updateUser(@RequestBody UserModel user) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
-            this.userService.updateUserProfile(user);
+            this.userService.updateUser(user);
 
             response.setSuccess(true);
             response.setMessage("Perfil atualizado com sucesso!");
@@ -450,13 +376,13 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<?> deleteUserProfile(@PathVariable("userId") int userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable("userId") int userId) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
-            this.userService.deleteUserProfile(userId);
+            this.userService.deleteUser(userId);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());

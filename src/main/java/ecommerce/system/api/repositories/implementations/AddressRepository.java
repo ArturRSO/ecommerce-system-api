@@ -34,23 +34,6 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public List<AddressModel> getAll() {
-
-        String query = "FROM AddressEntity a WHERE a.active = true ORDER BY a.addressId ASC";
-        TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class);
-        List<AddressEntity> entities = result.getResultList();
-
-        if (entities == null || entities.isEmpty()) {
-            return null;
-        }
-
-        ArrayList<AddressModel> addresses = new ArrayList<>();
-        (entities).forEach((address) -> addresses.add(address.toModel()));
-
-        return addresses;
-    }
-
-    @Override
     public AddressModel getById(int id) {
 
         try {
@@ -73,7 +56,7 @@ public class AddressRepository implements IAddressRepository {
     @Override
     public List<AddressModel> getAddressesByUserId(int userId) {
 
-        String query = "FROM AddressEntity a WHERE a.active = true AND a.userId = :userId ORDER BY a.addressId ASC";
+        String query = "SELECT a FROM AddressEntity a, UserAddressEntity ua WHERE a.active = true AND ua.id.userId = :userId AND a.addressId = ua.id.addressId ORDER BY a.addressId ASC";
         TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
                 .setParameter("userId", userId);
         List<AddressEntity> entities = result.getResultList();

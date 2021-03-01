@@ -13,7 +13,6 @@ public interface IProductService {
 
     void createProduct(ProductModel product);
     void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException;
-    List<ProductModel> getAllProducts();
     List<ProductModel> getProductsByStoreId(int storeId);
     List<ProductModel> getProductsToSell();
     ProductModel getProductById(int productId);

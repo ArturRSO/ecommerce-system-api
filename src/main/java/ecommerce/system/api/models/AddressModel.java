@@ -12,6 +12,7 @@ public class AddressModel {
     private int addressId;
 
     @NotNull
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int userId;
 
     @NotNull
@@ -55,7 +56,6 @@ public class AddressModel {
     private boolean active;
 
     public AddressModel(int addressId,
-                        int userId,
                         String country,
                         String postalCode,
                         String address,
@@ -68,7 +68,6 @@ public class AddressModel {
                         LocalDateTime lastUpdate,
                         boolean active) {
         this.addressId = addressId;
-        this.userId = userId;
         this.country = country;
         this.postalCode = postalCode;
         this.address = address;

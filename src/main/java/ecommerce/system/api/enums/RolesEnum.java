@@ -3,8 +3,7 @@ package ecommerce.system.api.enums;
 public enum RolesEnum {
     SYSTEM_ADMIN (1, "system_admin"),
     STORE_ADMIN (2, "store_admin"),
-    CUSTOMER (3, "customer"),
-    GUEST (4, "guest");
+    CUSTOMER (3, "customer");
 
     private final int id;
     private final String name;

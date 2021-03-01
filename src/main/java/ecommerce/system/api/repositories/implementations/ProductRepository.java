@@ -45,20 +45,6 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getAll() {
-
-        String query = "FROM ProductEntity p WHERE p.active = true ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class);
-        List<ProductEntity> entities = result.getResultList();
-
-        if (entities == null || entities.isEmpty()) {
-            return null;
-        }
-
-        return this.buildProducts(entities);
-    }
-
-    @Override
     public List<ProductModel> getProductsByStoreId(int storeId) {
 
         String query = "FROM ProductEntity p WHERE p.storeId = :storeId AND p.active = true ORDER BY p.productId ASC";

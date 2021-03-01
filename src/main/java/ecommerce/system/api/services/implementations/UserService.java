@@ -54,6 +54,16 @@ public class UserService implements IUserService {
     @Override
     public void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException {
 
+        String userRole = RolesEnum.getRoleById(user.getRoleId());
+
+        if (userRole == null) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        if (userRole.equals("system_admin") && !this.authenticationService.isSystemAdmin()) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
@@ -98,19 +108,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createCustomer(UserModel user)
-            throws InvalidOperationException, NoSuchAlgorithmException {
-
-        String userRole = RolesEnum.getRoleById(user.getRoleId());
-
-        if (userRole == null || (!userRole.equals("customer") && !userRole.equals("store_admin"))) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
-
-        this.createUser(user);
-    }
-
-    @Override
     public void createProfileImage(MultipartFile file, int userId) throws InvalidOperationException, IOException {
 
         if (!this.authenticationService.isLoggedUser(userId)) {
@@ -131,7 +128,7 @@ public class UserService implements IUserService {
     @Override
     public List<UserModel> getAllUsers() {
 
-        return this.userRepository.getAll();
+        return this.userRepository.getAllUsers();
     }
 
     @Override
@@ -169,16 +166,6 @@ public class UserService implements IUserService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return this.getUserByEmail(email);
-    }
-
-    @Override
-    public String getUserProfileImage(int userId, String path) throws InvalidOperationException, IOException {
-
-        if (!this.authenticationService.isLoggedUser(userId)) {
-            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
-        }
-
-        return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
     }
 
     @Override
@@ -247,7 +234,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUserProfile(UserModel user) throws InvalidOperationException {
+    public void updateUser(UserModel user) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(user.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -269,7 +256,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUserProfile(int userId) throws InvalidOperationException {
+    public void deleteUser(int userId) throws InvalidOperationException {
 
         UserModel user = this.userRepository.getById(userId);
 

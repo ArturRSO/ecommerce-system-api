@@ -185,33 +185,6 @@ public class StoreController {
         }
     }
 
-    @GetMapping("image")
-    public ResponseEntity<?> getProfileImage(@RequestParam String path) {
-
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
-
-        try {
-
-            String imageBase64 = this.storeService.getProfileImage(path);
-
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData(imageBase64);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PutMapping("update")
     public ResponseEntity<?> updateStore(@RequestBody StoreModel store) {
 

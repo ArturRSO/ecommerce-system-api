@@ -65,7 +65,7 @@ public class StoreService implements IStoreService {
     @Override
     public List<StoreModel> getAllStores() {
 
-        return this.storeRepository.getAll();
+        return this.storeRepository.getAllStores();
     }
 
     @Override
@@ -78,12 +78,6 @@ public class StoreService implements IStoreService {
     public StoreModel getStoreById(int storeId) {
 
         return this.storeRepository.getById(storeId);
-    }
-
-    @Override
-    public String getProfileImage(String path) throws IOException {
-
-        return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
     }
 
     @Override

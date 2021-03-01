@@ -63,34 +63,6 @@ public class AddressController {
         }
     }
 
-    @GetMapping("all")
-    public ResponseEntity<?> getAllAdresses() {
-
-        BaseResponseDTO<?> response;
-
-        try {
-
-            List<AddressModel> adresses = this.addressService.getAllAdresses();
-
-            if (adresses == null) {
-                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), adresses);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getAdressesByUserId(@PathVariable("userId") int userId) {
 

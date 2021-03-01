@@ -35,7 +35,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<UserModel> getAll() {
+    public List<UserModel> getAllUsers() {
 
         String query = "FROM UserEntity u WHERE u.active = true ORDER BY u.userId ASC";
         TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class);
@@ -135,7 +135,7 @@ public class UserRepository implements IUserRepository {
 
         try {
 
-            String query = "FROM UserEntity u WHERE u.email = :email";
+            String query = "FROM UserEntity u WHERE u.email = :email AND u.active = true";
             TypedQuery<UserEntity> result = this.entityManager.createQuery(query, UserEntity.class)
                     .setParameter("email", email);
 

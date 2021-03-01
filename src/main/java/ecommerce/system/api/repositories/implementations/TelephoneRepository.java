@@ -34,23 +34,6 @@ public class TelephoneRepository implements ITelephoneRepository {
     }
 
     @Override
-    public List<TelephoneModel> getAll() {
-
-        String query = "FROM TelephoneEntity t WHERE t.active = true ORDER by t.telephoneId ASC";
-        TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class);
-        List<TelephoneEntity> entities = result.getResultList();
-
-        if (entities == null || entities.isEmpty()) {
-            return null;
-        }
-
-        ArrayList<TelephoneModel> telephones = new ArrayList<>();
-        (entities).forEach((telephone) -> telephones.add(telephone.toModel()));
-
-        return telephones;
-    }
-
-    @Override
     public TelephoneModel getById(int id) {
 
         try {

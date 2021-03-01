@@ -44,12 +44,6 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public List<TelephoneModel> getAllTelephones() {
-
-        return this.telephoneRepository.getAll();
-    }
-
-    @Override
     public List<TelephoneModel> getTelephonesByUserId(int userId) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(userId) && !this.authenticationService.isSystemAdmin()) {

@@ -63,12 +63,6 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductModel> getAllProducts() {
-
-        return this.productRepository.getAll();
-    }
-
-    @Override
     public List<ProductModel> getProductsByStoreId(int storeId) {
 
         return this.productRepository.getProductsByStoreId(storeId);

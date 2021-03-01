@@ -48,7 +48,7 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
-    public List<StoreModel> getAll() {
+    public List<StoreModel> getAllStores() {
 
         String query = "FROM StoreEntity s WHERE s.active = true ORDER BY s.storeId ASC";
         TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class);

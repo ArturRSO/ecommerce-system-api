@@ -14,9 +14,6 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int addressId;
 
-    @Column(name = "fk_userId")
-    private int userId;
-
     @Column(name = "country")
     private String country;
 
@@ -55,7 +52,6 @@ public class AddressEntity {
 
     public AddressEntity(AddressModel address) {
         this.addressId = address.getAddressId();
-        this.userId = address.getUserId();
         this.country = address.getCountry();
         this.postalCode = address.getPostalCode();
         this.address = address.getAddress();
@@ -72,7 +68,6 @@ public class AddressEntity {
     public AddressModel toModel() {
         return new AddressModel(
                 this.addressId,
-                this.userId,
                 this.country,
                 this.postalCode,
                 this.address,
@@ -93,14 +88,6 @@ public class AddressEntity {
 
     public void setAddressId(int addressId) {
         this.addressId = addressId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getCountry() {

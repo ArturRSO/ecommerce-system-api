@@ -52,7 +52,6 @@ public class TestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-
     @GetMapping("check")
     public ResponseEntity<?> checkApplication() {
 

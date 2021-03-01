@@ -14,7 +14,6 @@ public interface IStoreService {
     List<StoreModel> getAllStores();
     List<StoreModel> getStoresByUserId(int userId);
     StoreModel getStoreById(int storeId);
-    String getProfileImage(String path) throws IOException;
     void updateStore(StoreModel store) throws InvalidOperationException;
     void deleteStore(int storeId);
 }

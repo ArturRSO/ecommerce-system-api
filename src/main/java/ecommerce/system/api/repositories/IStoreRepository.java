@@ -7,5 +7,6 @@ import java.util.List;
 public interface IStoreRepository extends ICrudRepository<StoreModel> {
 
     void createStoreUser(int storeId, int userId);
+    List<StoreModel> getAllStores();
     List<StoreModel> getStoresByUserId(int userId);
 }

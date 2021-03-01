@@ -53,34 +53,6 @@ public class TelephoneController {
         }
     }
 
-    @GetMapping("all")
-    public ResponseEntity<?> getAllTelephones() {
-
-        BaseResponseDTO<?> response;
-
-        try {
-
-            List<TelephoneModel> telephones = this.telephoneService.getAllTelephones();
-
-            if (telephones == null) {
-                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephones);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getTelephonesByUserId(@PathVariable("userId") int userId) {
 
