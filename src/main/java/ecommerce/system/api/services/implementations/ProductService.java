@@ -16,6 +16,7 @@ import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +38,6 @@ public class ProductService implements IProductService {
     @Override
     public void createProduct(ProductModel product) {
 
-        product.setImagePath(null);
         product.setCreationDate(LocalDateTime.now());
         product.setLastUpdate(null);
         product.setActive(true);
@@ -56,28 +56,43 @@ public class ProductService implements IProductService {
             throw new InvalidOperationException("Produto não encontrado!");
         }
 
-        product.setImagePath(imagePath);
-        product.setLastUpdate(LocalDateTime.now());
-
-        this.productRepository.update(product);
+        this.productRepository.createProductImage(productId, imagePath);
     }
 
     @Override
-    public List<ProductModel> getProductsByStoreId(int storeId) {
+    public List<ProductModel> getProductsByStoreId(int storeId) throws IOException {
 
-        return this.productRepository.getProductsByStoreId(storeId);
+        List<ProductModel> products = this.productRepository.getProductsByStoreId(storeId);
+
+        for (ProductModel product : products) {
+            List<String> images = this.getImagesByPaths(product.getImageList());
+            product.setImageList(images);
+        }
+
+        return products;
     }
 
     @Override
-    public List<ProductModel> getProductsToSell() {
+    public List<ProductModel> getProductsToSell() throws IOException {
 
-        return this.productRepository.getProductsToSell();
+        List<ProductModel> products = this.productRepository.getProductsToSell();
+
+        for (ProductModel product : products) {
+            List<String> images = this.getImagesByPaths(product.getImageList());
+            product.setImageList(images);
+        }
+
+        return products;
     }
 
     @Override
-    public ProductModel getProductById(int productId) {
+    public ProductModel getProductById(int productId) throws IOException {
 
-        return this.productRepository.getById(productId);
+        ProductModel product = this.productRepository.getById(productId);
+        List<String> images = this.getImagesByPaths(product.getImageList());
+        product.setImageList(images);
+
+        return product;
     }
 
     @Override
@@ -119,5 +134,16 @@ public class ProductService implements IProductService {
         if (!this.productRepository.delete(productId)) {
             throw new InvalidOperationException("Produto não encontrado!");
         }
+    }
+
+    private List<String> getImagesByPaths(List<String> paths) throws IOException {
+
+        ArrayList<String> images = new ArrayList<>();
+
+        for (String path : paths) {
+            images.add(this.fileService.getImageBase64(path));
+        }
+
+        return images;
     }
 }

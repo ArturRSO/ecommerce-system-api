@@ -1,7 +1,9 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.ProductEntity;
+import ecommerce.system.api.entities.ProductImageEntity;
 import ecommerce.system.api.models.*;
+import ecommerce.system.api.repositories.IProductDetailRepository;
 import ecommerce.system.api.repositories.IProductRepository;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
 import ecommerce.system.api.repositories.IProductTypeRepository;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ProductRepository implements IProductRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final IProductDetailRepository detailRepository;
     private final IProductSubtypeRepository productSubtypeRepository;
     private final IProductTypeRepository productTypeRepository;
 
@@ -28,7 +31,8 @@ public class ProductRepository implements IProductRepository {
     EntityManager entityManager;
 
     @Autowired
-    public ProductRepository(IProductSubtypeRepository productSubtypeRepository, IProductTypeRepository productTypeRepository) {
+    public ProductRepository(IProductDetailRepository detailRepository, IProductSubtypeRepository productSubtypeRepository, IProductTypeRepository productTypeRepository) {
+        this.detailRepository = detailRepository;
         this.productSubtypeRepository = productSubtypeRepository;
         this.productTypeRepository = productTypeRepository;
     }
@@ -42,6 +46,14 @@ public class ProductRepository implements IProductRepository {
         this.entityManager.flush();
 
         return product.getProductId();
+    }
+
+    @Override
+    public void createProductImage(int productId, String path) {
+
+        ProductImageEntity productImage = new ProductImageEntity(productId, path);
+
+        this.entityManager.persist(productImage);
     }
 
     @Override
@@ -86,7 +98,11 @@ public class ProductRepository implements IProductRepository {
             ProductModel product = entity.toModel();
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
+            List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
+            List<String> imagePaths = this.getImagePathsByProductId(entity.getProductId());
 
+            product.setDetails(details);
+            product.setImageList(imagePaths);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
 
@@ -138,12 +154,34 @@ public class ProductRepository implements IProductRepository {
         (entities).forEach(entity -> {
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
+            List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
+            List<String> imagePaths = this.getImagePathsByProductId(entity.getProductId());
             ProductModel product = entity.toModel();
+            product.setDetails(details);
+            product.setImageList(imagePaths);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
             products.add(product);
         });
 
         return products;
+    }
+
+    private List<String> getImagePathsByProductId(int productId) {
+
+        String query = "FROM ProductImageEntity p WHERE p.productId = :productId";
+        TypedQuery<ProductImageEntity> result = this.entityManager.createQuery(query, ProductImageEntity.class)
+                .setParameter("productId", productId);
+        List<ProductImageEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        ArrayList<String> paths = new ArrayList<>();
+
+        entities.forEach(entity -> paths.add(entity.getPath()));
+
+        return paths;
     }
 }

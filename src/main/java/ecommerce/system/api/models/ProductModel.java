@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProductModel {
 
@@ -18,11 +19,6 @@ public class ProductModel {
 
     private String name;
 
-    private String description;
-
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String imagePath;
-
     private double price;
 
     private int quantity;
@@ -36,8 +32,11 @@ public class ProductModel {
     @JsonIgnore
     private boolean active;
 
-    @JsonIgnore
-    private int orderQuantity;
+    private boolean isNew;
+
+    private List<ProductDetailModel> details;
+
+    private List<String> imageList;
 
     public ProductModel(
             int productId,
@@ -45,24 +44,22 @@ public class ProductModel {
             ProductSubtypeModel productSubtype,
             int storeId,
             String name,
-            String description,
-            String imagePath,
             double price,
             int quantity,
             LocalDateTime creationDate,
             LocalDateTime lastUpdate,
-            boolean active) {
+            boolean active,
+            boolean isNew) {
         this.productId = productId;
         this.productType = productType;
         this.productSubtype = productSubtype;
         this.storeId = storeId;
         this.name = name;
-        this.description = description;
-        this.imagePath = imagePath;
         this.price = price;
         this.quantity = quantity;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
+        this.isNew = isNew;
         this.active = active;
     }
 
@@ -106,22 +103,6 @@ public class ProductModel {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -154,6 +135,14 @@ public class ProductModel {
         this.lastUpdate = lastUpdate;
     }
 
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -162,11 +151,19 @@ public class ProductModel {
         this.active = active;
     }
 
-    public int getOrderQuantity() {
-        return orderQuantity;
+    public List<ProductDetailModel> getDetails() {
+        return details;
     }
 
-    public void setOrderQuantity(int orderQuantity) {
-        this.orderQuantity = orderQuantity;
+    public void setDetails(List<ProductDetailModel> details) {
+        this.details = details;
+    }
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
     }
 }

@@ -5,20 +5,20 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class ProductOrderKey implements Serializable {
+public class ProductDetailKey implements Serializable {
 
     @Column(name = "pk_fk_productId")
     private int productId;
 
-    @Column(name = "pk_fk_orderId")
-    private int orderid;
+    @Column(name = "pk_fk_detailLabelId")
+    private int detailLabelId;
 
-    public ProductOrderKey() {
+    public ProductDetailKey() {
     }
 
-    public ProductOrderKey(int productId, int orderid) {
+    public ProductDetailKey(int productId, int detailLabelId) {
         this.productId = productId;
-        this.orderid = orderid;
+        this.detailLabelId = detailLabelId;
     }
 
     public int getProductId() {
@@ -29,11 +29,11 @@ public class ProductOrderKey implements Serializable {
         this.productId = productId;
     }
 
-    public int getOrderid() {
-        return orderid;
+    public int getDetailLabelId() {
+        return detailLabelId;
     }
 
-    public void setOrderid(int orderid) {
-        this.orderid = orderid;
+    public void setDetailLabelId(int detailLabelId) {
+        this.detailLabelId = detailLabelId;
     }
 }

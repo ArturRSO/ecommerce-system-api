@@ -48,7 +48,7 @@ public class OrderService implements IOrderService {
 
                 totalPrice += product.getPrice();
 
-                int productQuantity = product.getQuantity() - product.getOrderQuantity();
+                int productQuantity = product.getQuantity() - 1; // product.getOrderQuantity(); // TODO
                 product.setQuantity(productQuantity);
 
                 if (productQuantity == 0) {
@@ -70,7 +70,7 @@ public class OrderService implements IOrderService {
             int orderId = this.orderRepository.createOrder(order, entry.getKey());
 
             for (ProductModel product : entry.getValue()) {
-                this.orderRepository.createProductOrder(product.getProductId(), orderId, product.getOrderQuantity());
+                this.orderRepository.createProductOrder(product.getProductId(), orderId, 1); //TODO
             }
 
             StoreModel store = this.storeService.getStoreById(entry.getKey());
@@ -113,7 +113,7 @@ public class OrderService implements IOrderService {
                 products = new ArrayList<>();
             }
 
-            product.setOrderQuantity(productData.get("quantity"));
+            //product.setOrderQuantity(productData.get("quantity")); // TODO
             products.add(product);
             productsByStore.put(product.getStoreId(), products);
         }

@@ -26,12 +26,6 @@ public class ProductEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "imagePath")
-    private String imagePath;
-
     @Column(name = "price")
     private double price;
 
@@ -43,6 +37,9 @@ public class ProductEntity {
 
     @Column(name = "lastUpdate")
     private LocalDateTime lastUpdate;
+
+    @Column(name = "isNew")
+    private boolean isNew;
 
     @Column(name = "isActive")
     private boolean active;
@@ -56,12 +53,11 @@ public class ProductEntity {
         this.productSubtypeId = product.getProductSubtype().getProductSubtypeId();
         this.storeId = product.getStoreId();
         this.name = product.getName();
-        this.description = product.getDescription();
-        this.imagePath = product.getImagePath();
         this.price = product.getPrice();
         this.quantity = product.getQuantity();
         this.creationDate = product.getCreationDate();
         this.lastUpdate = product.getLastUpdate();
+        this.isNew = product.isNew();
         this.active = product.isActive();
     }
 
@@ -72,14 +68,12 @@ public class ProductEntity {
                 null,
                 this.storeId,
                 this.name,
-                this.description,
-                this.imagePath,
                 this.price,
                 this.quantity,
                 this.creationDate,
                 this.lastUpdate,
-                this.active
-        );
+                this.isNew,
+                this.active);
     }
 
     public int getProductId() {
@@ -122,22 +116,6 @@ public class ProductEntity {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -168,6 +146,14 @@ public class ProductEntity {
 
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
     }
 
     public boolean isActive() {
