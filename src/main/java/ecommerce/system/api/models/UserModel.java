@@ -54,7 +54,7 @@ public class UserModel {
     private LocalDate birthday;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String profileImagePath;
+    private String profileImage;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
@@ -77,7 +77,7 @@ public class UserModel {
                      int documentTypeId,
                      int roleId,
                      LocalDate birthday,
-                     String profileImagePath,
+                     String profileImage,
                      LocalDateTime creationDate,
                      LocalDateTime lastUpdate,
                      boolean verifiedEmail,
@@ -91,7 +91,7 @@ public class UserModel {
         this.documentTypeId = documentTypeId;
         this.roleId = roleId;
         this.birthday = birthday;
-        this.profileImagePath = profileImagePath;
+        this.profileImage = profileImage;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.verifiedEmail = verifiedEmail;
@@ -170,12 +170,12 @@ public class UserModel {
         this.birthday = birthday;
     }
 
-    public String getProfileImagePath() {
-        return profileImagePath;
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public LocalDateTime getCreationDate() {

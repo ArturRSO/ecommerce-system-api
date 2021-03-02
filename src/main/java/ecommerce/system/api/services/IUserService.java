@@ -12,16 +12,16 @@ public interface IUserService {
 
     void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException;
     void createProfileImage(MultipartFile file, int userId) throws InvalidOperationException, IOException;
-    List<UserModel> getAllUsers();
-    List<UserModel> getUsersByRoleId(int roleId);
-    List<UserModel> getUsersByStoreId(int storeId);
-    UserModel getUserById(int id);
+    List<UserModel> getAllUsers() throws IOException;
+    List<UserModel> getUsersByRoleId(int roleId) throws IOException;
+    List<UserModel> getUsersByStoreId(int storeId) throws IOException;
+    UserModel getUserById(int id) throws IOException;
     UserModel getUserByEmail(String email);
-    UserModel getUserProfile();
+    UserModel getUserProfile() throws IOException;
     boolean checkPasswordRecoverToken(String token) throws Exception;
     boolean sendPasswordRecoverEmail(String email) throws Exception;
     void recoverPassword(String password, String token) throws Exception;
     void updateUserPassword(boolean isRecover, int userId, String password) throws InvalidOperationException, NoSuchAlgorithmException;
-    void updateUser(UserModel user) throws InvalidOperationException;
+    void updateUser(UserModel user) throws InvalidOperationException, IOException;
     void deleteUser(int userId) throws InvalidOperationException;
 }

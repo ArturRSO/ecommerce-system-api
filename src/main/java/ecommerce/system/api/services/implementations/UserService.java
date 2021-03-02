@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -117,7 +116,7 @@ public class UserService implements IUserService {
         String imagePath = this.fileService.saveMultpartImage(file, "user", userId);
 
         UserModel user = this.userRepository.getById(userId);
-        user.setProfileImagePath(imagePath);
+        user.setProfileImage(imagePath);
         user.setLastUpdate(LocalDateTime.now());
 
         if (!this.userRepository.update(user)) {
@@ -126,46 +125,67 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserModel> getAllUsers() {
+    public List<UserModel> getAllUsers() throws IOException {
 
-        return this.userRepository.getAllUsers();
+        List<UserModel> users = this.userRepository.getAllUsers();
+
+        for (UserModel user : users) {
+            user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+        }
+
+        return users;
     }
 
     @Override
-    public List<UserModel> getUsersByRoleId(int roleId) {
+    public List<UserModel> getUsersByRoleId(int roleId) throws IOException {
 
-        return this.userRepository.getUsersByRoleId(roleId);
+        List<UserModel> users = this.userRepository.getUsersByRoleId(roleId);
+
+        for (UserModel user : users) {
+            user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+        }
+
+        return users;
     }
 
     @Override
-    public List<UserModel> getUsersByStoreId(int storeId) {
+    public List<UserModel> getUsersByStoreId(int storeId) throws IOException {
 
-        return this.userRepository.getUsersByStoreId(storeId);
+        List<UserModel> users = this.userRepository.getUsersByStoreId(storeId);
+
+        for (UserModel user : users) {
+            user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+        }
+
+        return users;
     }
 
     @Override
-    public UserModel getUserById(int id) {
+    public UserModel getUserById(int id) throws IOException {
 
-        return this.userRepository.getById(id);
+        UserModel user = this.userRepository.getById(id);
+
+        user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+
+        return user;
     }
 
     @Override
     public UserModel getUserByEmail(String email) {
 
-        UserModel user = this.userRepository.getUserByEmail(email);
-
-        if (user != null) {
-            return user.isActive() ? user : null;
-        }
-
-        return null;
+        return this.userRepository.getUserByEmail(email);
     }
 
     @Override
-    public UserModel getUserProfile() {
+    public UserModel getUserProfile() throws IOException {
+
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return this.getUserByEmail(email);
+        UserModel user = this.getUserByEmail(email);
+
+        user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+
+        return user;
     }
 
     @Override
@@ -234,7 +254,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(UserModel user) throws InvalidOperationException {
+    public void updateUser(UserModel user) throws InvalidOperationException, IOException {
 
         if (!this.authenticationService.isLoggedUser(user.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -243,7 +263,7 @@ public class UserService implements IUserService {
         UserModel oldUser = this.getUserById(user.getUserId());
 
         user.setRoleId(oldUser.getRoleId());
-        user.setProfileImagePath(oldUser.getProfileImagePath());
+        user.setProfileImage(oldUser.getProfileImage());
         user.setPassword(oldUser.getPassword());
         user.setCreationDate(oldUser.getCreationDate());
         user.setVerifiedEmail(oldUser.isVerifiedEmail());

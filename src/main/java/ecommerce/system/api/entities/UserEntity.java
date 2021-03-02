@@ -67,7 +67,7 @@ public class UserEntity {
         this.documentTypeId = user.getDocumentTypeId();
         this.roleId = user.getRoleId();
         this.birthday = user.getBirthday();
-        this.profileImagePath = user.getProfileImagePath();
+        this.profileImagePath = user.getProfileImage();
         this.creationDate = user.getCreationDate();
         this.lastUpdate = user.getLastUpdate();
         this.verifiedEmail = user.isVerifiedEmail();
