@@ -125,6 +125,8 @@ public class ProductService implements IProductService {
     @Override
     public void deleteProduct(int productId) throws InvalidOperationException {
 
+        // TODO product verification
+
         if (!this.productRepository.delete(productId)) {
             throw new InvalidOperationException("Produto não encontrado!");
         }
