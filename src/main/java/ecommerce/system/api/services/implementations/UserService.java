@@ -94,10 +94,12 @@ public class UserService implements IUserService {
             if (checkedUser.isActive()) {
                 throw new InvalidOperationException("Já existe um usuário cadastrado com o número do documento informado.");
 
-            } else if (checkedUser.getEmail().equals(user.getEmail())) {
-                throw new InvalidOperationException("Já existe um usuário cadastrado com o e-mail informado.");
-
             } else {
+
+                if (checkedUser.getEmail().equals(user.getEmail())) {
+                    checkedUser.setEmail(checkedUser.getEmail() + " [Inactive]");
+                }
+
                 checkedUser.setDocumentNumber(checkedUser.getDocumentNumber() + " [Inactive]");
                 this.userRepository.update(checkedUser);
 
@@ -261,6 +263,10 @@ public class UserService implements IUserService {
         }
 
         UserModel oldUser = this.getUserById(user.getUserId());
+
+        if (oldUser == null) {
+            throw new InvalidOperationException("Usuário não encontrado!");
+        }
 
         user.setRoleId(oldUser.getRoleId());
         user.setProfileImage(oldUser.getProfileImage());
