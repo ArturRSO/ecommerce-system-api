@@ -2,10 +2,7 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.DeliveryModel;
-import ecommerce.system.api.models.OrderModel;
-import ecommerce.system.api.models.ProductModel;
-import ecommerce.system.api.models.StoreModel;
+import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.ICashFlowRepository;
 import ecommerce.system.api.repositories.IOrderRepository;
 import ecommerce.system.api.services.*;
@@ -27,15 +24,17 @@ public class OrderService implements IOrderService {
     private final IOrderRepository orderRepository;
     private final IProductService productService;
     private final IStoreService storeService;
+    private final IUserService userService;
 
     @Autowired
-    public OrderService(IAlertService alertService, ICashFlowRepository cashFlowRepositoy, IDeliveryService deliveryService, IOrderRepository orderRepository, IProductService productService, IStoreService storeService) {
+    public OrderService(IAlertService alertService, ICashFlowRepository cashFlowRepositoy, IDeliveryService deliveryService, IOrderRepository orderRepository, IProductService productService, IStoreService storeService, IUserService userService) {
         this.alertService = alertService;
         this.cashFlowRepository = cashFlowRepositoy;
         this.deliveryService = deliveryService;
         this.orderRepository = orderRepository;
         this.productService = productService;
         this.storeService = storeService;
+        this.userService = userService;
     }
 
     private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int addressId) throws Exception {
@@ -52,7 +51,11 @@ public class OrderService implements IOrderService {
                 product.setQuantity(productQuantity);
 
                 if (productQuantity == 0) {
-                    this.alertService.sendStockAlert(product);
+                    String productName = product.getName();
+                    String storeName = this.storeService.getStoreById(product.getStoreId()).getName();
+                    List<UserModel> users = this.userService.getUsersByStoreId(product.getStoreId());
+
+                    this.alertService.sendStockAlert(productName, storeName, users);
                 }
 
                 this.productService.updateProduct(product);
