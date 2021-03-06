@@ -131,6 +131,8 @@ public class TestController {
 
             String decodedPath = UriUtils.decode(path, "UTF-8");
 
+            logger.info("Getting image for test purposes with path: " + decodedPath);
+
             String base64Image = this.fileService.getImageBase64(decodedPath);
 
             response.setSuccess(true);
