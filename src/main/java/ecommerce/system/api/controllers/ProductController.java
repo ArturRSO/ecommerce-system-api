@@ -57,7 +57,7 @@ public class ProductController {
     }
 
     @PostMapping("create/image/{productId}")
-    public ResponseEntity<?> createProfileImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createProductImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -172,33 +172,6 @@ public class ProductController {
             logger.error(e.getMessage());
 
             response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("image")
-    public ResponseEntity<?> getProductImage(@RequestParam String path) {
-
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
-
-        try {
-
-            String imageBase64 = this.productService.getProductImage(path);
-
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData(imageBase64);
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

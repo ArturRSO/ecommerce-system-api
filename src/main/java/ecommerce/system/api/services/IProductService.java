@@ -16,7 +16,6 @@ public interface IProductService {
     List<ProductModel> getProductsByStoreId(int storeId) throws IOException;
     List<ProductModel> getProductsToSell() throws IOException;
     ProductModel getProductById(int productId) throws IOException;
-    String getProductImage(String path) throws IOException;
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);
     void updateProduct(ProductModel product) throws InvalidOperationException;

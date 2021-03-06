@@ -27,7 +27,7 @@ public class StoreController {
         this.storeService = storeService;
     }
 
-    @PostMapping("create/{userId}")
+    @PostMapping("create/user/{userId}")
     public ResponseEntity<?> createStore(@RequestBody StoreModel store, @PathVariable("userId") int userId) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();

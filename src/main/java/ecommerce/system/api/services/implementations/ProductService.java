@@ -96,12 +96,6 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public String getProductImage(String path) throws IOException {
-
-        return this.fileService.getImageBase64(UriUtils.decode(path, "UTF-8"));
-    }
-
-    @Override
     public List<ProductTypeModel> getAllProductTypes() {
 
         return this.productTypeRepository.getAll();

@@ -309,7 +309,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("recover/password")
+    @PutMapping("recover/password")
     public ResponseEntity<?> recoverPassword(@RequestBody String password, @RequestParam String token) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();

@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriUtils;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -121,14 +122,16 @@ public class TestController {
         }
     }
 
-    @GetMapping("images")
+    @GetMapping("image")
     public ResponseEntity<?> getImage(@RequestParam("path") String path) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
         try {
 
-            String base64Image = this.fileService.getImageBase64(path);
+            String decodedPath = UriUtils.decode(path, "UTF-8");
+
+            String base64Image = this.fileService.getImageBase64(decodedPath);
 
             response.setSuccess(true);
             response.setMessage(MessagesEnum.SUCCESS.getMessage());
@@ -148,7 +151,7 @@ public class TestController {
         }
     }
 
-    @PostMapping("images/create/{object}/{id}")
+    @PostMapping("image/create/{object}/{id}")
     public ResponseEntity<?> createImage(@PathVariable("object") String object, @PathVariable("id") int id, @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
