@@ -137,7 +137,7 @@ public class ProductService implements IProductService {
         ArrayList<String> images = new ArrayList<>();
 
         for (String path : paths) {
-            images.add(this.fileService.getImageBase64(path));
+            images.add("data:image;base64, " + this.fileService.getImageBase64(path));
         }
 
         return images;
