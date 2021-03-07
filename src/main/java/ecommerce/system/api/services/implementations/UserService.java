@@ -13,6 +13,7 @@ import ecommerce.system.api.services.*;
 import ecommerce.system.api.tools.NotificationHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +37,7 @@ public class UserService implements IUserService {
     @Autowired
     public UserService(IAuthenticationService authenticationService,
                        IFileService fileService,
-                       IOrderService orderService,
+                       @Lazy IOrderService orderService,
                        IStoreService storeService,
                        IUserRepository userRepository,
                        SHAEncoder shaEncoder,
