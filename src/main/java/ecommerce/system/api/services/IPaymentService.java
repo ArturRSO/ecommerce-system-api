@@ -1,10 +1,9 @@
 package ecommerce.system.api.services;
 
 import ecommerce.system.api.dto.PaymentMethodDTO;
-import ecommerce.system.api.models.PaymentMethodModel;
+import ecommerce.system.api.exceptions.InvalidOperationException;
 
 public interface IPaymentService {
 
-    PaymentMethodModel paymentMethodFactory(PaymentMethodDTO data);
-    boolean pay(PaymentMethodModel paymentMethod, double value);
+    boolean pay(PaymentMethodDTO data, double value) throws InvalidOperationException;
 }
