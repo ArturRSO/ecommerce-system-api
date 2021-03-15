@@ -121,6 +121,34 @@ public class ProductController {
         }
     }
 
+    @GetMapping("subtype/{subtypeId}")
+    public ResponseEntity<?> getProductsBySubtypeId(@PathVariable("subtypeId") int subtypeId) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            List<ProductModel> products = this.productService.getProductsBySubtypeId(subtypeId);
+
+            if (products == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("sell")
     public ResponseEntity<?> getProductsToSell() {
 

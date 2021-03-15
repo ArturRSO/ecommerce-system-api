@@ -72,6 +72,21 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
+    public List<ProductModel> getProductsBySubtypeId(int subtypeId) {
+
+        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity > 0 AND p.productSubtypeId = :subtypeId ORDER BY p.productId ASC";
+        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+                .setParameter("subtypeId", subtypeId);
+        List<ProductEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        return this.buildProducts(entities);
+    }
+
+    @Override
     public List<ProductModel> getProductsToSell() {
 
         String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity > 0 ORDER BY p.productId ASC";

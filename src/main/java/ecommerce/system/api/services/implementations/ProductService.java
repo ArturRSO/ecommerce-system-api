@@ -64,9 +64,26 @@ public class ProductService implements IProductService {
 
         List<ProductModel> products = this.productRepository.getProductsByStoreId(storeId);
 
-        for (ProductModel product : products) {
-            List<String> images = this.getImagesByPaths(product.getImageList());
-            product.setImageList(images);
+        if (products != null) {
+            for (ProductModel product : products) {
+                List<String> images = this.getImagesByPaths(product.getImageList());
+                product.setImageList(images);
+            }
+        }
+
+        return products;
+    }
+
+    @Override
+    public List<ProductModel> getProductsBySubtypeId(int subtypeId) throws IOException {
+
+        List<ProductModel> products = this.productRepository.getProductsBySubtypeId(subtypeId);
+
+        if (products != null) {
+            for (ProductModel product : products) {
+                List<String> images = this.getImagesByPaths(product.getImageList());
+                product.setImageList(images);
+            }
         }
 
         return products;
@@ -77,9 +94,11 @@ public class ProductService implements IProductService {
 
         List<ProductModel> products = this.productRepository.getProductsToSell();
 
-        for (ProductModel product : products) {
-            List<String> images = this.getImagesByPaths(product.getImageList());
-            product.setImageList(images);
+        if (products != null) {
+            for (ProductModel product : products) {
+                List<String> images = this.getImagesByPaths(product.getImageList());
+                product.setImageList(images);
+            }
         }
 
         return products;
@@ -89,8 +108,11 @@ public class ProductService implements IProductService {
     public ProductModel getProductById(int productId) throws IOException {
 
         ProductModel product = this.productRepository.getById(productId);
-        List<String> images = this.getImagesByPaths(product.getImageList());
-        product.setImageList(images);
+
+        if (product != null) {
+            List<String> images = this.getImagesByPaths(product.getImageList());
+            product.setImageList(images);
+        }
 
         return product;
     }

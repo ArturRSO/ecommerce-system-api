@@ -8,5 +8,6 @@ public interface IProductRepository extends ICrudRepository<ProductModel> {
 
     void createProductImage(int productId, String path);
     List<ProductModel> getProductsByStoreId(int storeId);
+    List<ProductModel> getProductsBySubtypeId(int subtypeId);
     List<ProductModel> getProductsToSell();
 }
