@@ -4,10 +4,15 @@ import ecommerce.system.api.models.*;
 
 import java.util.List;
 
-public interface IProductRepository extends ICrudRepository<ProductModel> {
+public interface IProductRepository {
 
+    int createProduct(ProductModel object);
     void createProductImage(int productId, String path);
-    List<ProductModel> getProductsByStoreId(int storeId);
-    List<ProductModel> getProductsBySubtypeId(int subtypeId);
-    List<ProductModel> getProductsToSell();
+    List<ProductModel> getProductsByQuantity(int quantity);
+    List<ProductModel> getProductsByNameAndQuantity(String name, int quantity);
+    List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity);
+    List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity);
+    ProductModel getProductById(int id);
+    boolean updateProduct(ProductModel object);
+    boolean deleteProduct(int id);
 }

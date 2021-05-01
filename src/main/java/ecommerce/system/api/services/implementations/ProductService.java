@@ -42,7 +42,7 @@ public class ProductService implements IProductService {
         product.setLastUpdate(null);
         product.setActive(true);
 
-        this.productRepository.create(product);
+        this.productRepository.createProduct(product);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ProductService implements IProductService {
 
         String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
 
-        ProductModel product = this.productRepository.getById(productId);
+        ProductModel product = this.productRepository.getProductById(productId);
 
         if (product == null) {
             throw new InvalidOperationException("Produto não encontrado!");
@@ -60,24 +60,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductModel> getProductsByStoreId(int storeId) throws IOException {
+    public List<ProductModel> getProductsByQuantity(int quantity) throws IOException {
 
-        List<ProductModel> products = this.productRepository.getProductsByStoreId(storeId);
-
-        if (products != null) {
-            for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImageList());
-                product.setImageList(images);
-            }
-        }
-
-        return products;
-    }
-
-    @Override
-    public List<ProductModel> getProductsBySubtypeId(int subtypeId) throws IOException {
-
-        List<ProductModel> products = this.productRepository.getProductsBySubtypeId(subtypeId);
+        List<ProductModel> products = this.productRepository.getProductsByQuantity(quantity);
 
         if (products != null) {
             for (ProductModel product : products) {
@@ -90,9 +75,39 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<ProductModel> getProductsToSell() throws IOException {
+    public List<ProductModel> getProductsByNameAndQuantity(String name, int quantity) throws IOException {
 
-        List<ProductModel> products = this.productRepository.getProductsToSell();
+        List<ProductModel> products = this.productRepository.getProductsByNameAndQuantity(name, quantity);
+
+        if (products != null) {
+            for (ProductModel product : products) {
+                List<String> images = this.getImagesByPaths(product.getImageList());
+                product.setImageList(images);
+            }
+        }
+
+        return products;
+    }
+
+    @Override
+    public List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity) throws IOException {
+
+        List<ProductModel> products = this.productRepository.getProductsByStoreIdAndQuantity(storeId, quantity);
+
+        if (products != null) {
+            for (ProductModel product : products) {
+                List<String> images = this.getImagesByPaths(product.getImageList());
+                product.setImageList(images);
+            }
+        }
+
+        return products;
+    }
+
+    @Override
+    public List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity) throws IOException {
+
+        List<ProductModel> products = this.productRepository.getProductsBySubtypeIdAndQuantity(subtypeId, quantity);
 
         if (products != null) {
             for (ProductModel product : products) {
@@ -107,7 +122,7 @@ public class ProductService implements IProductService {
     @Override
     public ProductModel getProductById(int productId) throws IOException {
 
-        ProductModel product = this.productRepository.getById(productId);
+        ProductModel product = this.productRepository.getProductById(productId);
 
         if (product != null) {
             List<String> images = this.getImagesByPaths(product.getImageList());
@@ -132,7 +147,7 @@ public class ProductService implements IProductService {
     @Override
     public void updateProduct(ProductModel product) throws InvalidOperationException {
 
-        ProductModel oldProduct = this.productRepository.getById(product.getProductId());
+        ProductModel oldProduct = this.productRepository.getProductById(product.getProductId());
 
         if (oldProduct == null) {
             throw new InvalidOperationException("Produto não encontrado!");
@@ -141,7 +156,7 @@ public class ProductService implements IProductService {
         product.setLastUpdate(LocalDateTime.now());
         product.setActive(oldProduct.isActive());
 
-        this.productRepository.update(product);
+        this.productRepository.updateProduct(product);
     }
 
     @Override
@@ -149,7 +164,7 @@ public class ProductService implements IProductService {
 
         // TODO product verification
 
-        if (!this.productRepository.delete(productId)) {
+        if (!this.productRepository.deleteProduct(productId)) {
             throw new InvalidOperationException("Produto não encontrado!");
         }
     }

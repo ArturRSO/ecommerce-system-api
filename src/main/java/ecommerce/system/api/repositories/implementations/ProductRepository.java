@@ -38,7 +38,7 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public int create(ProductModel object) {
+    public int createProduct(ProductModel object) {
 
         ProductEntity product = new ProductEntity(object);
 
@@ -57,11 +57,11 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsByStoreId(int storeId) {
+    public List<ProductModel> getProductsByQuantity(int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.storeId = :storeId AND p.active = true ORDER BY p.productId ASC";
+        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
         TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
-                .setParameter("storeId", storeId);
+                .setParameter("quantity", quantity);
         List<ProductEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
@@ -72,11 +72,12 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsBySubtypeId(int subtypeId) {
+    public List<ProductModel> getProductsByNameAndQuantity(String name, int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity > 0 AND p.productSubtypeId = :subtypeId ORDER BY p.productId ASC";
+        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity AND p.name LIKE :name ORDER BY p.productId ASC";
         TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
-                .setParameter("subtypeId", subtypeId);
+                .setParameter("quantity", quantity)
+                .setParameter("name", "%" + name + "%");
         List<ProductEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
@@ -87,10 +88,12 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsToSell() {
+    public List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity > 0 ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class);
+        String query = "FROM ProductEntity p WHERE p.storeId = :storeId AND p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
+        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+                .setParameter("storeId", storeId)
+                .setParameter("quantity", quantity);
         List<ProductEntity> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
@@ -101,7 +104,23 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public ProductModel getById(int id) {
+    public List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity) {
+
+        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity AND p.productSubtypeId = :subtypeId ORDER BY p.productId ASC";
+        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+                .setParameter("subtypeId", subtypeId)
+                .setParameter("quantity", quantity);
+        List<ProductEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        return this.buildProducts(entities);
+    }
+
+    @Override
+    public ProductModel getProductById(int id) {
 
         try {
 
@@ -132,7 +151,7 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public boolean update(ProductModel object) {
+    public boolean updateProduct(ProductModel object) {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, object.getProductId());
 
@@ -148,7 +167,7 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean deleteProduct(int id) {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, id);
 

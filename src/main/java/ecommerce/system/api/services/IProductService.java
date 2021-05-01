@@ -13,9 +13,10 @@ public interface IProductService {
 
     void createProduct(ProductModel product);
     void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException;
-    List<ProductModel> getProductsByStoreId(int storeId) throws IOException;
-    List<ProductModel> getProductsBySubtypeId(int subtypeId) throws IOException;
-    List<ProductModel> getProductsToSell() throws IOException;
+    List<ProductModel> getProductsByQuantity(int quantity) throws IOException;
+    List<ProductModel> getProductsByNameAndQuantity(String name, int quantity) throws IOException;
+    List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity) throws IOException;
+    List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity) throws IOException;
     ProductModel getProductById(int productId) throws IOException;
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);

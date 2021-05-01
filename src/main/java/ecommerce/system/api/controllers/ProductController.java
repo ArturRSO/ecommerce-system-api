@@ -93,14 +93,70 @@ public class ProductController {
         }
     }
 
-    @GetMapping("store/{storeId}")
-    public ResponseEntity<?> getProductsByStoreId(@PathVariable("storeId") int storeId) {
+    @GetMapping("all")
+    public ResponseEntity<?> getProductsByQuantity(@RequestParam("quantity") int quantity) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsByStoreId(storeId);
+            List<ProductModel> products = this.productService.getProductsByQuantity(quantity);
+
+            if (products == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<?> getProductsByNameAndQuantity(@RequestParam("name") String name, @RequestParam("quantity") int quantity) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            List<ProductModel> products = this.productService.getProductsByNameAndQuantity(name, quantity);
+
+            if (products == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("store/{storeId}")
+    public ResponseEntity<?> getProductsByStoreIdAndQuantity(@PathVariable("storeId") int storeId, @RequestParam("quantity") int quantity) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            List<ProductModel> products = this.productService.getProductsByStoreIdAndQuantity(storeId, quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -122,41 +178,13 @@ public class ProductController {
     }
 
     @GetMapping("subtype/{subtypeId}")
-    public ResponseEntity<?> getProductsBySubtypeId(@PathVariable("subtypeId") int subtypeId) {
+    public ResponseEntity<?> getProductsBySubtypeIdAndQuantity(@PathVariable("subtypeId") int subtypeId, @RequestParam("quantity") int quantity) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsBySubtypeId(subtypeId);
-
-            if (products == null) {
-                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
-
-            } else {
-                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
-            }
-
-            return new ResponseEntity<>(response, HttpStatus.OK);
-
-        } catch (Exception e) {
-
-            logger.error(e.getMessage());
-
-            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
-
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("sell")
-    public ResponseEntity<?> getProductsToSell() {
-
-        BaseResponseDTO<?> response;
-
-        try {
-
-            List<ProductModel> products = this.productService.getProductsToSell();
+            List<ProductModel> products = this.productService.getProductsBySubtypeIdAndQuantity(subtypeId, quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
