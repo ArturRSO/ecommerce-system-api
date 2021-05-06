@@ -13,6 +13,7 @@ import ecommerce.system.api.services.*;
 import ecommerce.system.api.tools.NotificationHandler;
 import ecommerce.system.api.tools.SHAEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final SHAEncoder shaEncoder;
     private final NotificationHandler notificationHandler;
+
+    @Value("${application.image-path-users-default}")
+    private String defaultProfileImagePath;
 
     @Autowired
     public UserService(IAuthenticationService authenticationService,
@@ -67,6 +71,7 @@ public class UserService implements IUserService {
         String encodedPassword = this.shaEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
+        user.setProfileImage(this.defaultProfileImagePath);
         user.setCreationDate(LocalDateTime.now());
         user.setLastUpdate(null);
         user.setVerifiedEmail(true);
