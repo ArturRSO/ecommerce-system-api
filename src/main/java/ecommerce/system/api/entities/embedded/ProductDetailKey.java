@@ -36,4 +36,31 @@ public class ProductDetailKey implements Serializable {
     public void setDetailLabelId(int detailLabelId) {
         this.detailLabelId = detailLabelId;
     }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof ProductDetailKey)) {
+            return false;
+        }
+
+        ProductDetailKey productDetailKey = (ProductDetailKey) object;
+
+        return productDetailKey.getProductId() == this.productId
+                && productDetailKey.getDetailLabelId() == this.detailLabelId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        result = 31 * result + this.productId;
+        result = 31 * result + this.detailLabelId;
+
+        return result;
+    }
 }

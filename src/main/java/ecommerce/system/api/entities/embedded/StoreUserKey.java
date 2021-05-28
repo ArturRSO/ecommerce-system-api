@@ -36,4 +36,31 @@ public class StoreUserKey implements Serializable {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof StoreUserKey)) {
+            return false;
+        }
+
+        StoreUserKey storeUserKey = (StoreUserKey) object;
+
+        return  storeUserKey.getStoreId() == this.storeId
+                && storeUserKey.getUserId() == this.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        result = 31 * result + this.storeId;
+        result = 31 * result + this.userId;
+
+        return result;
+    }
 }

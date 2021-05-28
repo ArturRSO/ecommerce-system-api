@@ -36,4 +36,31 @@ public class DetailLabelProductSubtypeKey implements Serializable {
     public void setDetailLabelId(int detailLabelId) {
         this.detailLabelId = detailLabelId;
     }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof DetailLabelProductSubtypeKey)) {
+            return false;
+        }
+
+        DetailLabelProductSubtypeKey detailLabelProductSubtypeKey = (DetailLabelProductSubtypeKey) object;
+
+        return detailLabelProductSubtypeKey.getProductSubtypeId() == this.productSubtypeId
+                && detailLabelProductSubtypeKey.getDetailLabelId() == this.detailLabelId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        result = 31 * result + this.productSubtypeId;
+        result = 31 * result + this.detailLabelId;
+
+        return result;
+    }
 }

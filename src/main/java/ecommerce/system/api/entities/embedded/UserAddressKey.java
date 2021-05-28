@@ -36,4 +36,31 @@ public class UserAddressKey implements Serializable {
     public void setAddressId(int addressId) {
         this.addressId = addressId;
     }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (object == this) {
+            return true;
+        }
+
+        if (!(object instanceof UserAddressKey)) {
+            return false;
+        }
+
+        UserAddressKey userAddressKey = (UserAddressKey) object;
+
+        return userAddressKey.getUserId() == this.userId
+                && userAddressKey.getAddressId() == this.addressId;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+
+        result = 31 * result + this.userId;
+        result = 31 * result + this.addressId;
+
+        return result;
+    }
 }
