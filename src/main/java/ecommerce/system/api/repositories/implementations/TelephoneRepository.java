@@ -56,7 +56,7 @@ public class TelephoneRepository implements ITelephoneRepository {
     @Override
     public List<TelephoneModel> getTelephonesByUserId(int userId) {
 
-        String query = "FROM TelephoneEntity t WHERE t.active = true AND t.userId = :userId ORDER by t.telephoneId ASC";
+        String query = "SELECT t FROM TelephoneEntity t, UserTelephoneEntity ut WHERE t.active = true AND ut.id.userId = :userId AND t.telephoneId = ut.id.telephoneId ORDER by t.telephoneId ASC";
         TypedQuery<TelephoneEntity> result = this.entityManager.createQuery(query, TelephoneEntity.class)
                 .setParameter("userId", userId);
         List<TelephoneEntity> entities = result.getResultList();

@@ -14,9 +14,6 @@ public class TelephoneEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int telephoneId;
 
-    @Column(name = "fk_userId")
-    private int userId;
-
     @Column(name = "fk_telephoneTypeId")
     private int telephoneTypeId;
 
@@ -43,7 +40,6 @@ public class TelephoneEntity {
 
     public TelephoneEntity(TelephoneModel telephone) {
         this.telephoneId = telephone.getTelephoneId();
-        this.userId = telephone.getUserId();
         this.telephoneTypeId = telephone.getTelephoneTypeId();
         this.internationalCode = telephone.getInternationalCode();
         this.localCode = telephone.getLocalCode();
@@ -56,7 +52,6 @@ public class TelephoneEntity {
     public TelephoneModel toModel() {
         return new TelephoneModel(
                 this.telephoneId,
-                this.userId,
                 this.telephoneTypeId,
                 this.internationalCode,
                 this.localCode,
@@ -73,14 +68,6 @@ public class TelephoneEntity {
 
     public void setTelephoneId(int telephoneId) {
         this.telephoneId = telephoneId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public int getTelephoneTypeId() {

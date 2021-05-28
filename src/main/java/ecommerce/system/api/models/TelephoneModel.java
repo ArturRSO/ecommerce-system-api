@@ -38,7 +38,6 @@ public class TelephoneModel {
     private boolean active;
 
     public TelephoneModel(int telephoneId,
-                          int userId,
                           int telephoneTypeId,
                           String internationalCode,
                           int localCode,
@@ -47,7 +46,6 @@ public class TelephoneModel {
                           LocalDateTime lastUpdate,
                           boolean active) {
         this.telephoneId = telephoneId;
-        this.userId = userId;
         this.telephoneTypeId = telephoneTypeId;
         this.internationalCode = internationalCode;
         this.localCode = localCode;

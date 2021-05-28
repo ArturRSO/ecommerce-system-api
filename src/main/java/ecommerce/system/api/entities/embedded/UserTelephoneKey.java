@@ -5,20 +5,20 @@ import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class UserAddressKey implements Serializable {
+public class UserTelephoneKey implements Serializable {
 
     @Column(name = "pk_fk_userId")
     private int userId;
 
-    @Column(name = "pk_fk_addressId")
-    private int addressId;
+    @Column(name = "pk_fk_telephoneId")
+    private int telephoneId;
 
-    public UserAddressKey() {
+    public UserTelephoneKey() {
     }
 
-    public UserAddressKey(int userId, int addressId) {
+    public UserTelephoneKey(int userId, int telephoneId) {
         this.userId = userId;
-        this.addressId = addressId;
+        this.telephoneId = telephoneId;
     }
 
     public int getUserId() {
@@ -29,11 +29,11 @@ public class UserAddressKey implements Serializable {
         this.userId = userId;
     }
 
-    public int getAddressId() {
-        return addressId;
+    public int getTelephoneId() {
+        return telephoneId;
     }
 
-    public void setAddressId(int addressId) {
-        this.addressId = addressId;
+    public void setTelephoneId(int telephoneId) {
+        this.telephoneId = telephoneId;
     }
 }

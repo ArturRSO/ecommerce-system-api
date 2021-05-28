@@ -53,6 +53,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/orders/store/**").hasAnyRole("system_admin", "store_admin")
                     .antMatchers("/orders/user/**").hasAnyRole("system_admin", "store_admin", "customer")
                     .antMatchers("/orders/**").hasAnyRole("system_admin")
+                    // PAYMENT METHOD
+                    .antMatchers("/paymentmethods/**").permitAll()
                     // PRODUCT
                     .antMatchers("/products/create/**").hasAnyRole("store_admin")
                     .antMatchers("/products/store/**").hasAnyRole("system_admin", "store_admin")

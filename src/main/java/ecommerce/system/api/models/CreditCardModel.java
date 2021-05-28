@@ -8,6 +8,7 @@ public class CreditCardModel extends PaymentMethodModel {
     private String securityCode;
 
     public CreditCardModel(String cardNumber, String ownerName, String expirationDate, String securityCode) {
+        super(0, null, 0, false);
         this.cardNumber = cardNumber;
         this.ownerName = ownerName;
         this.expirationDate = expirationDate;
