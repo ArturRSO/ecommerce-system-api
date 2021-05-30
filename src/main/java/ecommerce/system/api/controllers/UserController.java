@@ -165,7 +165,7 @@ public class UserController {
 
         try {
 
-            UserModel user = this.userService.getUserById(id);
+            UserModel user = this.userService.getUserById(id, false);
 
             if (user == null) {
                 response = new BaseResponseDTO<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");

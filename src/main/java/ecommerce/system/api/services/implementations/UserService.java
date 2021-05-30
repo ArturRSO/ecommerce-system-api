@@ -169,11 +169,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getUserById(int id) throws IOException {
+    public UserModel getUserById(int id, boolean imagePath) throws IOException {
 
         UserModel user = this.userRepository.getById(id);
 
-        user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+        if (!imagePath) {
+            user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
+        }
 
         return user;
     }
@@ -268,7 +270,7 @@ public class UserService implements IUserService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        UserModel oldUser = this.getUserById(user.getUserId());
+        UserModel oldUser = this.getUserById(user.getUserId(), true);
 
         if (oldUser == null) {
             throw new InvalidOperationException("Usuário não encontrado!");

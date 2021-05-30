@@ -1,6 +1,8 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.AddressEntity;
+import ecommerce.system.api.entities.UserAddressEntity;
+import ecommerce.system.api.entities.embedded.UserAddressKey;
 import ecommerce.system.api.models.AddressModel;
 import ecommerce.system.api.repositories.IAddressRepository;
 import org.slf4j.Logger;
@@ -31,6 +33,15 @@ public class AddressRepository implements IAddressRepository {
         this.entityManager.flush();
 
         return address.getAddressId();
+    }
+
+    @Override
+    public void relateAddressAndUser(int userId, int adddressId) {
+
+        UserAddressKey userAddressKey = new UserAddressKey(userId, adddressId);
+        UserAddressEntity userAddress = new UserAddressEntity(userAddressKey);
+
+        this.entityManager.persist(userAddress);
     }
 
     @Override
@@ -79,6 +90,9 @@ public class AddressRepository implements IAddressRepository {
         if (address == null || !address.isActive()) {
             return false;
         }
+
+        object.setCreationDate(address.getCreationDate());
+        object.setActive(address.isActive());
 
         AddressEntity updatedAddress = new AddressEntity(object);
         this.entityManager.merge(updatedAddress);

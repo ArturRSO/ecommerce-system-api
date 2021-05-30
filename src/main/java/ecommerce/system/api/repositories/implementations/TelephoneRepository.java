@@ -1,6 +1,8 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.entities.TelephoneEntity;
+import ecommerce.system.api.entities.UserTelephoneEntity;
+import ecommerce.system.api.entities.embedded.UserTelephoneKey;
 import ecommerce.system.api.models.TelephoneModel;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import org.slf4j.Logger;
@@ -31,6 +33,15 @@ public class TelephoneRepository implements ITelephoneRepository {
         this.entityManager.flush();
 
         return telephone.getTelephoneId();
+    }
+
+    @Override
+    public void relateTelephoneAndUser(int userId, int telephoneId) {
+
+        UserTelephoneKey userTelephoneKey = new UserTelephoneKey(userId, telephoneId);
+        UserTelephoneEntity userTelephone = new UserTelephoneEntity(userTelephoneKey);
+
+        this.entityManager.persist(userTelephone);
     }
 
     @Override
@@ -79,6 +90,9 @@ public class TelephoneRepository implements ITelephoneRepository {
         if (telephone == null || !telephone.isActive()) {
             return false;
         }
+
+        object.setCreationDate(telephone.getCreationDate());
+        object.setActive(telephone.isActive());
 
         TelephoneEntity updatedTelephone = new TelephoneEntity(object);
         this.entityManager.merge(updatedTelephone);

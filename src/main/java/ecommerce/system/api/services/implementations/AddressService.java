@@ -39,7 +39,8 @@ public class AddressService implements IAddressService {
         address.setLastUpdate(null);
         address.setActive(true);
 
-        this.addressRepository.create(address);
+        int addressId = this.addressRepository.create(address);
+        this.addressRepository.relateAddressAndUser(address.getUserId(), addressId);
     }
 
     @Override
@@ -65,6 +66,7 @@ public class AddressService implements IAddressService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
+        // HARDCODED
         address.setLastUpdate(LocalDateTime.now());
 
         if (!this.addressRepository.update(address)) {

@@ -15,7 +15,7 @@ public interface IUserService {
     List<UserModel> getAllUsers() throws IOException;
     List<UserModel> getUsersByRoleId(int roleId) throws IOException;
     List<UserModel> getUsersByStoreId(int storeId) throws IOException;
-    UserModel getUserById(int id) throws IOException;
+    UserModel getUserById(int id, boolean imagePath) throws IOException;
     UserModel getUserByEmail(String email);
     UserModel getUserProfile() throws IOException;
     boolean checkPasswordRecoverToken(String token) throws Exception;

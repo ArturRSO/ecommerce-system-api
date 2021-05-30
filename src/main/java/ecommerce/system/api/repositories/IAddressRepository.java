@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface IAddressRepository extends ICrudRepository<AddressModel> {
 
+    void relateAddressAndUser(int userId, int adddressId);
     List<AddressModel> getAddressesByUserId(int userId);
 }
