@@ -155,7 +155,7 @@ public class ProductRepository implements IProductRepository {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, object.getProductId());
 
-        if (product == null || product.isActive()) {
+        if (product == null || !product.isActive()) {
             return false;
         }
 
@@ -171,7 +171,7 @@ public class ProductRepository implements IProductRepository {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, id);
 
-        if (product == null || product.isActive()) {
+        if (product == null || !product.isActive()) {
             return false;
         }
 

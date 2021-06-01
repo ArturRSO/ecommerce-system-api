@@ -142,7 +142,7 @@ public class StoreRepository implements IStoreRepository {
 
         StoreEntity store = this.entityManager.find(StoreEntity.class, object.getStoreId());
 
-        if (store == null || store.isActive()) {
+        if (store == null || !store.isActive()) {
             return false;
         }
 
@@ -158,7 +158,7 @@ public class StoreRepository implements IStoreRepository {
 
         StoreEntity store = this.entityManager.find(StoreEntity.class, id);
 
-        if (store == null || store.isActive()) {
+        if (store == null || !store.isActive()) {
             return false;
         }
 

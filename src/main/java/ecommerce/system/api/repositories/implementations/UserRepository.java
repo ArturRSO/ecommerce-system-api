@@ -181,7 +181,7 @@ public class UserRepository implements IUserRepository {
 
         UserEntity user = this.entityManager.find(UserEntity.class, object.getUserId());
 
-        if (user == null || user.isActive()) {
+        if (user == null || !user.isActive()) {
             return false;
         }
 
@@ -196,7 +196,7 @@ public class UserRepository implements IUserRepository {
 
         UserEntity user = this.entityManager.find(UserEntity.class, id);
 
-        if (user == null || user.isActive()) {
+        if (user == null || !user.isActive()) {
             return false;
         }
 

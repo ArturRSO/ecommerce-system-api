@@ -157,7 +157,7 @@ public class ProductEntity {
     }
 
     public boolean isActive() {
-        return !active;
+        return active;
     }
 
     public void setActive(boolean active) {
