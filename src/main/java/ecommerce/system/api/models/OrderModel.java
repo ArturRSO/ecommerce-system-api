@@ -2,16 +2,20 @@ package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ecommerce.system.api.dto.PaymentMethodDTO;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 public class OrderModel {
 
     private int orderId;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int userId;
+
+    @JsonIgnore
+    private int storeId;
 
     @JsonIgnore
     private int paymentMethodId;
@@ -39,8 +43,11 @@ public class OrderModel {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int addressId;
 
-    // TODO remover list
-    private List<Map<String, Integer>> products;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Map<Integer, Integer> itens;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private PaymentMethodDTO paymentMethod;
 
     public OrderModel() {
     }
@@ -53,6 +60,17 @@ public class OrderModel {
         this.totalDiscountPercentage = totalDiscountPercentage;
         this.finalPrice = finalPrice;
         this.installment = installment;
+        this.creationDate = creationDate;
+        this.lastUpdate = lastUpdate;
+        this.orderStatusId = orderStatusId;
+    }
+
+    public OrderModel(int orderId, int storeId, double totalPrice, double totalDiscountPercentage, double finalPrice, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
+        this.orderId = orderId;
+        this.storeId = storeId;
+        this.totalPrice = totalPrice;
+        this.totalDiscountPercentage = totalDiscountPercentage;
+        this.finalPrice = finalPrice;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.orderStatusId = orderStatusId;
@@ -72,6 +90,14 @@ public class OrderModel {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
     public int getPaymentMethodId() {
@@ -146,11 +172,19 @@ public class OrderModel {
         this.addressId = addressId;
     }
 
-    public List<Map<String, Integer>> getProducts() {
-        return products;
+    public Map<Integer, Integer> getItens() {
+        return itens;
     }
 
-    public void setProducts(List<Map<String, Integer>> products) {
-        this.products = products;
+    public void setItens(Map<Integer, Integer> itens) {
+        this.itens = itens;
+    }
+
+    public PaymentMethodDTO getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethodDTO paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

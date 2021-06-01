@@ -6,16 +6,23 @@ import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.CreditCardModel;
 import ecommerce.system.api.models.PaymentMethodModel;
 import ecommerce.system.api.services.IPaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+@Service
 public class PaymentService implements IPaymentService {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public boolean pay(PaymentMethodDTO data, double value) throws InvalidOperationException {
-        //TODO
 
         PaymentMethodModel paymentMethod = this.paymentMethodFactory(data);
+
+        logger.info("Processing payment with value " + value + " and payment method " + paymentMethod.getName());
 
         return true;
     }

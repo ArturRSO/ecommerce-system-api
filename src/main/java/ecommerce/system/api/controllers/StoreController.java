@@ -89,7 +89,7 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -119,7 +119,7 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -237,16 +237,15 @@ public class StoreController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-            // TODO
-//        }  catch (InvalidOperationException ioe) {
-//
-//            logger.error(ioe.getMessage());
-//
-//            response.setSuccess(false);
-//            response.setMessage(ioe.getMessage());
-//            response.setData("");
-//
-//            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
 
         } catch (Exception e) {
 

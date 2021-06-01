@@ -38,6 +38,9 @@ public class ProductModel {
 
     private List<String> imageList;
 
+    @JsonIgnore
+    private int orderQuantity;
+
     public ProductModel(
             int productId,
             ProductTypeModel productType,
@@ -165,5 +168,13 @@ public class ProductModel {
 
     public void setImageList(List<String> imageList) {
         this.imageList = imageList;
+    }
+
+    public int getOrderQuantity() {
+        return orderQuantity;
+    }
+
+    public void setOrderQuantity(int orderQuantity) {
+        this.orderQuantity = orderQuantity;
     }
 }

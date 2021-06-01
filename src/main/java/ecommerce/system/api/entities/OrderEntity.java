@@ -54,12 +54,10 @@ public class OrderEntity {
     public OrderModel toModel() {
         return new OrderModel(
                 this.orderId,
-                0,
-                0,
+                this.storeId,
                 this.totalPrice,
                 this.totalDiscountPercentage,
                 this.finalPrice,
-                0,
                 this.creationDate,
                 this.lastUpdate,
                 this.orderStatusId

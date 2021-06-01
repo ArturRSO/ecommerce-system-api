@@ -14,6 +14,7 @@ public interface IStoreService {
     List<StoreModel> getAllStores();
     List<StoreModel> getStoresByUserId(int userId);
     StoreModel getStoreById(int storeId);
-    void updateStore(StoreModel store) throws InvalidOperationException;
-    void deleteStore(int storeId);
+    StoreModel getStoreByProductId(int productId);
+    void updateStore(StoreModel store) throws InvalidOperationException, IOException;
+    void deleteStore(int storeId) throws InvalidOperationException, IOException;
 }

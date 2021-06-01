@@ -1,5 +1,6 @@
 package ecommerce.system.api.controllers;
 
+import ecommerce.system.api.dto.PaymentDTO;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
@@ -114,6 +115,80 @@ public class OrderController {
             logger.error(e.getMessage());
 
             response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("update/{orderId}/status/{statusId}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable("orderId") int orderSummaryId, @PathVariable("statusId") int orderStatusId) {
+
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+
+        try {
+
+            this.orderService.updateOrderStatus(orderSummaryId, orderStatusId);
+
+            response.setSuccess(true);
+            response.setMessage("Pedido atualizado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("{orderId}/pay")
+    public ResponseEntity<?> payOrder(@PathVariable("orderId") int orderSummaryId, @RequestBody PaymentDTO paymentInfo) {
+
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+
+        try {
+
+            this.orderService.payOrder(orderSummaryId, paymentInfo);
+
+            response.setSuccess(true);
+            response.setMessage("Pedido atualizado com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

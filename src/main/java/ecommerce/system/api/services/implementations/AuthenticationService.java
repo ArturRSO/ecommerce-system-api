@@ -63,11 +63,11 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public boolean isSystemAdmin() {
+    public boolean isNotSystemAdmin() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         return authentication.getAuthorities().stream()
-                .anyMatch(r -> r.getAuthority().equals("ROLE_system_admin"));
+                .noneMatch(r -> r.getAuthority().equals("ROLE_system_admin"));
     }
 }

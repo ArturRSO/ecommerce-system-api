@@ -20,6 +20,6 @@ public interface IProductService {
     ProductModel getProductById(int productId) throws IOException;
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);
-    void updateProduct(ProductModel product) throws InvalidOperationException;
-    void deleteProduct(int productId) throws InvalidOperationException;
+    void updateProduct(ProductModel product) throws InvalidOperationException, IOException;
+    void deleteProduct(int productId) throws InvalidOperationException, IOException;
 }

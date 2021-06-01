@@ -1,18 +1,17 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.enums.MessagesEnum;
+import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.ProductModel;
-import ecommerce.system.api.models.ProductSubtypeModel;
-import ecommerce.system.api.models.ProductTypeModel;
+import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IProductRepository;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
 import ecommerce.system.api.repositories.IProductTypeRepository;
-import ecommerce.system.api.services.IFileService;
-import ecommerce.system.api.services.IProductService;
+import ecommerce.system.api.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,17 +21,33 @@ import java.util.List;
 @Service
 public class ProductService implements IProductService {
 
+    private final IAuthenticationService authenticationService;
     private final IFileService fileService;
+    private final IOrderService orderService;
     private final IProductRepository productRepository;
     private final IProductTypeRepository productTypeRepository;
     private final IProductSubtypeRepository productSubtypeRepository;
+    private final IStoreService storeService;
+    private final IUserService userService;
 
     @Autowired
-    public ProductService(IFileService fileService, IProductRepository productRepository, IProductTypeRepository productTypeRepository, IProductSubtypeRepository productSubtypeRepository) {
+    public ProductService(
+            IAuthenticationService authenticationService,
+            IFileService fileService,
+            @Lazy IOrderService orderService,
+            IProductRepository productRepository,
+            IProductTypeRepository productTypeRepository,
+            IProductSubtypeRepository productSubtypeRepository,
+            IStoreService storeService,
+            IUserService userService) {
+        this.authenticationService = authenticationService;
         this.fileService = fileService;
+        this.orderService = orderService;
         this.productRepository = productRepository;
         this.productTypeRepository = productTypeRepository;
         this.productSubtypeRepository = productSubtypeRepository;
+        this.storeService = storeService;
+        this.userService = userService;
     }
 
     @Override
@@ -145,13 +160,22 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updateProduct(ProductModel product) throws InvalidOperationException {
+    public void updateProduct(ProductModel product) throws InvalidOperationException, IOException {
 
         ProductModel oldProduct = this.productRepository.getProductById(product.getProductId());
 
         if (oldProduct == null) {
             throw new InvalidOperationException("Produto não encontrado!");
         }
+
+        StoreModel store = this.storeService.getStoreByProductId(product.getProductId());
+
+        List<UserModel> users = this.userService.getUsersByStoreId(store.getStoreId());
+
+        if (users.stream().noneMatch(user -> this.authenticationService.isLoggedUser(user.getUserId()))) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
         product.setCreationDate(oldProduct.getCreationDate());
         product.setLastUpdate(LocalDateTime.now());
         product.setActive(oldProduct.isActive());
@@ -160,13 +184,32 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void deleteProduct(int productId) throws InvalidOperationException {
+    public void deleteProduct(int productId) throws InvalidOperationException, IOException {
 
-        // TODO product verification
+        ProductModel product = this.getProductById(productId);
 
-        if (!this.productRepository.deleteProduct(productId)) {
-            throw new InvalidOperationException("Produto não encontrado!");
+        if (product == null) {
+            throw new InvalidOperationException("Produto não encontrado.");
         }
+
+        StoreModel store = this.storeService.getStoreByProductId(productId);
+
+        List<UserModel> users = this.userService.getUsersByStoreId(store.getStoreId());
+
+        if (users.stream().noneMatch(user -> this.authenticationService.isLoggedUser(user.getUserId()))) {
+            throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
+        }
+
+        List<OrderModel> orders = this.orderService.getOrdersByProductId(productId);
+
+        for (OrderModel order : orders) {
+
+            if (order.getOrderStatusId() != OrderStatusEnum.FINISHED.getId()) {
+                throw new InvalidOperationException("Não é possível desativar um produto com pedidos em aberto. Caso queira removê-lo da loja antes, mude o quantidade em estoque para zero.");
+            }
+        }
+
+        this.productRepository.deleteProduct(productId);
     }
 
     private List<String> getImagesByPaths(List<String> paths) throws IOException {

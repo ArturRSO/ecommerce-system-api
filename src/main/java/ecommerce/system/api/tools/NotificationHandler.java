@@ -39,7 +39,7 @@ public class NotificationHandler {
 
         int seconds = expiration/1000;
 
-        return nofificationId + "|" + LocalDateTime.now().plusSeconds(seconds).toString() + "|" + userId + data;
+        return nofificationId + "|" + LocalDateTime.now().plusSeconds(seconds) + "|" + userId + data;
     }
 
     private Map<String, String> getTokenInfoForNotification(NotificationsEnum notification) {

@@ -9,5 +9,5 @@ public interface IAuthenticationService {
 
     TokenDTO authenticateUser(CredentialsDTO credentials) throws NoSuchAlgorithmException;
     boolean isLoggedUser(int userId);
-    boolean isSystemAdmin();
+    boolean isNotSystemAdmin();
 }

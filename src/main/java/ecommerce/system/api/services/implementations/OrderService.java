@@ -1,5 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.dto.PaymentDTO;
 import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.*;
@@ -22,16 +23,26 @@ public class OrderService implements IOrderService {
     private final ICashFlowRepository cashFlowRepository;
     private final IDeliveryService deliveryService;
     private final IOrderRepository orderRepository;
+    private final IPaymentService paymentService;
     private final IProductService productService;
     private final IStoreService storeService;
     private final IUserService userService;
 
     @Autowired
-    public OrderService(IAlertService alertService, ICashFlowRepository cashFlowRepositoy, IDeliveryService deliveryService, IOrderRepository orderRepository, IProductService productService, IStoreService storeService, IUserService userService) {
+    public OrderService(
+            IAlertService alertService,
+            ICashFlowRepository cashFlowRepositoy,
+            IDeliveryService deliveryService,
+            IOrderRepository orderRepository,
+            IPaymentService paymentService,
+            IProductService productService,
+            IStoreService storeService,
+            IUserService userService) {
         this.alertService = alertService;
         this.cashFlowRepository = cashFlowRepositoy;
         this.deliveryService = deliveryService;
         this.orderRepository = orderRepository;
+        this.paymentService = paymentService;
         this.productService = productService;
         this.storeService = storeService;
         this.userService = userService;
@@ -47,7 +58,7 @@ public class OrderService implements IOrderService {
 
                 totalPrice += product.getPrice();
 
-                int productQuantity = product.getQuantity() - 1; // product.getOrderQuantity(); // TODO
+                int productQuantity = product.getQuantity() - product.getOrderQuantity();
                 product.setQuantity(productQuantity);
 
                 if (productQuantity == 0) {
@@ -64,33 +75,27 @@ public class OrderService implements IOrderService {
             OrderModel order = new OrderModel();
             order.setOrderId(orderSummaryId);
             order.setTotalPrice(totalPrice);
-            order.setTotalDiscountPercentage(0);
+            order.setTotalDiscountPercentage(0); // HARDCODED
             order.setFinalPrice(totalPrice);
             order.setCreationDate(LocalDateTime.now());
             order.setLastUpdate(null);
-            order.setOrderStatusId(OrderStatusEnum.PAID.getId());
+            order.setOrderStatusId(OrderStatusEnum.RECEIVED.getId());
 
             int orderId = this.orderRepository.createOrder(order, entry.getKey());
 
             for (ProductModel product : entry.getValue()) {
-                this.orderRepository.createProductOrder(product.getProductId(), orderId, 1); //TODO
+                this.orderRepository.createProductOrder(product.getProductId(), orderId, product.getOrderQuantity());
             }
 
             StoreModel store = this.storeService.getStoreById(entry.getKey());
 
             DeliveryModel delivery = new DeliveryModel();
-            delivery.setDeliveryServiceId(1); // Hardcoded
+            delivery.setDeliveryServiceId(1); // HARDCODED
             delivery.setOrderId(orderId);
             delivery.setSenderAddressId(store.getAddressId());
             delivery.setReceiverAddressId(addressId);
 
             this.deliveryService.createDelivery(delivery);
-
-            double commission = totalPrice * 0.10;
-            double storeProfit = totalPrice - commission;
-
-            this.cashFlowRepository.createStoreCashFlowRecord(entry.getKey(), orderId, storeProfit);
-            this.cashFlowRepository.createSystemCashFlowRecord(orderId, commission);
         }
     }
 
@@ -100,14 +105,14 @@ public class OrderService implements IOrderService {
         Map<Integer, List<ProductModel>> productsByStore = new HashMap<>();
         double totalPrice = 0;
 
-        for (Map<String, Integer> productData : order.getProducts()) {
-            ProductModel product = this.productService.getProductById(productData.get("productId"));
+        for (Map.Entry<Integer, Integer> item : order.getItens().entrySet()) {
+            ProductModel product = this.productService.getProductById(item.getKey());
 
-            if (productData.get("quantity") > product.getQuantity()) {
+            if (item.getValue() > product.getQuantity()) {
                 throw new InvalidOperationException("Estoque insuficiente para o produto " + product.getName());
             }
 
-            totalPrice += product.getPrice() * productData.get("quantity");
+            totalPrice += product.getPrice() * item.getValue();
 
             List<ProductModel> products = productsByStore.get(product.getStoreId());
 
@@ -116,18 +121,18 @@ public class OrderService implements IOrderService {
                 products = new ArrayList<>();
             }
 
-            //product.setOrderQuantity(productData.get("quantity")); // TODO
+            product.setOrderQuantity(item.getValue());
             products.add(product);
             productsByStore.put(product.getStoreId(), products);
         }
 
         order.setTotalPrice(totalPrice);
-        order.setTotalDiscountPercentage(0);
+        order.setTotalDiscountPercentage(0); // HARDCODED
         order.setFinalPrice(totalPrice);
-        order.setInstallment(1);
+        order.setInstallment(1); // HARDCODED
         order.setCreationDate(LocalDateTime.now());
         order.setLastUpdate(null);
-        order.setOrderStatusId(OrderStatusEnum.PAID.getId());
+        order.setOrderStatusId(OrderStatusEnum.RECEIVED.getId());
 
         int orderSummaryId = this.orderRepository.createOrderSummary(order);
 
@@ -141,8 +146,87 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public List<OrderModel> getOrdersByProductId(int productId) {
+
+        return this.orderRepository.getOrdersByProductId(productId);
+    }
+
+    @Override
     public List<OrderModel> getOrderSummariesByUserId(int userId) {
 
         return this.orderRepository.getOrderSummariesByUserId(userId);
+    }
+
+    @Override
+    public void updateOrderStatus(int orderSummaryid, int orderStatusId) throws InvalidOperationException {
+
+        OrderModel orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
+
+        if (orderSummary == null) {
+            throw new InvalidOperationException("Pedido não encontrado!");
+        }
+
+        List<OrderModel> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
+
+        if (orders == null) {
+            throw new InvalidOperationException("Pedido com dados comprometidos! Não foi possível efetuar a atualização de status.");
+        }
+
+        orderSummary.setOrderStatusId(orderStatusId);
+        orderSummary.setLastUpdate(LocalDateTime.now());
+
+        this.orderRepository.updateOrderSummary(orderSummary);
+
+        for (OrderModel order: orders) {
+
+            order.setOrderStatusId(orderStatusId);
+            order.setLastUpdate(LocalDateTime.now());
+
+            this.orderRepository.updateOrder(order);
+        }
+    }
+
+    @Override
+    public void payOrder(int orderSummaryid, PaymentDTO paymentInfo) throws InvalidOperationException {
+
+        OrderModel orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
+
+        if (orderSummary == null) {
+            throw new InvalidOperationException("Pedido não encontrado!");
+        }
+
+        if (orderSummary.getTotalPrice() != paymentInfo.getValue()) {
+            throw new InvalidOperationException("Valor do pagamento incorreto!");
+        }
+
+        List<OrderModel> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
+
+        if (orders == null) {
+            throw new InvalidOperationException("Pedido com dados comprometidos! Não foi possível efetuar o pagamento.");
+        }
+
+        if (this.paymentService.pay(paymentInfo.getPaymentMethod(), paymentInfo.getValue())) {
+
+            orderSummary.setOrderStatusId(OrderStatusEnum.PAID.getId());
+            orderSummary.setLastUpdate(LocalDateTime.now());
+
+            this.orderRepository.updateOrderSummary(orderSummary);
+
+            for (OrderModel order : orders) {
+
+                double commission = order.getTotalPrice() * 0.10; // HARDCODED
+                double storeProfit = order.getTotalPrice() - commission;
+
+                order.setOrderStatusId(OrderStatusEnum.PAID.getId());
+                order.setLastUpdate(LocalDateTime.now());
+
+                this.orderRepository.updateOrder(order);
+
+                this.cashFlowRepository.createStoreCashFlowRecord(order.getStoreId(), order.getOrderId(), storeProfit);
+                this.cashFlowRepository.createSystemCashFlowRecord(order.getOrderId(), commission);
+            }
+        } else {
+            throw new InvalidOperationException("Erro inesperado ao efetuar o pagamento!");
+        }
     }
 }

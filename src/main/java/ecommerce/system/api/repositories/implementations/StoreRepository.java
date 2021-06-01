@@ -39,7 +39,7 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
-    public void createStoreUser(int storeId, int userId) {
+    public void relateStoreAndUser(int storeId, int userId) {
 
         StoreUserKey storeUserKey = new StoreUserKey(storeId, userId);
         StoreUserEntity storeUser = new StoreUserEntity(storeUserKey);
@@ -83,6 +83,21 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
+    public List<Integer> getUserIdsByStoreId(int storeId) {
+
+        String query = "SELECT su.id.userId FROM StoreUserEntity su, StoreEntity s WHERE s.storeId = su.id.storeId AND s.storeId = :storeId AND s.active = true ORDER BY s.storeId ASC";
+        TypedQuery<Integer> result = this.entityManager.createQuery(query, Integer.class)
+                .setParameter("storeId", storeId);
+        List<Integer> userIds = result.getResultList();
+
+        if (userIds == null || userIds.isEmpty()) {
+            return null;
+        }
+
+        return userIds;
+    }
+
+    @Override
     public StoreModel getById(int id) {
 
         try {
@@ -103,11 +118,31 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
+    public StoreModel getStoreByProductId(int productId) {
+
+        try {
+
+            String query = "SELECT s FROM StoreEntity s, ProductEntity p WHERE p.storeId = s.storeId AND p.productId = :productId";
+            TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class)
+                    .setParameter("productId", productId);
+            StoreEntity store = result.getSingleResult();
+
+            return store.toModel();
+
+        } catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
+            return null;
+        }
+    }
+
+    @Override
     public boolean update(StoreModel object) {
 
         StoreEntity store = this.entityManager.find(StoreEntity.class, object.getStoreId());
 
-        if (store == null || !store.isActive()) {
+        if (store == null || store.isActive()) {
             return false;
         }
 
@@ -123,7 +158,7 @@ public class StoreRepository implements IStoreRepository {
 
         StoreEntity store = this.entityManager.find(StoreEntity.class, id);
 
-        if (store == null || !store.isActive()) {
+        if (store == null || store.isActive()) {
             return false;
         }
 

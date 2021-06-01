@@ -42,7 +42,7 @@ public class UserService implements IUserService {
     public UserService(IAuthenticationService authenticationService,
                        IFileService fileService,
                        @Lazy IOrderService orderService,
-                       IStoreService storeService,
+                       @Lazy IStoreService storeService,
                        IUserRepository userRepository,
                        SHAEncoder shaEncoder,
                        NotificationHandler notificationHandler) {
@@ -64,7 +64,7 @@ public class UserService implements IUserService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        if (userRole.equals("system_admin") && !this.authenticationService.isSystemAdmin()) {
+        if (userRole.equals("system_admin") && this.authenticationService.isNotSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
