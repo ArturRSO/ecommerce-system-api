@@ -35,8 +35,6 @@ public class TelephoneService implements ITelephoneService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        // HARDCODED
-        telephone.setInternationalCode("+55");
         telephone.setCreationDate(LocalDateTime.now());
         telephone.setLastUpdate(null);
         telephone.setActive(true);
@@ -68,8 +66,6 @@ public class TelephoneService implements ITelephoneService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        // HARDCODED
-        telephone.setInternationalCode("+55");
         telephone.setLastUpdate(LocalDateTime.now());
 
         if (!this.telephoneRepository.update(telephone)) {

@@ -347,7 +347,7 @@ public class UserController {
     }
 
     @PostMapping("recover/password/mail")
-    public ResponseEntity<?> sendRecoverPasswordMail(@RequestBody String email) {
+    public ResponseEntity<?> sendPasswordRecoverMail(@RequestBody String email) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
