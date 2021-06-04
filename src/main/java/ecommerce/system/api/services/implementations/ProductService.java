@@ -57,7 +57,11 @@ public class ProductService implements IProductService {
         product.setLastUpdate(null);
         product.setActive(true);
 
-        this.productRepository.createProduct(product);
+        int productId = this.productRepository.createProduct(product);
+
+        for (ProductDetailModel detail: product.getDetails()) {
+            this.productRepository.createProductDetail(detail, productId);
+        }
     }
 
     @Override
@@ -164,6 +168,11 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public List<ProductDetailModel> getProductDetailLabelsByProductSubtypeId(int productSubtypeId) {
+        return this.productRepository.getProductDetailLabelsByProductSubtypeId(productSubtypeId);
+    }
+
+    @Override
     public void updateProduct(ProductModel product) throws InvalidOperationException, IOException {
 
         ProductModel oldProduct = this.productRepository.getProductById(product.getProductId());
@@ -183,6 +192,12 @@ public class ProductService implements IProductService {
         product.setCreationDate(oldProduct.getCreationDate());
         product.setLastUpdate(LocalDateTime.now());
         product.setActive(oldProduct.isActive());
+
+        for (ProductDetailModel detail : product.getDetails()) {
+            if (!this.productRepository.updateProductDetails(detail, product.getProductId())) {
+                throw new InvalidOperationException("Erro ao atualizar detalhes do produto!");
+            }
+        }
 
         this.productRepository.updateProduct(product);
     }

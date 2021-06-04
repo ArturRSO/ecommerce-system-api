@@ -1,6 +1,7 @@
 package ecommerce.system.api.entities;
 
 import ecommerce.system.api.entities.embedded.ProductDetailKey;
+import ecommerce.system.api.models.ProductDetailModel;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -23,6 +24,11 @@ public class ProductDetailEntity {
     public ProductDetailEntity(ProductDetailKey id, String value) {
         this.id = id;
         this.value = value;
+    }
+
+    public ProductDetailEntity(ProductDetailModel detail, int productId) {
+        this.id = new ProductDetailKey(productId, detail.getLabelId());
+        this.value = detail.getValue();
     }
 
     public ProductDetailKey getId() {

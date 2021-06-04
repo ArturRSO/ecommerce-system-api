@@ -1,6 +1,7 @@
 package ecommerce.system.api.services;
 
 import ecommerce.system.api.exceptions.InvalidOperationException;
+import ecommerce.system.api.models.ProductDetailModel;
 import ecommerce.system.api.models.ProductModel;
 import ecommerce.system.api.models.ProductSubtypeModel;
 import ecommerce.system.api.models.ProductTypeModel;
@@ -20,6 +21,7 @@ public interface IProductService {
     ProductModel getProductById(int productId) throws IOException;
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);
+    List<ProductDetailModel> getProductDetailLabelsByProductSubtypeId(int productSubtypeId);
     void updateProduct(ProductModel product) throws InvalidOperationException, IOException;
     void updateProductImage(MultipartFile file, int productId, int imageId) throws InvalidOperationException, IOException;
     void deleteProduct(int productId) throws InvalidOperationException, IOException;

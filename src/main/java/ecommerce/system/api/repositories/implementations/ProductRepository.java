@@ -1,7 +1,10 @@
 package ecommerce.system.api.repositories.implementations;
 
+import ecommerce.system.api.entities.ProductDetailEntity;
+import ecommerce.system.api.entities.ProductDetailLabelEntity;
 import ecommerce.system.api.entities.ProductEntity;
 import ecommerce.system.api.entities.ProductImageEntity;
+import ecommerce.system.api.entities.embedded.ProductDetailKey;
 import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IProductDetailRepository;
 import ecommerce.system.api.repositories.IProductRepository;
@@ -46,6 +49,14 @@ public class ProductRepository implements IProductRepository {
         this.entityManager.flush();
 
         return product.getProductId();
+    }
+
+    @Override
+    public void createProductDetail(ProductDetailModel detail, int productId) {
+
+        ProductDetailEntity entity = new ProductDetailEntity(detail, productId);
+
+        this.entityManager.persist(entity);
     }
 
     @Override
@@ -151,6 +162,25 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
+    public List<ProductDetailModel> getProductDetailLabelsByProductSubtypeId(int productSubtypeId) {
+
+        String query = "SELECT pdl FROM ProductDetailLabelEntity pdl, DetailLabelProductSubtypeEntity dlps WHERE dlps.id.detailLabelId = pdl.detailLabelId AND dlps.id.productSubtypeId = :productSubtypeId ORDER BY pdl.detailLabelId ASC";
+        TypedQuery<ProductDetailLabelEntity> result = this.entityManager.createQuery(query, ProductDetailLabelEntity.class)
+                .setParameter("productSubtypeId", productSubtypeId);
+        List<ProductDetailLabelEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        ArrayList<ProductDetailModel> detailLabels = new ArrayList<>();
+
+        (entities).forEach((entity) -> detailLabels.add(entity.toModel()));
+
+        return detailLabels;
+    }
+
+    @Override
     public boolean updateProduct(ProductModel object) {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, object.getProductId());
@@ -162,6 +192,22 @@ public class ProductRepository implements IProductRepository {
         ProductEntity updatedProduct = new ProductEntity(object);
 
         this.entityManager.merge(updatedProduct);
+
+        return true;
+    }
+
+    @Override
+    public boolean updateProductDetails(ProductDetailModel detail, int productId) {
+
+        ProductDetailEntity entity = this.entityManager.find(ProductDetailEntity.class, new ProductDetailKey(productId, detail.getLabelId()));
+
+        if (entity == null) {
+            return false;
+        }
+
+        ProductDetailEntity updatedDetail = new ProductDetailEntity(detail, productId);
+
+        this.entityManager.merge(updatedDetail);
 
         return true;
     }

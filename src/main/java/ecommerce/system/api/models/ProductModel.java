@@ -11,8 +11,16 @@ public class ProductModel {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int productId;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private int productTypeId;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private int productSubtypeId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ProductTypeModel productType;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private ProductSubtypeModel productSubtype;
 
     private int storeId;
@@ -47,8 +55,8 @@ public class ProductModel {
 
     public ProductModel(
             int productId,
-            ProductTypeModel productType,
-            ProductSubtypeModel productSubtype,
+            int productTypeId,
+            int productSubtypeId,
             int storeId,
             String name,
             double price,
@@ -58,8 +66,8 @@ public class ProductModel {
             boolean active,
             boolean isNew) {
         this.productId = productId;
-        this.productType = productType;
-        this.productSubtype = productSubtype;
+        this.productTypeId = productTypeId;
+        this.productSubtypeId = productSubtypeId;
         this.storeId = storeId;
         this.name = name;
         this.price = price;
@@ -76,6 +84,22 @@ public class ProductModel {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public int getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(int productTypeId) {
+        this.productTypeId = productTypeId;
+    }
+
+    public int getProductSubtypeId() {
+        return productSubtypeId;
+    }
+
+    public void setProductSubtypeId(int productSubtypeId) {
+        this.productSubtypeId = productSubtypeId;
     }
 
     public ProductTypeModel getProductType() {

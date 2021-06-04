@@ -1,5 +1,7 @@
 package ecommerce.system.api.entities;
 
+import ecommerce.system.api.models.ProductDetailModel;
+
 import javax.persistence.*;
 
 @Entity(name = "ProductDetailLabelEntity")
@@ -20,6 +22,11 @@ public class ProductDetailLabelEntity {
     public ProductDetailLabelEntity(int detailLabelId, String name) {
         this.detailLabelId = detailLabelId;
         this.name = name;
+    }
+
+    public ProductDetailModel toModel() {
+
+        return new ProductDetailModel(this.detailLabelId, this.name);
     }
 
     public int getDetailLabelId() {

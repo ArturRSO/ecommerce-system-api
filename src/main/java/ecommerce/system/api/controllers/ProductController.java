@@ -3,6 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
+import ecommerce.system.api.models.ProductDetailModel;
 import ecommerce.system.api.models.ProductModel;
 import ecommerce.system.api.models.ProductSubtypeModel;
 import ecommerce.system.api.models.ProductTypeModel;
@@ -191,6 +192,34 @@ public class ProductController {
 
             } else {
                 response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), products);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("details/labels/subtype/{subtypeId}")
+    public ResponseEntity<?> getProductDetailLabelsByProductSubtypeId(@PathVariable("subtypeId") int productSubtypeId) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            List<ProductDetailModel> detailLabels = this.productService.getProductDetailLabelsByProductSubtypeId(productSubtypeId);
+
+            if (detailLabels == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), detailLabels);
             }
 
             return new ResponseEntity<>(response, HttpStatus.OK);

@@ -49,8 +49,8 @@ public class ProductEntity {
 
     public ProductEntity(ProductModel product) {
         this.productId = product.getProductId();
-        this.productTypeId = product.getProductType().getProductTypeId();
-        this.productSubtypeId = product.getProductSubtype().getProductSubtypeId();
+        this.productTypeId = product.getProductTypeId();
+        this.productSubtypeId = product.getProductSubtypeId();
         this.storeId = product.getStoreId();
         this.name = product.getName();
         this.price = product.getPrice();
@@ -64,8 +64,8 @@ public class ProductEntity {
     public ProductModel toModel() {
         return new ProductModel(
                 this.productId,
-                null,
-                null,
+                this.productTypeId,
+                this.productSubtypeId,
                 this.storeId,
                 this.name,
                 this.price,
