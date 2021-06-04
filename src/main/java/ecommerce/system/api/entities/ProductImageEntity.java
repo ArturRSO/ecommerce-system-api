@@ -1,5 +1,7 @@
 package ecommerce.system.api.entities;
 
+import ecommerce.system.api.models.ProductImageModel;
+
 import javax.persistence.*;
 
 @Entity(name = "ProductImageEntity")
@@ -23,6 +25,17 @@ public class ProductImageEntity {
     public ProductImageEntity(int productId, String path) {
         this.productId = productId;
         this.path = path;
+    }
+
+    public ProductImageEntity(ProductImageModel image) {
+        this.productImageId = image.getProductImageId();
+        this.productId = image.getProductId();
+        this.path = image.getPath();
+    }
+
+    public ProductImageModel toModel() {
+
+        return new ProductImageModel(this.productImageId, this.productId, this.path);
     }
 
     public int getProductImageId() {

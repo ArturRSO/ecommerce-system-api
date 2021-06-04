@@ -326,6 +326,43 @@ public class ProductController {
         }
     }
 
+    @PutMapping("update/image/{imageId}/product{productId}")
+    public ResponseEntity<?> updateProductImage(@PathVariable("imageId") int imageId, @PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
+
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+
+        try {
+
+            this.productService.updateProductImage(file, productId, imageId);
+
+            response.setSuccess(true);
+            response.setMessage("Imagem atualizada com sucesso!");
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }  catch (InvalidOperationException ioe) {
+
+            logger.error(ioe.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        }  catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("delete/{productId}")
     public ResponseEntity<?> deleteProducts(@PathVariable("productId") int productId) {
 

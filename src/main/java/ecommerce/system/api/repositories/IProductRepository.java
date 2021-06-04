@@ -14,5 +14,6 @@ public interface IProductRepository {
     List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity);
     ProductModel getProductById(int id);
     boolean updateProduct(ProductModel object);
+    boolean updateProductImage(ProductImageModel image);
     boolean deleteProduct(int id);
 }

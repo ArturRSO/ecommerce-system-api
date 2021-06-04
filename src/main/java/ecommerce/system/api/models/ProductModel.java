@@ -36,6 +36,10 @@ public class ProductModel {
 
     private List<ProductDetailModel> details;
 
+    @JsonIgnore
+    private List<ProductImageModel> images;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<String> imageList;
 
     @JsonIgnore
@@ -160,6 +164,14 @@ public class ProductModel {
 
     public void setDetails(List<ProductDetailModel> details) {
         this.details = details;
+    }
+
+    public List<ProductImageModel> getImages() {
+        return images;
+    }
+
+    public void setImages(List<ProductImageModel> images) {
+        this.images = images;
     }
 
     public List<String> getImageList() {

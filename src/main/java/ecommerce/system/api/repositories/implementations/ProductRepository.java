@@ -133,10 +133,10 @@ public class ProductRepository implements IProductRepository {
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
             List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
-            List<String> imagePaths = this.getImagePathsByProductId(entity.getProductId());
+            List<ProductImageModel> images = this.getImagesByProductId(entity.getProductId());
 
             product.setDetails(details);
-            product.setImageList(imagePaths);
+            product.setImages(images);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
 
@@ -167,6 +167,22 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
+    public boolean updateProductImage(ProductImageModel image) {
+
+        ProductImageEntity entity = this.entityManager.find(ProductImageEntity.class, image.getProductImageId());
+
+        if (entity == null) {
+            return false;
+        }
+
+        ProductImageEntity updatedImage = new ProductImageEntity(image);
+
+        this.entityManager.merge(updatedImage);
+
+        return true;
+    }
+
+    @Override
     public boolean deleteProduct(int id) {
 
         ProductEntity product = this.entityManager.find(ProductEntity.class, id);
@@ -189,10 +205,10 @@ public class ProductRepository implements IProductRepository {
             ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
             ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
             List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
-            List<String> imagePaths = this.getImagePathsByProductId(entity.getProductId());
+            List<ProductImageModel> images = this.getImagesByProductId(entity.getProductId());
             ProductModel product = entity.toModel();
             product.setDetails(details);
-            product.setImageList(imagePaths);
+            product.setImages(images);
             product.setProductType(productType);
             product.setProductSubtype(productSubtype);
             products.add(product);
@@ -201,9 +217,9 @@ public class ProductRepository implements IProductRepository {
         return products;
     }
 
-    private List<String> getImagePathsByProductId(int productId) {
+    private List<ProductImageModel> getImagesByProductId(int productId) {
 
-        String query = "FROM ProductImageEntity p WHERE p.productId = :productId";
+        String query = "FROM ProductImageEntity p WHERE p.productId = :productId ORDER BY p.productImageId ASC";
         TypedQuery<ProductImageEntity> result = this.entityManager.createQuery(query, ProductImageEntity.class)
                 .setParameter("productId", productId);
         List<ProductImageEntity> entities = result.getResultList();
@@ -212,9 +228,9 @@ public class ProductRepository implements IProductRepository {
             return null;
         }
 
-        ArrayList<String> paths = new ArrayList<>();
+        ArrayList<ProductImageModel> paths = new ArrayList<>();
 
-        entities.forEach(entity -> paths.add(entity.getPath()));
+        entities.forEach(entity -> paths.add(entity.toModel()));
 
         return paths;
     }

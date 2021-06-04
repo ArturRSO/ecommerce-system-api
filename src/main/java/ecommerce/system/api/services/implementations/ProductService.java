@@ -63,12 +63,16 @@ public class ProductService implements IProductService {
     @Override
     public void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException {
 
-        String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
-
         ProductModel product = this.productRepository.getProductById(productId);
 
         if (product == null) {
             throw new InvalidOperationException("Produto não encontrado!");
+        }
+
+        String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
+
+        if (product.getImages().size() > 4) {
+            throw new InvalidOperationException("Este produto já tem o máximo de imagens permitidas cadastradas!");
         }
 
         this.productRepository.createProductImage(productId, imagePath);
@@ -81,7 +85,7 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImageList());
+                List<String> images = this.getImagesByPaths(product.getImages());
                 product.setImageList(images);
             }
         }
@@ -96,7 +100,7 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImageList());
+                List<String> images = this.getImagesByPaths(product.getImages());
                 product.setImageList(images);
             }
         }
@@ -111,7 +115,7 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImageList());
+                List<String> images = this.getImagesByPaths(product.getImages());
                 product.setImageList(images);
             }
         }
@@ -126,7 +130,7 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImageList());
+                List<String> images = this.getImagesByPaths(product.getImages());
                 product.setImageList(images);
             }
         }
@@ -140,7 +144,7 @@ public class ProductService implements IProductService {
         ProductModel product = this.productRepository.getProductById(productId);
 
         if (product != null) {
-            List<String> images = this.getImagesByPaths(product.getImageList());
+            List<String> images = this.getImagesByPaths(product.getImages());
             product.setImageList(images);
         }
 
@@ -184,6 +188,20 @@ public class ProductService implements IProductService {
     }
 
     @Override
+    public void updateProductImage(MultipartFile file, int productId, int imageId) throws InvalidOperationException, IOException {
+
+        ProductModel product = this.productRepository.getProductById(productId);
+
+        if (product == null) {
+            throw new InvalidOperationException("Produto não encontrado!");
+        }
+
+        String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
+
+        this.productRepository.updateProductImage(new ProductImageModel(productId, imagePath));
+    }
+
+    @Override
     public void deleteProduct(int productId) throws InvalidOperationException, IOException {
 
         ProductModel product = this.getProductById(productId);
@@ -212,14 +230,14 @@ public class ProductService implements IProductService {
         this.productRepository.deleteProduct(productId);
     }
 
-    private List<String> getImagesByPaths(List<String> paths) throws IOException {
+    private List<String> getImagesByPaths(List<ProductImageModel> images) throws IOException {
 
-        ArrayList<String> images = new ArrayList<>();
+        ArrayList<String> imageList = new ArrayList<>();
 
-        for (String path : paths) {
-            images.add("data:image;base64, " + this.fileService.getImageBase64(path));
+        for (ProductImageModel image : images) {
+            imageList.add("data:image;base64, " + this.fileService.getImageBase64(image.getPath()));
         }
 
-        return images;
+        return imageList;
     }
 }
