@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ITelephoneService {
 
-    void createTelephone(TelephoneModel telephone) throws InvalidOperationException;
+    int createTelephone(TelephoneModel telephone) throws InvalidOperationException;
     List<TelephoneModel> getTelephonesByUserId(int userId) throws InvalidOperationException;
     TelephoneModel getTelephoneById(int telephoneId);
     void updateTelephone(TelephoneModel telephone) throws InvalidOperationException;

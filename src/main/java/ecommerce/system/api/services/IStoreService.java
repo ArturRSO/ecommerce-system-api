@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IStoreService {
 
-    void createStore(StoreModel store, int userId) throws InvalidOperationException;
+    int createStore(StoreModel store, int userId) throws InvalidOperationException;
     void createProfileImage(MultipartFile file, int storeId) throws IOException, InvalidOperationException;
     List<StoreModel> getAllStores();
     List<StoreModel> getStoresByUserId(int userId);

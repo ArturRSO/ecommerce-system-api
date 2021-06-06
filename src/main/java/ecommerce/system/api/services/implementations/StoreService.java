@@ -42,7 +42,7 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public void createStore(StoreModel store, int userId) throws InvalidOperationException {
+    public int createStore(StoreModel store, int userId) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(userId)) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -55,6 +55,8 @@ public class StoreService implements IStoreService {
        int storeId = this.storeRepository.create(store);
 
        this.storeRepository.relateStoreAndUser(storeId, userId);
+
+       return storeId;
     }
 
     @Override

@@ -29,15 +29,13 @@ public class TelephoneController {
     @PostMapping("create")
     public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.telephoneService.createTelephone(telephone);
+            int telephoneId = this.telephoneService.createTelephone(telephone);
 
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephoneId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -45,9 +43,7 @@ public class TelephoneController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

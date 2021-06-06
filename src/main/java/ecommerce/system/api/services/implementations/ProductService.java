@@ -51,7 +51,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void createProduct(ProductModel product) {
+    public int createProduct(ProductModel product) {
 
         product.setCreationDate(LocalDateTime.now());
         product.setLastUpdate(null);
@@ -62,10 +62,12 @@ public class ProductService implements IProductService {
         for (ProductDetailModel detail: product.getDetails()) {
             this.productRepository.createProductDetail(detail, productId);
         }
+
+        return productId;
     }
 
     @Override
-    public void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException {
+    public int createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException {
 
         ProductModel product = this.productRepository.getProductById(productId);
 
@@ -79,7 +81,7 @@ public class ProductService implements IProductService {
             throw new InvalidOperationException("Este produto já tem o máximo de imagens permitidas cadastradas!");
         }
 
-        this.productRepository.createProductImage(productId, imagePath);
+        return this.productRepository.createProductImage(productId, imagePath);
     }
 
     @Override

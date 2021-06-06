@@ -29,7 +29,7 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public void createTelephone(TelephoneModel telephone) throws InvalidOperationException {
+    public int createTelephone(TelephoneModel telephone) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -41,6 +41,8 @@ public class TelephoneService implements ITelephoneService {
 
         int telephoneId = this.telephoneRepository.create(telephone);
         this.telephoneRepository.relateTelephoneAndUser(telephone.getUserId(), telephoneId);
+
+        return telephoneId;
     }
 
     @Override

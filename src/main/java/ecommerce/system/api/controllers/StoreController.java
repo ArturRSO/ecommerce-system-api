@@ -30,15 +30,13 @@ public class StoreController {
     @PostMapping("create/user/{userId}")
     public ResponseEntity<?> createStore(@RequestBody StoreModel store, @PathVariable("userId") int userId) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.storeService.createStore(store, userId);
+            int storeId = this.storeService.createStore(store, userId);
 
-            response.setSuccess(true);
-            response.setMessage("Loja criada com sucesso!");
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), storeId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -46,9 +44,7 @@ public class StoreController {
 
             logger.error(ioe.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -56,9 +52,7 @@ public class StoreController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

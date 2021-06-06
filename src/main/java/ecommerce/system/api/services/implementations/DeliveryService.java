@@ -17,11 +17,11 @@ public class DeliveryService implements IDeliveryService {
     }
 
     @Override
-    public void createDelivery(DeliveryModel delivery) {
+    public int createDelivery(DeliveryModel delivery) {
 
         delivery.setSuccess(false);
 
-        this.deliveryRepository.createDelivery(delivery);
+        return this.deliveryRepository.createDelivery(delivery);
     }
 
     @Override

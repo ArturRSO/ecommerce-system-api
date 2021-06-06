@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IOrderService {
 
-    void createOrder(OrderModel order) throws Exception;
+    int createOrder(OrderModel order) throws Exception;
     List<OrderModel> getOrdersByStoreId(int storeId);
     List<OrderModel> getOrdersByProductId(int productId);
     List<OrderModel> getOrderSummariesByUserId(int userId);

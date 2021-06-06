@@ -29,7 +29,7 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public void createAddress(AddressModel address) throws InvalidOperationException {
+    public int createAddress(AddressModel address) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(address.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -41,6 +41,8 @@ public class AddressService implements IAddressService {
 
         int addressId = this.addressRepository.create(address);
         this.addressRepository.relateAddressAndUser(address.getUserId(), addressId);
+
+        return addressId;
     }
 
     @Override

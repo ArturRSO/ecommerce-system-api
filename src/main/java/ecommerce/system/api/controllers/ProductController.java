@@ -33,15 +33,13 @@ public class ProductController {
     @PostMapping("create")
     public ResponseEntity<?> createProduct(@RequestBody ProductModel product) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.productService.createProduct(product);
+            int productId = this.productService.createProduct(product);
 
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), productId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -49,9 +47,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -60,15 +56,13 @@ public class ProductController {
     @PostMapping("create/image/{productId}")
     public ResponseEntity<?> createProductImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.productService.createProductImage(file, productId);
+            int productImageId = this.productService.createProductImage(file, productId);
 
-            response.setSuccess(true);
-            response.setMessage("Imagem cadastrada com sucesso!");
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), productImageId);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -76,9 +70,7 @@ public class ProductController {
 
             logger.error(ioe.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -86,9 +78,7 @@ public class ProductController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

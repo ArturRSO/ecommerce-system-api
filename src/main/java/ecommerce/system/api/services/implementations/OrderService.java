@@ -100,7 +100,7 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void createOrder(OrderModel order) throws Exception {
+    public int createOrder(OrderModel order) throws Exception {
 
         Map<Integer, List<ProductModel>> productsByStore = new HashMap<>();
         double totalPrice = 0;
@@ -137,6 +137,8 @@ public class OrderService implements IOrderService {
         int orderSummaryId = this.orderRepository.createOrderSummary(order);
 
         this.createOrdersByStore(productsByStore, orderSummaryId, order.getAddressId());
+
+        return orderSummaryId;
     }
 
     @Override

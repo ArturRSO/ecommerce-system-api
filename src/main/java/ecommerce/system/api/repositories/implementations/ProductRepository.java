@@ -60,11 +60,14 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public void createProductImage(int productId, String path) {
+    public int createProductImage(int productId, String path) {
 
         ProductImageEntity productImage = new ProductImageEntity(productId, path);
 
         this.entityManager.persist(productImage);
+        this.entityManager.flush();
+
+        return productImage.getProductImageId();
     }
 
     @Override

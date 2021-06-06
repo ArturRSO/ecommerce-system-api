@@ -30,15 +30,13 @@ public class OrderController {
     @PostMapping("create")
     public ResponseEntity<?> createOrder(@RequestBody OrderModel order) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.orderService.createOrder(order);
+            int orderId = this.orderService.createOrder(order);
 
-            response.setSuccess(true);
-            response.setMessage("Pedido gerado com sucesso!");
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), orderId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -46,9 +44,7 @@ public class OrderController {
 
             logger.error(ioe.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -56,9 +52,7 @@ public class OrderController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -31,15 +31,13 @@ public class UserController {
     @PostMapping("create")
     public ResponseEntity<?> createUser(@RequestBody UserModel user) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.userService.createUser(user);
+            int userId = this.userService.createUser(user);
 
-            response.setSuccess(true);
-            response.setMessage("Usuário cadastrado com sucesso!");
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), userId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -47,9 +45,7 @@ public class UserController {
 
             logger.error(ioe.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -57,9 +53,7 @@ public class UserController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

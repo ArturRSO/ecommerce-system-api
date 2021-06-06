@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface IProductService {
 
-    void createProduct(ProductModel product);
-    void createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException;
+    int createProduct(ProductModel product);
+    int createProductImage(MultipartFile file, int productId) throws InvalidOperationException, IOException;
     List<ProductModel> getProductsByQuantity(int quantity) throws IOException;
     List<ProductModel> getProductsByNameAndQuantity(String name, int quantity) throws IOException;
     List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity) throws IOException;

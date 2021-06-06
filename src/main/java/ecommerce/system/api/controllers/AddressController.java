@@ -29,15 +29,13 @@ public class AddressController {
     @PostMapping("create")
     public ResponseEntity<?> createAddress(@RequestBody AddressModel address) {
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+        BaseResponseDTO<?> response;
 
         try {
 
-            this.addressService.createAddress(address);
+            int addressId = this.addressService.createAddress(address);
 
-            response.setSuccess(true);
-            response.setMessage(MessagesEnum.SUCCESS.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), addressId);
 
             return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -45,9 +43,7 @@ public class AddressController {
 
             logger.error(ioe.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(ioe.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -55,9 +51,7 @@ public class AddressController {
 
             logger.error(e.getMessage());
 
-            response.setSuccess(false);
-            response.setMessage(MessagesEnum.FAILURE.getMessage());
-            response.setData("");
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }

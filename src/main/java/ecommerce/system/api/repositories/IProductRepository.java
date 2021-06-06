@@ -8,7 +8,7 @@ public interface IProductRepository {
 
     int createProduct(ProductModel object);
     void createProductDetail(ProductDetailModel detail, int productId);
-    void createProductImage(int productId, String path);
+    int createProductImage(int productId, String path);
     List<ProductModel> getProductsByQuantity(int quantity);
     List<ProductModel> getProductsByNameAndQuantity(String name, int quantity);
     List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity);

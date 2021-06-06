@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IDeliveryService {
 
-    void createDelivery(DeliveryModel delivery);
+    int createDelivery(DeliveryModel delivery);
     double getDeliveryPrice();
     List<DeliveryModel> getDeliveriesByOrderId(int orderId);
     void updateDeliveryStatus(int deliveryId, boolean status);

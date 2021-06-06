@@ -56,7 +56,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException {
+    public int createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
@@ -93,7 +93,7 @@ public class UserService implements IUserService {
                 }
             }
 
-            this.userRepository.create(user);
+            return this.userRepository.create(user);
 
         } else {
 
@@ -109,7 +109,7 @@ public class UserService implements IUserService {
                 checkedUser.setDocumentNumber(checkedUser.getDocumentNumber() + " [Inactive]");
                 this.userRepository.update(checkedUser);
 
-                this.userRepository.create(user);
+               return this.userRepository.create(user);
             }
         }
     }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface IUserService {
 
-    void createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException;
+    int createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException;
     void createProfileImage(MultipartFile file, int userId) throws InvalidOperationException, IOException;
     List<UserModel> getAllUsers() throws IOException;
     List<UserModel> getUsersByRoleId(int roleId) throws IOException;

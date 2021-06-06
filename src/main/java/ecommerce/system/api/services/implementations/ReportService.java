@@ -1,7 +1,8 @@
-package ecommerce.system.api.services;
+package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IReportRepository;
+import ecommerce.system.api.services.IReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
