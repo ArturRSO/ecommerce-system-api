@@ -61,6 +61,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .antMatchers("/products/update").hasAnyRole("store_admin")
                     .antMatchers("/products/delete/**").hasAnyRole("store_admin")
                     .antMatchers("/products/**").permitAll()
+                    // REPORT
+                    .antMatchers("/reports/orders").hasAnyRole("system_admin")
+                    .antMatchers("/reports/orders/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/reports/products").hasAnyRole("system_admin")
+                    .antMatchers("/reports/products/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/reports/stores/cashflow").hasAnyRole("system_admin")
+                    .antMatchers("/reports/stores/cashflow/revenue").hasAnyRole("system_admin")
+                    .antMatchers("/reports/stores/cashflow/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/reports/stores/cashflow/revenue/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/reports/stores/user").hasAnyRole("system_admin")
+                    .antMatchers("/reports/stores/user/**").hasAnyRole("system_admin", "store_admin")
+                    .antMatchers("/reports/**").hasAnyRole("system_admin")
                     // STORE
                     .antMatchers("/stores/create/**").hasAnyRole("store_admin")
                     .antMatchers("/stores/all").hasAnyRole("system_admin")
