@@ -1,11 +1,16 @@
 package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DeliveryModel {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int deliveryId;
+
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int deliveryServiceId;
+
     private int orderId;
     private AddressModel senderAddress;
     private AddressModel receiverAddress;

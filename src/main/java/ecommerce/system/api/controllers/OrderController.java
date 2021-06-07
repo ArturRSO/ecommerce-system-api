@@ -4,7 +4,9 @@ import ecommerce.system.api.dto.PaymentDTO;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
+import ecommerce.system.api.models.DeliveryModel;
 import ecommerce.system.api.models.OrderModel;
+import ecommerce.system.api.services.IDeliveryService;
 import ecommerce.system.api.services.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,10 +22,12 @@ import java.util.List;
 public class OrderController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final IDeliveryService deliveryService;
     private final IOrderService orderService;
 
     @Autowired
-    public OrderController(IOrderService orderService) {
+    public OrderController(IDeliveryService deliveryService, IOrderService orderService) {
+        this.deliveryService = deliveryService;
         this.orderService = orderService;
     }
 
@@ -47,6 +51,29 @@ public class OrderController {
             response = new BaseResponseDTO<>(false, ioe.getMessage(), "");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("delivery/create")
+    public ResponseEntity<?> createDelivery(@RequestBody DeliveryModel delivery) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            int deliveryId = this.deliveryService.createDelivery(delivery);
+
+            response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), deliveryId);
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
 
         } catch (Exception e) {
 
@@ -124,7 +151,7 @@ public class OrderController {
             this.orderService.updateOrderStatus(orderSummaryId, orderStatusId);
 
             response.setSuccess(true);
-            response.setMessage("Pedido atualizado com sucesso!");
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
@@ -135,6 +162,33 @@ public class OrderController {
 
             response.setSuccess(false);
             response.setMessage(ioe.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response.setSuccess(false);
+            response.setMessage(MessagesEnum.FAILURE.getMessage());
+            response.setData("");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("delivery/update/{deliveryId}")
+    public ResponseEntity<?> updateDelveryStatus(@PathVariable("deliveryId") int deliveryId, @RequestBody boolean status) {
+
+        BaseResponseDTO<String> response = new BaseResponseDTO<>();
+
+        try {
+
+            this.deliveryService.updateDeliveryStatus(deliveryId, status);
+
+            response.setSuccess(true);
+            response.setMessage(MessagesEnum.SUCCESS.getMessage());
             response.setData("");
 
             return new ResponseEntity<>(response, HttpStatus.OK);
