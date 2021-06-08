@@ -5,13 +5,15 @@ import java.util.UUID;
 public class ProductsByStoreReportModel {
 
     private UUID id;
+    private String storeName;
     private int storeId;
     private int products;
     private int activeProducts;
 
-    public ProductsByStoreReportModel(UUID id, int storeId, int products, int activeProducts) {
+    public ProductsByStoreReportModel(UUID id, int storeId, String storeName, int products, int activeProducts) {
         this.id = id;
         this.storeId = storeId;
+        this.storeName = storeName;
         this.products = products;
         this.activeProducts = activeProducts;
     }
@@ -30,6 +32,14 @@ public class ProductsByStoreReportModel {
 
     public void setStoreId(int storeId) {
         this.storeId = storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public int getProducts() {

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Entity(name = "StoresByUserReportEntity")
 @Immutable
-@Table(name = "vw_storesByUser")
+@Table(name = "vw_storesByUserAndStatus")
 public class StoresByUserReportEntity {
 
     @Id

@@ -148,7 +148,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowReportModel> reports = this.reportService.getStoreCashFlowReport();
+            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -176,7 +176,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowReportModel> reports = this.reportService.getStoreCashFlowReportByDateRange(startDate, endDate);
+            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByDateRange(startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -204,7 +204,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowReportModel> reports = this.reportService.getStoreCashFlowReportByStoreId(storeId);
+            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByStoreId(storeId);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -232,7 +232,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowReportModel> reports = this.reportService.getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
+            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");

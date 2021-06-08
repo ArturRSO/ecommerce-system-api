@@ -1,57 +1,28 @@
-package ecommerce.system.api.entities;
+package ecommerce.system.api.models;
 
-import ecommerce.system.api.models.StoreCashFlowReportModel;
-import org.hibernate.annotations.Immutable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity(name = "StoreCashFlowReportEntity")
-@Immutable
-@Table(name = "vw_storeCashFlowByProduct")
-public class StoreCashFlowReportEntity {
+public class StoreCashFlowByOrderReportModel {
 
-    @Id
-    @Column(name = "id")
     private UUID id;
-
-    @Column(name = "storeId")
     private int storeId;
-
-    @Column(name = "orderId")
     private int orderId;
-
-    @Column(name = "value")
     private double value;
-
-    @Column(name = "product")
+    private int productId;
     private String productName;
-
-    @Column(name = "quantity")
     private int productQuantity;
-
-    @Column(name = "timestamp")
     private LocalDateTime timestamp;
 
-    public StoreCashFlowReportEntity() {
-    }
-
-    public StoreCashFlowReportEntity(UUID id, int storeId, int orderId, double value, String productName, int productQuantity, LocalDateTime timestamp) {
+    public StoreCashFlowByOrderReportModel(UUID id, int storeId, int orderId, double value, int productId, String productName, int productQuantity, LocalDateTime timestamp) {
         this.id = id;
         this.storeId = storeId;
         this.orderId = orderId;
         this.value = value;
+        this.productId = productId;
         this.productName = productName;
         this.productQuantity = productQuantity;
         this.timestamp = timestamp;
-    }
-
-    public StoreCashFlowReportModel toModel() {
-        return new StoreCashFlowReportModel(this.id, this.storeId, this.orderId, this.value, this.productName, this.productQuantity, this.timestamp);
     }
 
     public UUID getId() {
@@ -84,6 +55,14 @@ public class StoreCashFlowReportEntity {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {

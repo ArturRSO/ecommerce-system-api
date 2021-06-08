@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Entity(name = "ProductsByStoreReportEntity")
 @Immutable
-@Table(name = "vw_productsByStore")
+@Table(name = "vw_productsByStoreAndStatus")
 public class ProductsByStoreReportEntity {
 
     @Id
@@ -20,6 +20,9 @@ public class ProductsByStoreReportEntity {
 
     @Column(name = "storeId")
     private int storeId;
+
+    @Column(name = "storeName")
+    private String storeName;
 
     @Column(name = "products")
     private int products;
@@ -30,15 +33,16 @@ public class ProductsByStoreReportEntity {
     public ProductsByStoreReportEntity() {
     }
 
-    public ProductsByStoreReportEntity(UUID id, int storeId, int products, int activeProducts) {
+    public ProductsByStoreReportEntity(UUID id, int storeId, String storeName, int products, int activeProducts) {
         this.id = id;
         this.storeId = storeId;
+        this.storeName = storeName;
         this.products = products;
         this.activeProducts = activeProducts;
     }
 
     public ProductsByStoreReportModel toModel() {
-        return new ProductsByStoreReportModel(this.id, this.storeId, this.products, this.activeProducts);
+        return new ProductsByStoreReportModel(this.id, this.storeId, this.storeName, this.products, this.activeProducts);
     }
 
     public UUID getId() {
@@ -55,6 +59,14 @@ public class ProductsByStoreReportEntity {
 
     public void setStoreId(int storeId) {
         this.storeId = storeId;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
     }
 
     public int getProducts() {

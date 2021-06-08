@@ -6,13 +6,21 @@ public class OrdersByStoreReportModel {
 
     private UUID id;
     private int storeId;
+    private String storeName;
     private int orders;
+    private int receivedOrders;
+    private int paidOrders;
+    private int sentOrders;
     private int finishedOrders;
 
-    public OrdersByStoreReportModel(UUID id, int storeId, int orders, int finishedOrders) {
+    public OrdersByStoreReportModel(UUID id, int storeId, String storeName, int orders, int receivedOrders, int paidOrders, int sentOrders, int finishedOrders) {
         this.id = id;
         this.storeId = storeId;
+        this.storeName = storeName;
         this.orders = orders;
+        this.receivedOrders = receivedOrders;
+        this.paidOrders = paidOrders;
+        this.sentOrders = sentOrders;
         this.finishedOrders = finishedOrders;
     }
 
@@ -32,12 +40,44 @@ public class OrdersByStoreReportModel {
         this.storeId = storeId;
     }
 
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
     public int getOrders() {
         return orders;
     }
 
     public void setOrders(int orders) {
         this.orders = orders;
+    }
+
+    public int getReceivedOrders() {
+        return receivedOrders;
+    }
+
+    public void setReceivedOrders(int receivedOrders) {
+        this.receivedOrders = receivedOrders;
+    }
+
+    public int getPaidOrders() {
+        return paidOrders;
+    }
+
+    public void setPaidOrders(int paidOrders) {
+        this.paidOrders = paidOrders;
+    }
+
+    public int getSentOrders() {
+        return sentOrders;
+    }
+
+    public void setSentOrders(int sentOrders) {
+        this.sentOrders = sentOrders;
     }
 
     public int getFinishedOrders() {

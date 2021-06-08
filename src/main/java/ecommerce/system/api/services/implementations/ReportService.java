@@ -40,22 +40,22 @@ public class ReportService implements IReportService {
     }
 
     @Override
-    public List<StoreCashFlowReportModel> getStoreCashFlowReport() {
+    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReport() {
         return this.reportRepository.getStoreCashFlowReport();
     }
 
     @Override
-    public List<StoreCashFlowReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowReportByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<StoreCashFlowReportModel> getStoreCashFlowReportByStoreId(int storeId) {
+    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreId(int storeId) {
         return this.reportRepository.getStoreCashFlowReportByStoreId(storeId);
     }
 
     @Override
-    public List<StoreCashFlowReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
     }
 

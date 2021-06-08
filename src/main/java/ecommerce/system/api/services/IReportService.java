@@ -11,10 +11,10 @@ public interface IReportService {
     OrdersByStoreReportModel getOrdersReportByStoreId(int storeId);
     List<ProductsByStoreReportModel> getProductsReport();
     ProductsByStoreReportModel getProductsReportByStoreId(int storeId);
-    List<StoreCashFlowReportModel> getStoreCashFlowReport();
-    List<StoreCashFlowReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate);
-    List<StoreCashFlowReportModel> getStoreCashFlowReportByStoreId(int storeId);
-    List<StoreCashFlowReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate);
+    List<StoreCashFlowByOrderReportModel> getStoreCashFlowReport();
+    List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate);
+    List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreId(int storeId);
+    List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate);
     List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReport();
     List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate);
     List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByStoreId(int storeId);
