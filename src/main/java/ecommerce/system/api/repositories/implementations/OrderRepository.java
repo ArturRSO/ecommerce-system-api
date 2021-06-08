@@ -1,5 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
+import ecommerce.system.api.dto.OrderItemDTO;
 import ecommerce.system.api.entities.OrderEntity;
 import ecommerce.system.api.entities.OrderSummaryEntity;
 import ecommerce.system.api.entities.ProductOrderEntity;
@@ -16,9 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Transactional(rollbackOn = {Exception.class})
@@ -76,7 +75,7 @@ public class OrderRepository implements IOrderRepository {
         List<OrderModel> orders = new ArrayList<>();
         (entities).forEach((entity) -> {
             OrderModel order = entity.toModel();
-            Map<Integer, Integer> itens = this.getItensByOrderId(entity.getOrderId());
+            List<OrderItemDTO>  itens = this.getItensByOrderId(entity.getOrderId());
             order.setItens(itens);
             orders.add(order);
         });
@@ -152,9 +151,12 @@ public class OrderRepository implements IOrderRepository {
             TypedQuery<OrderSummaryEntity> result = this.entityManager.createQuery(query, OrderSummaryEntity.class)
                     .setParameter("orderSummaryId", orderSummaryId);
 
-            OrderSummaryEntity order = result.getSingleResult();
+            OrderSummaryEntity entity = result.getSingleResult();
 
-            return order.toModel();
+            OrderModel order = entity.toModel();
+            order.setItens(this.getItensByOrderSummaryId(entity.getOrderSummaryId()));
+
+            return order;
 
         } catch (NoResultException nre) {
 
@@ -194,7 +196,7 @@ public class OrderRepository implements IOrderRepository {
         return true;
     }
 
-    private Map<Integer, Integer> getItensByOrderId(int orderId) {
+    private List<OrderItemDTO> getItensByOrderId(int orderId) {
 
         String query = "FROM ProductOrderEntity po WHERE po.id.orderId = :orderId";
         TypedQuery<ProductOrderEntity> result = this.entityManager.createQuery(query, ProductOrderEntity.class)
@@ -205,13 +207,13 @@ public class OrderRepository implements IOrderRepository {
             return null;
         }
 
-        Map<Integer, Integer> itens = new HashMap<>();
-        (entities).forEach((item) -> itens.put(item.getId().getProductId(), item.getQuantity()));
+        ArrayList<OrderItemDTO> itens = new ArrayList<>();
+        (entities).forEach((item) -> itens.add(item.toDTO()));
 
         return itens;
     }
 
-    private Map<Integer, Integer> getItensByOrderSummaryId(int orderSummaryId) {
+    private List<OrderItemDTO> getItensByOrderSummaryId(int orderSummaryId) {
 
         String query = "SELECT po FROM ProductOrderEntity po, OrderEntity o WHERE o.orderId = po.id.orderId AND o.orderSummaryId = :orderSummaryId";
         TypedQuery<ProductOrderEntity> result = this.entityManager.createQuery(query, ProductOrderEntity.class)
@@ -222,8 +224,8 @@ public class OrderRepository implements IOrderRepository {
             return null;
         }
 
-        Map<Integer, Integer> itens = new HashMap<>();
-        (entities).forEach((item) -> itens.put(item.getId().getProductId(), item.getQuantity()));
+        ArrayList<OrderItemDTO> itens = new ArrayList<>();
+        (entities).forEach((item) -> itens.add(item.toDTO()));
 
         return itens;
     }

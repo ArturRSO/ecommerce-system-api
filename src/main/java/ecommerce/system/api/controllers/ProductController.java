@@ -315,7 +315,7 @@ public class ProductController {
 
         try {
 
-            this.productService.updateProduct(product);
+            this.productService.updateProduct(product, false);
 
             response.setSuccess(true);
             response.setMessage("Loja atualizada com sucesso!");

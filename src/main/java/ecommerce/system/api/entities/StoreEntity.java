@@ -29,8 +29,8 @@ public class StoreEntity {
     @Column(name = "fk_telephoneId")
     private int telephoneId;
 
-    @Column(name = "profileImagePath")
-    private String profileImagePath;
+    @Column(name = "imagePath")
+    private String imagePath;
 
     @Column(name = "creationDate")
     private LocalDateTime creationDate;
@@ -51,7 +51,7 @@ public class StoreEntity {
         this.documentTypeId = store.getDocumentTypeId();
         this.addressId = store.getAddressId();
         this.telephoneId = store.getTelephoneId();
-        this.profileImagePath = store.getProfileImagePath();
+        this.imagePath = store.getProfileImagePath();
         this.creationDate = store.getCreationDate();
         this.lastUpdate = store.getLastUpdate();
         this.active = store.isActive();
@@ -65,7 +65,7 @@ public class StoreEntity {
                 this.documentTypeId,
                 this.addressId,
                 this.telephoneId,
-                this.profileImagePath,
+                this.imagePath,
                 this.creationDate,
                 this.lastUpdate,
                 this.active
@@ -120,12 +120,12 @@ public class StoreEntity {
         this.addressId = addressId;
     }
 
-    public String getProfileImagePath() {
-        return profileImagePath;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
+    public void setImagePath(String profileImagePath) {
+        this.imagePath = profileImagePath;
     }
 
     public LocalDateTime getCreationDate() {

@@ -1,5 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
+import ecommerce.system.api.dto.OrderItemDTO;
 import ecommerce.system.api.dto.PaymentDTO;
 import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
@@ -69,7 +70,7 @@ public class OrderService implements IOrderService {
                     this.alertService.sendStockAlert(productName, storeName, users);
                 }
 
-                this.productService.updateProduct(product);
+                this.productService.updateProduct(product, true);
             }
 
             OrderModel order = new OrderModel();
@@ -105,14 +106,14 @@ public class OrderService implements IOrderService {
         Map<Integer, List<ProductModel>> productsByStore = new HashMap<>();
         double totalPrice = 0;
 
-        for (Map.Entry<Integer, Integer> item : order.getItens().entrySet()) {
-            ProductModel product = this.productService.getProductById(item.getKey());
+        for (OrderItemDTO item : order.getItens()) {
+            ProductModel product = this.productService.getProductById(item.getProductId());
 
-            if (item.getValue() > product.getQuantity()) {
+            if (item.getQuantity() > product.getQuantity()) {
                 throw new InvalidOperationException("Estoque insuficiente para o produto " + product.getName());
             }
 
-            totalPrice += product.getPrice() * item.getValue();
+            totalPrice += product.getPrice() * item.getQuantity();
 
             List<ProductModel> products = productsByStore.get(product.getStoreId());
 
@@ -121,7 +122,7 @@ public class OrderService implements IOrderService {
                 products = new ArrayList<>();
             }
 
-            product.setOrderQuantity(item.getValue());
+            product.setOrderQuantity(item.getQuantity());
             products.add(product);
             productsByStore.put(product.getStoreId(), products);
         }
@@ -157,6 +158,12 @@ public class OrderService implements IOrderService {
     public List<OrderModel> getOrderSummariesByUserId(int userId) {
 
         return this.orderRepository.getOrderSummariesByUserId(userId);
+    }
+
+    @Override
+    public OrderModel getOrderSummaryById(int orderSummaryId) {
+
+        return this.orderRepository.getOrderSummaryById(orderSummaryId);
     }
 
     @Override

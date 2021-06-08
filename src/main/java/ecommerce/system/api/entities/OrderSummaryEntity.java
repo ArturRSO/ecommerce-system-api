@@ -38,7 +38,7 @@ public class OrderSummaryEntity {
     @Column(name = "lastUpdate")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "orderStatusId")
+    @Column(name = "fk_orderStatusId")
     private int orderStatusId;
 
     public OrderSummaryEntity() {
@@ -46,7 +46,7 @@ public class OrderSummaryEntity {
 
     public OrderSummaryEntity(OrderModel order) {
         this.userId = order.getUserId();
-        this.paymentMethodId = order.getPaymentMethodId();
+        this.paymentMethodId = order.getPaymentMethod().getPaymentMethodId();
         this.totalPrice = order.getTotalPrice();
         this.totalDiscountPercentage = order.getTotalDiscountPercentage();
         this.finalPrice = order.getFinalPrice();

@@ -22,7 +22,7 @@ public interface IProductService {
     List<ProductTypeModel> getAllProductTypes();
     List<ProductSubtypeModel> getProductSubtypesByProductTypeId(int productTypeId);
     List<ProductDetailModel> getProductDetailLabelsByProductSubtypeId(int productSubtypeId);
-    void updateProduct(ProductModel product) throws InvalidOperationException, IOException;
+    void updateProduct(ProductModel product, boolean systemUpdate) throws InvalidOperationException, IOException;
     void updateProductImage(MultipartFile file, int productId, int imageId) throws InvalidOperationException, IOException;
     void deleteProduct(int productId) throws InvalidOperationException, IOException;
 }

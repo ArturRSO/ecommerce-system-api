@@ -37,7 +37,7 @@ public class ProductDetailRepository implements IProductDetailRepository {
 
         entities.forEach(entity -> {
             ProductDetailLabelEntity label = this.getDetailLabelById(entity.getId().getDetailLabelId());
-            ProductDetailModel detail = new ProductDetailModel(label.getName(), entity.getValue());
+            ProductDetailModel detail = new ProductDetailModel(label.getDetailLabelId(), label.getName(), entity.getValue());
             details.add(detail);
         });
 

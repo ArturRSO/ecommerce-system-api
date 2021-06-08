@@ -35,7 +35,7 @@ public class OrderEntity {
     @Column(name = "lastUpdate")
     private LocalDateTime lastUpdate;
 
-    @Column(name = "orderStatusId")
+    @Column(name = "fk_orderStatusId")
     private int orderStatusId;
 
     public OrderEntity() {

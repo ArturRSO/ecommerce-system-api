@@ -21,6 +21,12 @@ public class ProductDetailModel {
         this.label = label;
     }
 
+    public ProductDetailModel(int labelId, String label, String value) {
+        this.labelId = labelId;
+        this.label = label;
+        this.value = value;
+    }
+
     public int getLabelId() {
         return labelId;
     }

@@ -1,13 +1,12 @@
 package ecommerce.system.api.entities;
 
+import ecommerce.system.api.dto.OrderItemDTO;
 import ecommerce.system.api.entities.embedded.ProductOrderKey;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import java.util.HashMap;
-import java.util.Map;
 
 @Entity(name = "ProductOrderEntity")
 @Table(name = "tb_product_order")
@@ -27,12 +26,9 @@ public class ProductOrderEntity {
         this.quantity = quantity;
     }
 
-    public Map<String, Integer> toMap() {
-        Map<String, Integer> map = new HashMap<>();
-        map.put("productId", this.id.getProductId());
-        map.put("quantity", this.quantity);
+    public OrderItemDTO toDTO() {
 
-        return map;
+        return new OrderItemDTO(this.id.getProductId(), this.quantity);
     }
 
     public ProductOrderKey getId() {

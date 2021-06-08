@@ -175,7 +175,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void updateProduct(ProductModel product) throws InvalidOperationException, IOException {
+    public void updateProduct(ProductModel product, boolean systemUpdate) throws InvalidOperationException, IOException {
 
         ProductModel oldProduct = this.productRepository.getProductById(product.getProductId());
 
@@ -187,7 +187,7 @@ public class ProductService implements IProductService {
 
         List<UserModel> users = this.userService.getUsersByStoreId(store.getStoreId());
 
-        if (users.stream().noneMatch(user -> this.authenticationService.isLoggedUser(user.getUserId()))) {
+        if (users.stream().noneMatch(user -> this.authenticationService.isLoggedUser(user.getUserId())) && !systemUpdate) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 

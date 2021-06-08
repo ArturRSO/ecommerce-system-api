@@ -2,10 +2,11 @@ package ecommerce.system.api.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ecommerce.system.api.dto.OrderItemDTO;
 import ecommerce.system.api.dto.PaymentMethodDTO;
 
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.List;
 
 public class OrderModel {
 
@@ -43,8 +44,7 @@ public class OrderModel {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int addressId;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Map<Integer, Integer> itens;
+    private List<OrderItemDTO> itens;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private PaymentMethodDTO paymentMethod;
@@ -172,11 +172,11 @@ public class OrderModel {
         this.addressId = addressId;
     }
 
-    public Map<Integer, Integer> getItens() {
+    public List<OrderItemDTO>  getItens() {
         return itens;
     }
 
-    public void setItens(Map<Integer, Integer> itens) {
+    public void setItens(List<OrderItemDTO>  itens) {
         this.itens = itens;
     }
 
