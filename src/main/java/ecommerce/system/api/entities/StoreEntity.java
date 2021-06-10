@@ -51,7 +51,7 @@ public class StoreEntity {
         this.documentTypeId = store.getDocumentTypeId();
         this.addressId = store.getAddressId();
         this.telephoneId = store.getTelephoneId();
-        this.imagePath = store.getProfileImagePath();
+        this.imagePath = store.getProfileImage();
         this.creationDate = store.getCreationDate();
         this.lastUpdate = store.getLastUpdate();
         this.active = store.isActive();

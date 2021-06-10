@@ -20,7 +20,7 @@ public class StoreModel {
     private int telephoneId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private String profileImagePath;
+    private String profileImage;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime creationDate;
@@ -38,7 +38,7 @@ public class StoreModel {
         this.documentTypeId = documentTypeId;
         this.addressId = addressId;
         this.telephoneId = telephoneId;
-        this.profileImagePath = profileImagePath;
+        this.profileImage = profileImagePath;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
         this.active = active;
@@ -92,12 +92,12 @@ public class StoreModel {
         this.telephoneId = telephoneId;
     }
 
-    public String getProfileImagePath() {
-        return profileImagePath;
+    public String getProfileImage() {
+        return profileImage;
     }
 
-    public void setProfileImagePath(String profileImagePath) {
-        this.profileImagePath = profileImagePath;
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public LocalDateTime getCreationDate() {

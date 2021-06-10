@@ -11,10 +11,10 @@ public interface IStoreService {
 
     int createStore(StoreModel store, int userId) throws InvalidOperationException;
     void createProfileImage(MultipartFile file, int storeId) throws IOException, InvalidOperationException;
-    List<StoreModel> getAllStores();
-    List<StoreModel> getStoresByUserId(int userId);
-    StoreModel getStoreById(int storeId);
-    StoreModel getStoreByProductId(int productId);
+    List<StoreModel> getAllStores() throws IOException;
+    List<StoreModel> getStoresByUserId(int userId) throws IOException;
+    StoreModel getStoreById(int storeId) throws IOException;
+    StoreModel getStoreByProductId(int productId) throws IOException;
     void updateStore(StoreModel store) throws InvalidOperationException, IOException;
     void deleteStore(int storeId) throws InvalidOperationException, IOException;
 }

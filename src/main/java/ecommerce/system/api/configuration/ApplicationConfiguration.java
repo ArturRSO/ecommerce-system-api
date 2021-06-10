@@ -15,6 +15,8 @@ public class ApplicationConfiguration {
     private String imagePathProducts;
     private String imagePathStores;
     private String imagePathUsers;
+    private String imagePathProductsDefault;
+    private String imagePathStoresDefault;
     private String imagePathUsersDefault;
 
     public String getBaseUrlApi() {
@@ -55,6 +57,22 @@ public class ApplicationConfiguration {
 
     public void setImagePathUsers(String imagePathUsers) {
         this.imagePathUsers = imagePathUsers;
+    }
+
+    public String getImagePathProductsDefault() {
+        return imagePathProductsDefault;
+    }
+
+    public void setImagePathProductsDefault(String imagePathProductsDefault) {
+        this.imagePathProductsDefault = imagePathProductsDefault;
+    }
+
+    public String getImagePathStoresDefault() {
+        return imagePathStoresDefault;
+    }
+
+    public void setImagePathStoresDefault(String imagePathStoresDefault) {
+        this.imagePathStoresDefault = imagePathStoresDefault;
     }
 
     public String getImagePathUsersDefault() {

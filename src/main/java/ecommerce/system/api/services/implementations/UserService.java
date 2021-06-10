@@ -290,7 +290,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void deleteUser(int userId) throws InvalidOperationException {
+    public void deleteUser(int userId) throws InvalidOperationException, IOException {
 
         UserModel user = this.userRepository.getById(userId);
 

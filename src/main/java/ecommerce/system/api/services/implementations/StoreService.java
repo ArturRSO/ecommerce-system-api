@@ -10,6 +10,7 @@ import ecommerce.system.api.models.UserModel;
 import ecommerce.system.api.repositories.IStoreRepository;
 import ecommerce.system.api.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +27,9 @@ public class StoreService implements IStoreService {
     private final IOrderService orderService;
     private final IStoreRepository storeRepository;
     private final IUserService userService;
+
+    @Value("${application.image-path-stores-default}")
+    private String defaultProfileImagePath;
 
     @Autowired
     public StoreService(
@@ -48,6 +52,7 @@ public class StoreService implements IStoreService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
+        store.setProfileImage(this.defaultProfileImagePath);
         store.setCreationDate(LocalDateTime.now());
         store.setLastUpdate(null);
         store.setActive(true);
@@ -69,34 +74,54 @@ public class StoreService implements IStoreService {
 
         String imagePath = this.fileService.saveMultpartImage(file, "store", storeId);
 
-        store.setProfileImagePath(imagePath);
+        store.setProfileImage(imagePath);
         store.setLastUpdate(LocalDateTime.now());
 
         this.storeRepository.update(store);
     }
 
     @Override
-    public List<StoreModel> getAllStores() {
+    public List<StoreModel> getAllStores() throws IOException {
 
-        return this.storeRepository.getAllStores();
+        List<StoreModel> stores = this.storeRepository.getAllStores();
+
+        for (StoreModel store : stores) {
+            store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+        }
+
+        return stores;
     }
 
     @Override
-    public List<StoreModel> getStoresByUserId(int userId) {
+    public List<StoreModel> getStoresByUserId(int userId) throws IOException {
 
-        return this.storeRepository.getStoresByUserId(userId);
+        List<StoreModel> stores = this.storeRepository.getStoresByUserId(userId);
+
+        for (StoreModel store : stores) {
+            store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+        }
+
+        return stores;
     }
 
     @Override
-    public StoreModel getStoreById(int storeId) {
+    public StoreModel getStoreById(int storeId) throws IOException {
 
-        return this.storeRepository.getById(storeId);
+        StoreModel store = this.storeRepository.getById(storeId);
+
+        store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+
+        return store;
     }
 
     @Override
-    public StoreModel getStoreByProductId(int productId) {
+    public StoreModel getStoreByProductId(int productId) throws IOException {
 
-        return this.storeRepository.getStoreByProductId(productId);
+        StoreModel store = this.storeRepository.getStoreByProductId(productId);
+
+        store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+
+        return store;
     }
 
     @Override

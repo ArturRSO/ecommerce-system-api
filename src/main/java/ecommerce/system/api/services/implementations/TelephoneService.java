@@ -11,6 +11,7 @@ import ecommerce.system.api.services.ITelephoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public void deleteTelephone(int telephoneId) throws InvalidOperationException {
+    public void deleteTelephone(int telephoneId) throws InvalidOperationException, IOException {
 
         TelephoneModel telephone = this.getTelephoneById(telephoneId);
 
