@@ -372,4 +372,21 @@ public class ReportRepository implements IReportRepository {
 
         return usersCountReports;
     }
+
+    @Override
+    public List<StoresCountReportModel> getStoresCountReport() {
+
+        String query = "FROM StoresCountReportEntity s";
+        TypedQuery<StoresCountReportEntity> result = this.entityManager.createQuery(query, StoresCountReportEntity.class);
+        List<StoresCountReportEntity> entities = result.getResultList();
+
+        if (entities == null || entities.isEmpty()) {
+            return null;
+        }
+
+        ArrayList<StoresCountReportModel> storesCountReports = new ArrayList<>();
+        (entities).forEach(entity -> storesCountReports.add(entity.toModel()));
+
+        return storesCountReports;
+    }
 }

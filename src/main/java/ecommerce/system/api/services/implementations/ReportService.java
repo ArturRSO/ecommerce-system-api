@@ -113,4 +113,10 @@ public class ReportService implements IReportService {
     public List<UsersCountReportModel> getUsersCountReport() {
         return this.reportRepository.getUsersCountReport();
     }
+
+    @Override
+    public List<StoresCountReportModel> getStoresCountReport() {
+
+        return this.reportRepository.getStoresCountReport();
+    }
 }

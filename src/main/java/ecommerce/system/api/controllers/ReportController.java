@@ -7,6 +7,7 @@ import ecommerce.system.api.services.IReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -450,7 +451,9 @@ public class ReportController {
     }
 
     @GetMapping(value = "system/cashflow", params = {"startDate", "endDate"})
-    public ResponseEntity<?> getSystemCashFlowReportsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
+    public ResponseEntity<?> getSystemCashFlowReportsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         BaseResponseDTO<?> response;
 
@@ -506,7 +509,9 @@ public class ReportController {
     }
 
     @GetMapping(value = "system/cashflow/revenue", params = {"startDate", "endDate"})
-    public ResponseEntity<?> getSystemCashFlowRevenueReportsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
+    public ResponseEntity<?> getSystemCashFlowRevenueReportsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         BaseResponseDTO<?> response;
 
@@ -541,6 +546,34 @@ public class ReportController {
         try {
 
             List<UsersCountReportModel> reports = this.reportService.getUsersCountReport();
+
+            if (reports == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), reports);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("stores/count")
+    public ResponseEntity<?> getStoresCountReports() {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            List<StoresCountReportModel> reports = this.reportService.getStoresCountReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");

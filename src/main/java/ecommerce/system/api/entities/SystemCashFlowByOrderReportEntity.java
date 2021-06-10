@@ -19,10 +19,13 @@ public class SystemCashFlowByOrderReportEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "pk_orderId")
+    @Column(name = "orderId")
     private int orderId;
 
-    @Column(name = "store")
+    @Column(name = "storeId")
+    private int storeId;
+
+    @Column(name = "storeName")
     private String storeName;
 
     @Column(name = "value")
@@ -34,16 +37,17 @@ public class SystemCashFlowByOrderReportEntity {
     public SystemCashFlowByOrderReportEntity() {
     }
 
-    public SystemCashFlowByOrderReportEntity(UUID id, int orderId, String storeName, double value, LocalDateTime timestamp) {
+    public SystemCashFlowByOrderReportEntity(UUID id, int orderId, int storeId, String storeName, double value, LocalDateTime timestamp) {
         this.id = id;
         this.orderId = orderId;
+        this.storeId = storeId;
         this.storeName = storeName;
         this.value = value;
         this.timestamp = timestamp;
     }
 
     public SystemCashFlowByOrderReportModel toModel() {
-        return new SystemCashFlowByOrderReportModel(this.id, this.orderId, this.storeName, this.timestamp);
+        return new SystemCashFlowByOrderReportModel(this.id, this.orderId, this.storeId, this.storeName, this.timestamp);
     }
 
     public UUID getId() {
@@ -60,6 +64,14 @@ public class SystemCashFlowByOrderReportEntity {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
     }
 
     public String getStoreName() {

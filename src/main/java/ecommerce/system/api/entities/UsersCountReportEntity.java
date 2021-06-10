@@ -42,7 +42,7 @@ public class UsersCountReportEntity {
     }
 
     public UsersCountReportModel toModel() {
-        return null;
+        return new UsersCountReportModel(this.id, this.users, this.admins, this.storeAdmins, this.customers);
     }
 
     public UUID getId() {

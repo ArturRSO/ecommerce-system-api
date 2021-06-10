@@ -26,4 +26,5 @@ public interface IReportRepository {
     List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReport();
     List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate);
     List<UsersCountReportModel> getUsersCountReport();
+    List<StoresCountReportModel> getStoresCountReport();
 }
