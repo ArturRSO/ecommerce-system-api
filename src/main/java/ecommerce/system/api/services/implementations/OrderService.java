@@ -161,6 +161,12 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public OrderModel getOrderById(int orderId) {
+
+        return this.orderRepository.getOrderById(orderId);
+    }
+
+    @Override
     public OrderModel getOrderSummaryById(int orderSummaryId) {
 
         return this.orderRepository.getOrderSummaryById(orderSummaryId);

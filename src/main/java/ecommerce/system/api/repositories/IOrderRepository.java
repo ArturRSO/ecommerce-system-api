@@ -13,6 +13,7 @@ public interface IOrderRepository {
     List<OrderModel> getOrdersByProductId(int productId);
     List<OrderModel> getOrderSummariesByUserId(int userId);
     List<OrderModel> getOrdersByOrderSummaryId(int orderSummaryId);
+    OrderModel getOrderById(int orderId);
     OrderModel getOrderSummaryById(int orderSummaryId);
     boolean updateOrder(OrderModel order);
     boolean updateOrderSummary(OrderModel orderSummary);

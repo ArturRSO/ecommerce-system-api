@@ -141,6 +141,34 @@ public class OrderController {
         }
     }
 
+    @GetMapping("{orderId}")
+    public ResponseEntity<?> getOrderById(@PathVariable("orderId") int orderId) {
+
+        BaseResponseDTO<?> response;
+
+        try {
+
+            OrderModel order = this.orderService.getOrderById(orderId);
+
+            if (order == null) {
+                response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
+
+            } else {
+                response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), order);
+            }
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            logger.error(e.getMessage());
+
+            response = new BaseResponseDTO<>(false, MessagesEnum.FAILURE.getMessage(), "");
+
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("summary/{orderId}")
     public ResponseEntity<?> getOrderSummaryById(@PathVariable("orderId") int orderId) {
 

@@ -12,6 +12,7 @@ public interface IOrderService {
     List<OrderModel> getOrdersByStoreId(int storeId);
     List<OrderModel> getOrdersByProductId(int productId);
     List<OrderModel> getOrderSummariesByUserId(int userId);
+    OrderModel getOrderById(int orderId);
     OrderModel getOrderSummaryById(int orderSummaryId);
     void updateOrderStatus(int orderSummaryid, int orderStatusId) throws InvalidOperationException;
     void payOrder(int orderSummaryid, PaymentDTO paymentInfo) throws InvalidOperationException;

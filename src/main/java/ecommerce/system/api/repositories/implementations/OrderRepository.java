@@ -143,6 +143,30 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
+    public OrderModel getOrderById(int orderId) {
+
+        try {
+
+            String query = "FROM OrderEntity o WHERE o.orderId = :orderId";
+            TypedQuery<OrderEntity> result = this.entityManager.createQuery(query, OrderEntity.class)
+                    .setParameter("orderId", orderId);
+
+            OrderEntity entity = result.getSingleResult();
+
+            OrderModel order = entity.toModel();
+            order.setItens(this.getItensByOrderId(entity.getOrderId()));
+
+            return order;
+
+        } catch (NoResultException nre) {
+
+            logger.error(nre.getMessage());
+
+            return null;
+        }
+    }
+
+    @Override
     public OrderModel getOrderSummaryById(int orderSummaryId) {
 
         try {
