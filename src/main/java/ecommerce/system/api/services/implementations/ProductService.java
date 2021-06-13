@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -91,8 +90,8 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImages());
-                product.setImageList(images);
+                List<ProductImageModel> images = this.getImagesByPaths(product.getImages());
+                product.setImages(images);
             }
         }
 
@@ -106,8 +105,8 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImages());
-                product.setImageList(images);
+                List<ProductImageModel> images = this.getImagesByPaths(product.getImages());
+                product.setImages(images);
             }
         }
 
@@ -121,8 +120,8 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImages());
-                product.setImageList(images);
+                List<ProductImageModel> images = this.getImagesByPaths(product.getImages());
+                product.setImages(images);
             }
         }
 
@@ -136,8 +135,8 @@ public class ProductService implements IProductService {
 
         if (products != null) {
             for (ProductModel product : products) {
-                List<String> images = this.getImagesByPaths(product.getImages());
-                product.setImageList(images);
+                List<ProductImageModel> images = this.getImagesByPaths(product.getImages());
+                product.setImages(images);
             }
         }
 
@@ -150,8 +149,8 @@ public class ProductService implements IProductService {
         ProductModel product = this.productRepository.getProductById(productId);
 
         if (product != null) {
-            List<String> images = this.getImagesByPaths(product.getImages());
-            product.setImageList(images);
+            List<ProductImageModel> images = this.getImagesByPaths(product.getImages());
+            product.setImages(images);
         }
 
         return product;
@@ -247,14 +246,12 @@ public class ProductService implements IProductService {
         this.productRepository.deleteProduct(productId);
     }
 
-    private List<String> getImagesByPaths(List<ProductImageModel> images) throws IOException {
-
-        ArrayList<String> imageList = new ArrayList<>();
+    private List<ProductImageModel> getImagesByPaths(List<ProductImageModel> images) throws IOException {
 
         for (ProductImageModel image : images) {
-            imageList.add("data:image;base64, " + this.fileService.getImageBase64(image.getPath()));
+            image.setImage("data:image;base64, " + this.fileService.getImageBase64(image.getPath()));
         }
 
-        return imageList;
+        return images;
     }
 }

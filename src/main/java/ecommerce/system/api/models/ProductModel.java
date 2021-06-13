@@ -8,7 +8,6 @@ import java.util.List;
 
 public class ProductModel {
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private int productId;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -42,16 +41,17 @@ public class ProductModel {
 
     private boolean isNew;
 
+    @JsonProperty("details")
     private List<ProductDetailModel> details;
 
-    @JsonIgnore
-    private List<ProductImageModel> images;
-
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private List<String> imageList;
+    private List<ProductImageModel> images;
 
     @JsonIgnore
     private int orderQuantity;
+
+    public ProductModel() {
+    }
 
     public ProductModel(
             int productId,
@@ -196,14 +196,6 @@ public class ProductModel {
 
     public void setImages(List<ProductImageModel> images) {
         this.images = images;
-    }
-
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
     }
 
     public int getOrderQuantity() {

@@ -1,5 +1,6 @@
 package ecommerce.system.api.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProductImageModel {
@@ -8,6 +9,9 @@ public class ProductImageModel {
     private int productId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String image;
+
+    @JsonIgnore
     private String path;
 
     public ProductImageModel(int productImageId, int productId, String path) {
@@ -35,6 +39,14 @@ public class ProductImageModel {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getPath() {
