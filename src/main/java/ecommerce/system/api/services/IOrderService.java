@@ -1,7 +1,6 @@
 package ecommerce.system.api.services;
 
 import ecommerce.system.api.dto.PaymentDTO;
-import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.OrderModel;
 
 import java.util.List;
@@ -14,6 +13,6 @@ public interface IOrderService {
     List<OrderModel> getOrderSummariesByUserId(int userId);
     OrderModel getOrderById(int orderId);
     OrderModel getOrderSummaryById(int orderSummaryId);
-    void updateOrderStatus(int orderSummaryid, int orderStatusId) throws InvalidOperationException;
-    void payOrder(int orderSummaryid, PaymentDTO paymentInfo) throws InvalidOperationException;
+    void updateOrderStatus(int orderSummaryid, int orderStatusId) throws Exception;
+    void payOrder(int orderSummaryid, PaymentDTO paymentInfo) throws Exception;
 }

@@ -51,14 +51,6 @@ public class NotificationHandler {
                 tokenInfo.put("expiration", String.valueOf(this.tokenConfiguration.getPasswordRecoverExpiration()));
                 tokenInfo.put("key", this.tokenConfiguration.getPasswordRecoverKey());
                 break;
-            case STORE_ADMIN:
-                tokenInfo.put("expiration", String.valueOf(this.tokenConfiguration.getStoreAdminExpiration()));
-                tokenInfo.put("key", this.tokenConfiguration.getStoreAdminKey());
-                break;
-            case EMAIL_VERIFY:
-                tokenInfo.put("expiration", String.valueOf(this.tokenConfiguration.getEmailVerifyExpiration()));
-                tokenInfo.put("key", this.tokenConfiguration.getStoreAdminKey());
-                break;
             default:
                 return null;
         }

@@ -22,6 +22,16 @@ public class AlertService implements IAlertService {
     }
 
     @Override
+    public void sendOrderAlert(int orderId, String orderStatus, UserModel user) throws Exception {
+        Map<String, String> data = new HashMap<>();
+
+        data.put("[[orderId]]", String.valueOf(orderId));
+        data.put("[[orderStatus]]", orderStatus);
+
+        this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.ORDER_ALERT, data);
+    }
+
+    @Override
     public void sendStockAlert(String productName, String storeName, List<UserModel> users) throws Exception {
 
         Map<String, String> data = new HashMap<>();

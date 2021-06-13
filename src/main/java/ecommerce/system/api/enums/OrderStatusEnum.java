@@ -22,4 +22,14 @@ public enum OrderStatusEnum {
     public String getName() {
         return name;
     }
+
+    public static String getStatusNameById(int id) {
+        for (OrderStatusEnum e : OrderStatusEnum.values()) {
+            if(e.getId() == id) {
+                return e.getName();
+            }
+        }
+
+        return null;
+    }
 }
