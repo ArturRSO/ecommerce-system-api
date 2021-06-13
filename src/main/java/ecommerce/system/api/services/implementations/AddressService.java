@@ -30,7 +30,7 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public int createAddress(AddressModel address) throws InvalidOperationException {
+    public int createAddress(AddressModel address, boolean relateWithUser) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(address.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -41,7 +41,10 @@ public class AddressService implements IAddressService {
         address.setActive(true);
 
         int addressId = this.addressRepository.create(address);
-        this.addressRepository.relateAddressAndUser(address.getUserId(), addressId);
+
+        if (relateWithUser) {
+            this.addressRepository.relateAddressAndUser(address.getUserId(), addressId);
+        }
 
         return addressId;
     }

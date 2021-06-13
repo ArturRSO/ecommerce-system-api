@@ -27,13 +27,13 @@ public class AddressController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createAddress(@RequestBody AddressModel address) {
+    public ResponseEntity<?> createAddress(@RequestBody AddressModel address, @RequestParam("user") boolean relateWithUser) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            int addressId = this.addressService.createAddress(address);
+            int addressId = this.addressService.createAddress(address, relateWithUser);
 
             response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), addressId);
 

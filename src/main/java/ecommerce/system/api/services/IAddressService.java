@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IAddressService {
 
-    int createAddress(AddressModel address) throws InvalidOperationException;
+    int createAddress(AddressModel address, boolean relateWithUser) throws InvalidOperationException;
     List<AddressModel> getAdressesByUserId(int userId) throws InvalidOperationException;
     AddressModel getAdressById(int addressId);
     void updateAddress(AddressModel address) throws InvalidOperationException;

@@ -27,13 +27,13 @@ public class TelephoneController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone) {
+    public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone, @RequestParam("user") boolean relateWithUser) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            int telephoneId = this.telephoneService.createTelephone(telephone);
+            int telephoneId = this.telephoneService.createTelephone(telephone, relateWithUser);
 
             response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), telephoneId);
 
