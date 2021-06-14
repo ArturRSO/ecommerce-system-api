@@ -9,13 +9,15 @@ public class SystemCashFlowByOrderReportModel {
     private int orderId;
     private int storeId;
     private String storeName;
+    private double value;
     private LocalDateTime timestamp;
 
-    public SystemCashFlowByOrderReportModel(UUID id, int orderId, int storeId, String storeName, LocalDateTime timestamp) {
+    public SystemCashFlowByOrderReportModel(UUID id, int orderId, int storeId, String storeName, double value, LocalDateTime timestamp) {
         this.id = id;
         this.orderId = orderId;
         this.storeId = storeId;
         this.storeName = storeName;
+        this.value = value;
         this.timestamp = timestamp;
     }
 
@@ -49,6 +51,14 @@ public class SystemCashFlowByOrderReportModel {
 
     public void setStoreName(String storeName) {
         this.storeName = storeName;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 
     public LocalDateTime getTimestamp() {

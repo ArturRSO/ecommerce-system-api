@@ -47,7 +47,7 @@ public class SystemCashFlowByOrderReportEntity {
     }
 
     public SystemCashFlowByOrderReportModel toModel() {
-        return new SystemCashFlowByOrderReportModel(this.id, this.orderId, this.storeId, this.storeName, this.timestamp);
+        return new SystemCashFlowByOrderReportModel(this.id, this.orderId, this.storeId, this.storeName, this.value, this.timestamp);
     }
 
     public UUID getId() {

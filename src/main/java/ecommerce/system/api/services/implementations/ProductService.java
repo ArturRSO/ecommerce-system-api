@@ -74,11 +74,13 @@ public class ProductService implements IProductService {
             throw new InvalidOperationException("Produto não encontrado!");
         }
 
-        String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
-
-        if (product.getImages().size() > 4) {
-            throw new InvalidOperationException("Este produto já tem o máximo de imagens permitidas cadastradas!");
+        if (product.getImages() != null && product.getImages().size() > 0) {
+            if (product.getImages().size() >= 4) {
+                throw new InvalidOperationException("Este produto já tem o máximo de imagens permitidas cadastradas!");
+            }
         }
+
+        String imagePath = this.fileService.saveMultpartImage(file, "product", productId);
 
         return this.productRepository.createProductImage(productId, imagePath);
     }
