@@ -12,6 +12,8 @@ public class OrderModel {
 
     private int orderId;
 
+    private int orderSummaryId;
+
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int userId;
 
@@ -52,8 +54,8 @@ public class OrderModel {
     public OrderModel() {
     }
 
-    public OrderModel(int orderId, int userId, int paymentMethodId, double totalPrice, double totalDiscountPercentage, double finalPrice, int installment, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
-        this.orderId = orderId;
+    public OrderModel(int orderSummaryIdId, int userId, int paymentMethodId, double totalPrice, double totalDiscountPercentage, double finalPrice, int installment, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
+        this.orderSummaryId = orderSummaryIdId;
         this.userId = userId;
         this.paymentMethodId = paymentMethodId;
         this.totalPrice = totalPrice;
@@ -65,8 +67,9 @@ public class OrderModel {
         this.orderStatusId = orderStatusId;
     }
 
-    public OrderModel(int orderId, int storeId, double totalPrice, double totalDiscountPercentage, double finalPrice, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
+    public OrderModel(int orderId, int orderSummaryId, int storeId, double totalPrice, double totalDiscountPercentage, double finalPrice, LocalDateTime creationDate, LocalDateTime lastUpdate, int orderStatusId) {
         this.orderId = orderId;
+        this.orderSummaryId = orderSummaryId;
         this.storeId = storeId;
         this.totalPrice = totalPrice;
         this.totalDiscountPercentage = totalDiscountPercentage;
@@ -82,6 +85,14 @@ public class OrderModel {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
+    }
+
+    public int getOrderSummaryId() {
+        return orderSummaryId;
+    }
+
+    public void setOrderSummaryId(int orderSummaryId) {
+        this.orderSummaryId = orderSummaryId;
     }
 
     public int getUserId() {

@@ -171,7 +171,9 @@ public class ReportController {
     }
 
     @GetMapping(value = "stores/cashflow", params = {"startDate", "endDate"})
-    public ResponseEntity<?> getStoreCashFlowReportsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
+    public ResponseEntity<?> getStoreCashFlowReportsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         BaseResponseDTO<?> response;
 
@@ -227,7 +229,10 @@ public class ReportController {
     }
 
     @GetMapping(value = "stores/cashflow", params = {"startDate", "endDate", "storeId"})
-    public ResponseEntity<?> getStoreCashFlowReportsByDateRangeAndStoreId(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @RequestParam("storeId") int storeId) {
+    public ResponseEntity<?> getStoreCashFlowReportsByDateRangeAndStoreId(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam("storeId") int storeId) {
 
         BaseResponseDTO<?> response;
 
@@ -283,7 +288,9 @@ public class ReportController {
     }
 
     @GetMapping(value = "stores/cashflow/revenue", params = {"startDate", "endDate"})
-    public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRange(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate) {
+    public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         BaseResponseDTO<?> response;
 
@@ -339,7 +346,10 @@ public class ReportController {
     }
 
     @GetMapping(value = "stores/cashflow/revenue", params = {"startDate", "endDate", "storeId"})
-    public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRangeAndStoreId(@RequestParam("startDate") LocalDate startDate, @RequestParam("endDate") LocalDate endDate, @RequestParam("storeId") int storeId) {
+    public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRangeAndStoreId(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam("storeId") int storeId) {
 
         BaseResponseDTO<?> response;
 

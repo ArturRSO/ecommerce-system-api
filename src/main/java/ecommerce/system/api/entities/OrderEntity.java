@@ -41,19 +41,25 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(OrderModel order) {
-        this.orderSummaryId = order.getOrderId();
+    public OrderEntity(OrderModel order, boolean update) {
+        this.orderSummaryId = order.getOrderSummaryId();
+        this.storeId = order.getStoreId();
         this.totalPrice = order.getTotalPrice();
         this.totalDiscountPercentage = order.getTotalDiscountPercentage();
         this.finalPrice = order.getFinalPrice();
         this.creationDate = order.getCreationDate();
         this.lastUpdate = order.getLastUpdate();
         this.orderStatusId = order.getOrderStatusId();
+
+        if (update) {
+            this.orderId = order.getOrderId();
+        }
     }
 
     public OrderModel toModel() {
         return new OrderModel(
                 this.orderId,
+                this.orderSummaryId,
                 this.storeId,
                 this.totalPrice,
                 this.totalDiscountPercentage,

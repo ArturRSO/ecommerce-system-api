@@ -31,7 +31,7 @@ public class OrderRepository implements IOrderRepository {
     @Override
     public int createOrder(OrderModel order, int storeId) {
 
-        OrderEntity orderEntity = new OrderEntity(order);
+        OrderEntity orderEntity = new OrderEntity(order, false);
         orderEntity.setStoreId(storeId);
 
         this.entityManager.persist(orderEntity);
@@ -199,7 +199,7 @@ public class OrderRepository implements IOrderRepository {
             return false;
         }
 
-        OrderEntity updatedOrder = new OrderEntity(order);
+        OrderEntity updatedOrder = new OrderEntity(order, true);
         this.entityManager.merge(updatedOrder);
 
         return true;
@@ -208,13 +208,13 @@ public class OrderRepository implements IOrderRepository {
     @Override
     public boolean updateOrderSummary(OrderModel orderSummary) {
 
-        OrderSummaryEntity entity = this.entityManager.find(OrderSummaryEntity.class, orderSummary.getOrderId());
+        OrderSummaryEntity entity = this.entityManager.find(OrderSummaryEntity.class, orderSummary.getOrderSummaryId());
 
         if (entity == null) {
             return false;
         }
 
-        OrderEntity updatedOrder = new OrderEntity(orderSummary);
+        OrderSummaryEntity updatedOrder = new OrderSummaryEntity(orderSummary);
         this.entityManager.merge(updatedOrder);
 
         return true;

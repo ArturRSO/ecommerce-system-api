@@ -45,8 +45,8 @@ public class OrderSummaryEntity {
     }
 
     public OrderSummaryEntity(OrderModel order) {
+        this.orderSummaryId = order.getOrderSummaryId();
         this.userId = order.getUserId();
-        this.paymentMethodId = order.getPaymentMethod().getPaymentMethodId();
         this.totalPrice = order.getTotalPrice();
         this.totalDiscountPercentage = order.getTotalDiscountPercentage();
         this.finalPrice = order.getFinalPrice();
@@ -54,6 +54,13 @@ public class OrderSummaryEntity {
         this.creationDate = order.getCreationDate();
         this.lastUpdate = order.getLastUpdate();
         this.orderStatusId = order.getOrderStatusId();
+
+        if (order.getPaymentMethod() != null) {
+            this.paymentMethodId = order.getPaymentMethod().getPaymentMethodId();
+
+        } else {
+            this.paymentMethodId = order.getPaymentMethodId();
+        }
     }
 
     public OrderModel toModel() {

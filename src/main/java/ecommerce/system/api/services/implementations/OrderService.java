@@ -214,7 +214,7 @@ public class OrderService implements IOrderService {
 
             for (ProductModel product : entry.getValue()) {
 
-                totalPrice += product.getPrice();
+                totalPrice += product.getPrice() * product.getOrderQuantity();
 
                 int productQuantity = product.getQuantity() - product.getOrderQuantity();
                 product.setQuantity(productQuantity);
@@ -231,7 +231,7 @@ public class OrderService implements IOrderService {
             }
 
             OrderModel order = new OrderModel();
-            order.setOrderId(orderSummaryId);
+            order.setOrderSummaryId(orderSummaryId);
             order.setTotalPrice(totalPrice);
             order.setTotalDiscountPercentage(0); // HARDCODED
             order.setFinalPrice(totalPrice);
