@@ -97,8 +97,10 @@ public class StoreService implements IStoreService {
 
         List<StoreModel> stores = this.storeRepository.getStoresByUserId(userId);
 
-        for (StoreModel store : stores) {
-            store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+        if (stores != null) {
+            for (StoreModel store : stores) {
+                store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+            }
         }
 
         return stores;

@@ -383,7 +383,7 @@ public class ProductController {
     }
 
     @DeleteMapping("delete/{productId}")
-    public ResponseEntity<?> deleteProducts(@PathVariable("productId") int productId) {
+    public ResponseEntity<?> deleteProduct(@PathVariable("productId") int productId) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
