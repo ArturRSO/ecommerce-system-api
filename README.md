@@ -1,2 +1,3 @@
-# e-commerce-system-api
-Back-end do sistema de e-commerce, criado como projeto de final de curso, para o Bacharelado em Sistemas de Informação, pela universidade de Mogi das Cruzes.
+# E-commerce System API
+
+- Back-end of the e-commerce system created as an end-of-course project, for the Bachelor's Degree in Information Systems of the University of Mogi das Cruzes (UMC).
