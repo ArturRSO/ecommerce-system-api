@@ -1,5 +1,6 @@
 package ecommerce.system.api.tools;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -8,6 +9,9 @@ import java.security.NoSuchAlgorithmException;
 
 @Component
 public class SHAEncoder {
+
+    @Value("${application.hash.salt}")
+    private String salt;
 
     public String encode(String text) throws NoSuchAlgorithmException {
 
