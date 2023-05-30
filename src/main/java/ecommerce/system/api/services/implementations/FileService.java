@@ -32,7 +32,8 @@ public class FileService implements IFileService {
     }
 
     @Override
-    public String saveMultpartImage(MultipartFile file, String object, int id) throws InvalidOperationException, IOException {
+    public String saveMultpartImage(MultipartFile file, String object, int id)
+            throws InvalidOperationException, IOException {
 
         String path;
 
@@ -50,14 +51,22 @@ public class FileService implements IFileService {
                 throw new InvalidOperationException("Objeto desconhecido!");
         }
 
-        String[] splittedName = file.getOriginalFilename().split("\\.");
-        String extension = splittedName[splittedName.length - 1];
+        String originalFileName = file.getOriginalFilename();
 
-        path += id + "." + extension;
+        if (originalFileName != null) {
+            String[] splittedName = originalFileName.split("\\.");
 
-        this.fileHandler.saveMultipartFile(file, path);
+            String extension = splittedName[splittedName.length - 1];
 
-        return path;
+            path += id + "." + extension;
+
+            this.fileHandler.saveMultipartFile(file, path);
+
+            return path;
+
+        } else {
+            throw new InvalidOperationException("Couldn't get original file name!");
+        }
     }
 
     @Override
