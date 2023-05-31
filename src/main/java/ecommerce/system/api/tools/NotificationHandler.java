@@ -1,6 +1,5 @@
 package ecommerce.system.api.tools;
 
-import ecommerce.system.api.configuration.TokenConfiguration;
 import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.models.SimpleMailModel;
@@ -20,15 +19,19 @@ public class NotificationHandler {
     @Value("${application.base-url-front}")
     private String baseUrl;
 
+    @Value("${token.password-recover-expiration}")
+    private String passwordRecoverExpiration;
+
+    @Value("${token.password-recover-key}")
+    private String passwordRecoverKey;
+
     private final AESCodec aesCodec;
     private final EmailSender emailSender;
-    private final TokenConfiguration tokenConfiguration;
 
     @Autowired
-    public NotificationHandler(AESCodec aesCodec, EmailSender emailSender, TokenConfiguration tokenConfiguration) {
+    public NotificationHandler(AESCodec aesCodec, EmailSender emailSender) {
         this.aesCodec = aesCodec;
         this.emailSender = emailSender;
-        this.tokenConfiguration = tokenConfiguration;
     }
 
     private String createTokenBase(int userId, int nofificationId, int expiration, String data) {
@@ -37,7 +40,7 @@ public class NotificationHandler {
             data = "empty";
         }
 
-        int seconds = expiration/1000;
+        int seconds = expiration / 1000;
 
         return nofificationId + "|" + LocalDateTime.now().plusSeconds(seconds) + "|" + userId + "|" + data;
     }
@@ -48,8 +51,8 @@ public class NotificationHandler {
 
         switch (notification) {
             case PASSWORD_RECOVER:
-                tokenInfo.put("expiration", String.valueOf(this.tokenConfiguration.getPasswordRecoverExpiration()));
-                tokenInfo.put("key", this.tokenConfiguration.getPasswordRecoverKey());
+                tokenInfo.put("expiration", this.passwordRecoverExpiration);
+                tokenInfo.put("key", this.passwordRecoverKey);
                 break;
             default:
                 return null;
@@ -68,7 +71,8 @@ public class NotificationHandler {
                 throw new InvalidOperationException("Notificação desconhecida!");
             }
 
-            String base = this.createTokenBase(userId, notification.getId(), Integer.parseInt(tokenInfo.get("expiration")), data);
+            String base = this.createTokenBase(userId, notification.getId(),
+                    Integer.parseInt(tokenInfo.get("expiration")), data);
             String encryptedParameter = this.aesCodec.encryptText(base, tokenInfo.get("key"));
 
             return baseUrl + notification.getRoute() + UriUtils.encode(encryptedParameter, "UTF-8");
@@ -119,7 +123,8 @@ public class NotificationHandler {
         return LocalDateTime.now().isBefore(expirationDate) && notificationId == notification.getId();
     }
 
-    public SimpleMailModel sendEmail(int userId, String userEmail, NotificationsEnum notification, Map<String, String> data) throws Exception {
+    public SimpleMailModel sendEmail(int userId, String userEmail, NotificationsEnum notification,
+            Map<String, String> data) throws Exception {
 
         String tokenData = data == null ? null : data.get("token");
 
