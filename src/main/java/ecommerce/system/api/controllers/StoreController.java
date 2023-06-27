@@ -3,7 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.StoreModel;
+import ecommerce.system.api.models.Store;
 import ecommerce.system.api.services.IStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class StoreController {
     }
 
     @PostMapping("create/user/{userId}")
-    public ResponseEntity<?> createStore(@RequestBody StoreModel store, @PathVariable("userId") int userId) {
+    public ResponseEntity<?> createStore(@RequestBody Store store, @PathVariable("userId") int userId) {
 
         BaseResponseDTO<?> response;
 
@@ -59,7 +59,8 @@ public class StoreController {
     }
 
     @PostMapping("create/image/{storeId}")
-    public ResponseEntity<?> createProfileImage(@PathVariable("storeId") int storeId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createProfileImage(@PathVariable("storeId") int storeId,
+            @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -102,7 +103,7 @@ public class StoreController {
 
         try {
 
-            List<StoreModel> stores = this.storeService.getAllStores();
+            List<Store> stores = this.storeService.getAllStores();
 
             if (stores == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -130,7 +131,7 @@ public class StoreController {
 
         try {
 
-            List<StoreModel> stores = this.storeService.getStoresByUserId(userId);
+            List<Store> stores = this.storeService.getStoresByUserId(userId);
 
             if (stores == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -158,7 +159,7 @@ public class StoreController {
 
         try {
 
-            StoreModel store = this.storeService.getStoreById(id);
+            Store store = this.storeService.getStoreById(id);
 
             if (store == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -180,7 +181,7 @@ public class StoreController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> updateStore(@RequestBody StoreModel store) {
+    public ResponseEntity<?> updateStore(@RequestBody Store store) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 

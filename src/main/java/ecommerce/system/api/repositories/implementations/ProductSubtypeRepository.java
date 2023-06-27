@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.ProductSubtypeEntity;
-import ecommerce.system.api.models.ProductSubtypeModel;
+import ecommerce.system.api.models.ProductSubtype;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,39 +8,35 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class ProductSubtypeRepository implements IProductSubtypeRepository {
 
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
-    public List<ProductSubtypeModel> getByProductTypeId(int productTypeId) {
+    public List<ProductSubtype> getByProductTypeId(int productTypeId) {
 
-        String query = "FROM ProductSubtypeEntity p WHERE p.productTypeId = :productTypeId ORDER BY p.productTypeId ASC";
-        TypedQuery<ProductSubtypeEntity> result = this.entityManager.createQuery(query, ProductSubtypeEntity.class)
+        String query = "FROM ProductSubtype p WHERE p.productTypeId = :productTypeId ORDER BY p.productTypeId ASC";
+        TypedQuery<ProductSubtype> result = this.entityManager.createQuery(query, ProductSubtype.class)
                 .setParameter("productTypeId", productTypeId);
-        List<ProductSubtypeEntity> entities = result.getResultList();
+        List<ProductSubtype> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<ProductSubtypeModel> productSubtypes = new ArrayList<>();
-        (entities).forEach(productSubtype -> productSubtypes.add(productSubtype.toModel()));
-
-        return productSubtypes;
+        return entities;
     }
 
     @Override
-    public ProductSubtypeModel getById(int id) {
+    public ProductSubtype getById(int id) {
 
-        ProductSubtypeEntity productSubtype = this.entityManager.find(ProductSubtypeEntity.class, id);
+        ProductSubtype productSubtype = this.entityManager.find(ProductSubtype.class, id);
 
-        return productSubtype == null ? null : productSubtype.toModel();
+        return productSubtype == null ? null : productSubtype;
     }
 }

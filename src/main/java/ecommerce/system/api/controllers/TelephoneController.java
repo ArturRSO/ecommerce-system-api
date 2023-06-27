@@ -3,7 +3,7 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.TelephoneModel;
+import ecommerce.system.api.models.Telephone;
 import ecommerce.system.api.services.ITelephoneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +27,8 @@ public class TelephoneController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createTelephone(@RequestBody TelephoneModel telephone, @RequestParam("user") boolean relateWithUser) {
+    public ResponseEntity<?> createTelephone(@RequestBody Telephone telephone,
+            @RequestParam("user") boolean relateWithUser) {
 
         BaseResponseDTO<?> response;
 
@@ -56,7 +57,7 @@ public class TelephoneController {
 
         try {
 
-            List<TelephoneModel> telephones = this.telephoneService.getTelephonesByUserId(userId);
+            List<Telephone> telephones = this.telephoneService.getTelephonesByUserId(userId);
 
             if (telephones == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -92,7 +93,7 @@ public class TelephoneController {
 
         try {
 
-            TelephoneModel telephone = this.telephoneService.getTelephoneById(id);
+            Telephone telephone = this.telephoneService.getTelephoneById(id);
 
             if (telephone == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -114,7 +115,7 @@ public class TelephoneController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> updateTelephone(@RequestBody TelephoneModel telephone) {
+    public ResponseEntity<?> updateTelephone(@RequestBody Telephone telephone) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 

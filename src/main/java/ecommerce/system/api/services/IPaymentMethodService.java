@@ -1,10 +1,10 @@
 package ecommerce.system.api.services;
 
-import ecommerce.system.api.models.PaymentMethodModel;
+import ecommerce.system.api.models.PaymentMethod;
 
 import java.util.List;
 
 public interface IPaymentMethodService {
 
-    List<PaymentMethodModel> getPaymentMethods();
+    List<PaymentMethod> getPaymentMethods();
 }

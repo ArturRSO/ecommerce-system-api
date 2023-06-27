@@ -50,13 +50,13 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public int createOrder(OrderModel order) throws Exception {
+    public int createOrder(Order order) throws Exception {
 
-        Map<Integer, List<ProductModel>> productsByStore = new HashMap<>();
+        Map<Integer, List<Product>> productsByStore = new HashMap<>();
         double totalPrice = 0;
 
         for (OrderItemDTO item : order.getItens()) {
-            ProductModel product = this.productService.getProductById(item.getProductId());
+            Product product = this.productService.getProductById(item.getProductId());
 
             if (item.getQuantity() > product.getQuantity()) {
                 throw new InvalidOperationException("Estoque insuficiente para o produto " + product.getName());
@@ -64,7 +64,7 @@ public class OrderService implements IOrderService {
 
             totalPrice += product.getPrice() * item.getQuantity();
 
-            List<ProductModel> products = productsByStore.get(product.getStoreId());
+            List<Product> products = productsByStore.get(product.getStoreId());
 
             if (products == null) {
                 totalPrice += this.deliveryService.getDeliveryPrice();
@@ -86,7 +86,7 @@ public class OrderService implements IOrderService {
 
         int orderSummaryId = this.orderRepository.createOrderSummary(order);
 
-        UserModel user = this.userService.getUserById(order.getUserId(), true);
+        User user = this.userService.getUserById(order.getUserId(), true);
 
         this.alertService.sendOrderAlert(orderSummaryId, OrderStatusEnum.RECEIVED.getName(), user);
 
@@ -96,31 +96,31 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderModel> getOrdersByStoreId(int storeId) {
+    public List<Order> getOrdersByStoreId(int storeId) {
 
         return this.orderRepository.getOrdersByStoreId(storeId);
     }
 
     @Override
-    public List<OrderModel> getOrdersByProductId(int productId) {
+    public List<Order> getOrdersByProductId(int productId) {
 
         return this.orderRepository.getOrdersByProductId(productId);
     }
 
     @Override
-    public List<OrderModel> getOrderSummariesByUserId(int userId) {
+    public List<Order> getOrderSummariesByUserId(int userId) {
 
         return this.orderRepository.getOrderSummariesByUserId(userId);
     }
 
     @Override
-    public OrderModel getOrderById(int orderId) {
+    public Order getOrderById(int orderId) {
 
         return this.orderRepository.getOrderById(orderId);
     }
 
     @Override
-    public OrderModel getOrderSummaryById(int orderSummaryId) {
+    public Order getOrderSummaryById(int orderSummaryId) {
 
         return this.orderRepository.getOrderSummaryById(orderSummaryId);
     }
@@ -128,16 +128,17 @@ public class OrderService implements IOrderService {
     @Override
     public void updateOrderStatus(int orderSummaryid, int orderStatusId) throws Exception {
 
-        OrderModel orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
+        Order orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
 
         if (orderSummary == null) {
             throw new InvalidOperationException("Pedido não encontrado!");
         }
 
-        List<OrderModel> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
+        List<Order> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
 
         if (orders == null) {
-            throw new InvalidOperationException("Pedido com dados comprometidos! Não foi possível efetuar a atualização de status.");
+            throw new InvalidOperationException(
+                    "Pedido com dados comprometidos! Não foi possível efetuar a atualização de status.");
         }
 
         orderSummary.setOrderStatusId(orderStatusId);
@@ -145,11 +146,12 @@ public class OrderService implements IOrderService {
 
         this.orderRepository.updateOrderSummary(orderSummary);
 
-        UserModel user = this.userService.getUserById(orderSummary.getUserId(), true);
+        User user = this.userService.getUserById(orderSummary.getUserId(), true);
 
-        this.alertService.sendOrderAlert(orderSummary.getOrderId(), OrderStatusEnum.getStatusNameById(orderStatusId), user);
+        this.alertService.sendOrderAlert(orderSummary.getOrderId(), OrderStatusEnum.getStatusNameById(orderStatusId),
+                user);
 
-        for (OrderModel order: orders) {
+        for (Order order : orders) {
 
             order.setOrderStatusId(orderStatusId);
             order.setLastUpdate(LocalDateTime.now());
@@ -161,7 +163,7 @@ public class OrderService implements IOrderService {
     @Override
     public void payOrder(int orderSummaryid, PaymentDTO paymentInfo) throws Exception {
 
-        OrderModel orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
+        Order orderSummary = this.orderRepository.getOrderSummaryById(orderSummaryid);
 
         if (orderSummary == null) {
             throw new InvalidOperationException("Pedido não encontrado!");
@@ -171,10 +173,11 @@ public class OrderService implements IOrderService {
             throw new InvalidOperationException("Valor do pagamento incorreto!");
         }
 
-        List<OrderModel> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
+        List<Order> orders = this.orderRepository.getOrdersByOrderSummaryId(orderSummaryid);
 
         if (orders == null) {
-            throw new InvalidOperationException("Pedido com dados comprometidos! Não foi possível efetuar o pagamento.");
+            throw new InvalidOperationException(
+                    "Pedido com dados comprometidos! Não foi possível efetuar o pagamento.");
         }
 
         if (this.paymentService.pay(paymentInfo.getPaymentMethod(), paymentInfo.getValue())) {
@@ -184,11 +187,11 @@ public class OrderService implements IOrderService {
 
             this.orderRepository.updateOrderSummary(orderSummary);
 
-            UserModel user = this.userService.getUserById(orderSummary.getUserId(), true);
+            User user = this.userService.getUserById(orderSummary.getUserId(), true);
 
             this.alertService.sendOrderAlert(orderSummary.getOrderId(), OrderStatusEnum.PAID.getName(), user);
 
-            for (OrderModel order : orders) {
+            for (Order order : orders) {
 
                 double commission = order.getTotalPrice() * 0.10; // HARDCODED
                 double storeProfit = order.getTotalPrice() - commission;
@@ -206,13 +209,14 @@ public class OrderService implements IOrderService {
         }
     }
 
-    private void createOrdersByStore(Map<Integer, List<ProductModel>> productsByStore, int orderSummaryId, int addressId) throws Exception {
+    private void createOrdersByStore(Map<Integer, List<Product>> productsByStore, int orderSummaryId,
+            int addressId) throws Exception {
 
-        for (Map.Entry<Integer, List<ProductModel>> entry : productsByStore.entrySet()) {
+        for (Map.Entry<Integer, List<Product>> entry : productsByStore.entrySet()) {
 
             double totalPrice = this.deliveryService.getDeliveryPrice();
 
-            for (ProductModel product : entry.getValue()) {
+            for (Product product : entry.getValue()) {
 
                 totalPrice += product.getPrice() * product.getOrderQuantity();
 
@@ -222,7 +226,7 @@ public class OrderService implements IOrderService {
                 if (productQuantity == 0) {
                     String productName = product.getName();
                     String storeName = this.storeService.getStoreById(product.getStoreId()).getName();
-                    List<UserModel> users = this.userService.getUsersByStoreId(product.getStoreId());
+                    List<User> users = this.userService.getUsersByStoreId(product.getStoreId());
 
                     this.alertService.sendStockAlert(productName, storeName, users);
                 }
@@ -230,7 +234,7 @@ public class OrderService implements IOrderService {
                 this.productService.updateProduct(product, true);
             }
 
-            OrderModel order = new OrderModel();
+            Order order = new Order();
             order.setOrderSummaryId(orderSummaryId);
             order.setTotalPrice(totalPrice);
             order.setTotalDiscountPercentage(0); // HARDCODED
@@ -241,13 +245,13 @@ public class OrderService implements IOrderService {
 
             int orderId = this.orderRepository.createOrder(order, entry.getKey());
 
-            for (ProductModel product : entry.getValue()) {
+            for (Product product : entry.getValue()) {
                 this.orderRepository.createProductOrder(product.getProductId(), orderId, product.getOrderQuantity());
             }
 
-            StoreModel store = this.storeService.getStoreById(entry.getKey());
+            Store store = this.storeService.getStoreById(entry.getKey());
 
-            DeliveryModel delivery = new DeliveryModel();
+            Delivery delivery = new Delivery();
             delivery.setDeliveryServiceId(1); // HARDCODED
             delivery.setOrderId(orderId);
             delivery.setSenderAddressId(store.getAddressId());

@@ -1,7 +1,7 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.StoreCashFlowEntity;
-import ecommerce.system.api.entities.SystemCashFlowEntity;
+import ecommerce.system.api.models.StoreCashFlow;
+import ecommerce.system.api.models.SystemCashFlow;
 import ecommerce.system.api.repositories.ICashFlowRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class CashFlowRepository implements ICashFlowRepository {
 
     @PersistenceContext
@@ -20,7 +20,7 @@ public class CashFlowRepository implements ICashFlowRepository {
     @Override
     public int createSystemCashFlowRecord(int orderId, double value) {
 
-        SystemCashFlowEntity systemCashFlow = new SystemCashFlowEntity(orderId, value, LocalDateTime.now());
+        SystemCashFlow systemCashFlow = new SystemCashFlow(orderId, value, LocalDateTime.now());
 
         this.entityManager.persist(systemCashFlow);
         this.entityManager.flush();
@@ -31,7 +31,7 @@ public class CashFlowRepository implements ICashFlowRepository {
     @Override
     public int createStoreCashFlowRecord(int storeId, int orderId, double value) {
 
-        StoreCashFlowEntity storeCashFlow = new StoreCashFlowEntity(storeId, orderId, value, LocalDateTime.now());
+        StoreCashFlow storeCashFlow = new StoreCashFlow(storeId, orderId, value, LocalDateTime.now());
 
         this.entityManager.persist(storeCashFlow);
         this.entityManager.flush();

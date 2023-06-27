@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication(scanBasePackages = { "ecommerce.system.api" })
-@EntityScan(basePackages="ecommerce.system.api.entities")
+@EntityScan(basePackages = "ecommerce.system.api.models")
 @PropertySource("classpath:application.properties")
 public class ApplicationStarter {
 

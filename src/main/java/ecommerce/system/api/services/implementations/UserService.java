@@ -6,8 +6,8 @@ import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
-import ecommerce.system.api.models.OrderModel;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.Order;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.*;
 import ecommerce.system.api.tools.NotificationHandler;
@@ -40,12 +40,12 @@ public class UserService implements IUserService {
 
     @Autowired
     public UserService(IAuthenticationService authenticationService,
-                       IFileService fileService,
-                       @Lazy IOrderService orderService,
-                       @Lazy IStoreService storeService,
-                       IUserRepository userRepository,
-                       SHAEncoder shaEncoder,
-                       NotificationHandler notificationHandler) {
+            IFileService fileService,
+            @Lazy IOrderService orderService,
+            @Lazy IStoreService storeService,
+            IUserRepository userRepository,
+            SHAEncoder shaEncoder,
+            NotificationHandler notificationHandler) {
         this.authenticationService = authenticationService;
         this.fileService = fileService;
         this.orderService = orderService;
@@ -56,7 +56,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public int createUser(UserModel user) throws NoSuchAlgorithmException, InvalidOperationException {
+    public int createUser(User user) throws NoSuchAlgorithmException, InvalidOperationException {
 
         String userRole = RolesEnum.getRoleById(user.getRoleId());
 
@@ -77,7 +77,7 @@ public class UserService implements IUserService {
         user.setVerifiedEmail(true);
         user.setActive(true);
 
-        UserModel checkedUser = this.userRepository.getUserByDocumentNumber(user.getDocumentNumber());
+        User checkedUser = this.userRepository.getUserByDocumentNumber(user.getDocumentNumber());
 
         if (checkedUser == null) {
             checkedUser = this.userRepository.getUserByEmail(user.getEmail());
@@ -98,7 +98,8 @@ public class UserService implements IUserService {
         } else {
 
             if (checkedUser.isActive()) {
-                throw new InvalidOperationException("Já existe um usuário cadastrado com o número do documento informado.");
+                throw new InvalidOperationException(
+                        "Já existe um usuário cadastrado com o número do documento informado.");
 
             } else {
 
@@ -109,7 +110,7 @@ public class UserService implements IUserService {
                 checkedUser.setDocumentNumber(checkedUser.getDocumentNumber() + " [Inactive]");
                 this.userRepository.update(checkedUser);
 
-               return this.userRepository.create(user);
+                return this.userRepository.create(user);
             }
         }
     }
@@ -123,7 +124,7 @@ public class UserService implements IUserService {
 
         String imagePath = this.fileService.saveMultpartImage(file, "user", userId);
 
-        UserModel user = this.userRepository.getById(userId);
+        User user = this.userRepository.getById(userId);
         user.setProfileImage(imagePath);
         user.setLastUpdate(LocalDateTime.now());
 
@@ -133,11 +134,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserModel> getAllUsers() throws IOException {
+    public List<User> getAllUsers() throws IOException {
 
-        List<UserModel> users = this.userRepository.getAllUsers();
+        List<User> users = this.userRepository.getAllUsers();
 
-        for (UserModel user : users) {
+        for (User user : users) {
             user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
         }
 
@@ -145,11 +146,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserModel> getUsersByRoleId(int roleId) throws IOException {
+    public List<User> getUsersByRoleId(int roleId) throws IOException {
 
-        List<UserModel> users = this.userRepository.getUsersByRoleId(roleId);
+        List<User> users = this.userRepository.getUsersByRoleId(roleId);
 
-        for (UserModel user : users) {
+        for (User user : users) {
             user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
         }
 
@@ -157,11 +158,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserModel> getUsersByStoreId(int storeId) throws IOException {
+    public List<User> getUsersByStoreId(int storeId) throws IOException {
 
-        List<UserModel> users = this.userRepository.getUsersByStoreId(storeId);
+        List<User> users = this.userRepository.getUsersByStoreId(storeId);
 
-        for (UserModel user : users) {
+        for (User user : users) {
             user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
         }
 
@@ -169,9 +170,9 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getUserById(int id, boolean imagePath) throws IOException {
+    public User getUserById(int id, boolean imagePath) throws IOException {
 
-        UserModel user = this.userRepository.getById(id);
+        User user = this.userRepository.getById(id);
 
         if (!imagePath) {
             user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
@@ -181,17 +182,17 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
 
         return this.userRepository.getUserByEmail(email);
     }
 
     @Override
-    public UserModel getUserProfile() throws IOException {
+    public User getUserProfile() throws IOException {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserModel user = this.getUserByEmail(email);
+        User user = this.getUserByEmail(email);
 
         user.setProfileImage(this.fileService.getImageBase64(user.getProfileImage()));
 
@@ -207,11 +208,12 @@ public class UserService implements IUserService {
     @Override
     public boolean sendPasswordRecoverEmail(String email) throws Exception {
 
-        UserModel user = this.getUserByEmail(email);
+        User user = this.getUserByEmail(email);
 
         if (user != null) {
 
-            this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.PASSWORD_RECOVER, null);
+            this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.PASSWORD_RECOVER,
+                    null);
 
             return true;
         }
@@ -243,7 +245,7 @@ public class UserService implements IUserService {
             }
         }
 
-        UserModel user = this.userRepository.getById(userId);
+        User user = this.userRepository.getById(userId);
 
         if (user == null) {
             throw new InvalidOperationException("Usuário não encontrado!");
@@ -264,13 +266,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void updateUser(UserModel user) throws InvalidOperationException, IOException {
+    public void updateUser(User user) throws InvalidOperationException, IOException {
 
         if (!this.authenticationService.isLoggedUser(user.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        UserModel oldUser = this.getUserById(user.getUserId(), true);
+        User oldUser = this.getUserById(user.getUserId(), true);
 
         if (oldUser == null) {
             throw new InvalidOperationException("Usuário não encontrado!");
@@ -292,7 +294,7 @@ public class UserService implements IUserService {
     @Override
     public void deleteUser(int userId) throws InvalidOperationException, IOException {
 
-        UserModel user = this.userRepository.getById(userId);
+        User user = this.userRepository.getById(userId);
 
         if (user == null) {
             throw new InvalidOperationException("Usuário não encontrado.");
@@ -310,9 +312,9 @@ public class UserService implements IUserService {
 
         } else if (user.getRoleId() == RolesEnum.CUSTOMER.getId()) {
 
-            List<OrderModel> orders = this.orderService.getOrderSummariesByUserId(userId);
+            List<Order> orders = this.orderService.getOrderSummariesByUserId(userId);
 
-            for (OrderModel order : orders) {
+            for (Order order : orders) {
 
                 if (order.getOrderStatusId() != OrderStatusEnum.FINISHED.getId()) {
                     throw new InvalidOperationException("Não é possível desativar um perfil com pedidos em aberto.");

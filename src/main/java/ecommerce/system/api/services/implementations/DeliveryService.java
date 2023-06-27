@@ -1,6 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
-import ecommerce.system.api.models.DeliveryModel;
+import ecommerce.system.api.models.Delivery;
 import ecommerce.system.api.repositories.IDeliveryRepository;
 import ecommerce.system.api.services.IDeliveryService;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class DeliveryService implements IDeliveryService {
     }
 
     @Override
-    public int createDelivery(DeliveryModel delivery) {
+    public int createDelivery(Delivery delivery) {
 
         delivery.setSuccess(false);
 
@@ -31,7 +31,7 @@ public class DeliveryService implements IDeliveryService {
     }
 
     @Override
-    public List<DeliveryModel> getDeliveriesByOrderId(int orderId) {
+    public List<Delivery> getDeliveriesByOrderId(int orderId) {
 
         return this.deliveryRepository.getDeliveriesByOrderId(orderId);
     }

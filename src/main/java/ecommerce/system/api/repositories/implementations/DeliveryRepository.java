@@ -1,7 +1,6 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.DeliveryEntity;
-import ecommerce.system.api.models.DeliveryModel;
+import ecommerce.system.api.models.Delivery;
 import ecommerce.system.api.repositories.IDeliveryRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,67 +8,58 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class DeliveryRepository implements IDeliveryRepository {
 
     @PersistenceContext
     EntityManager entityManager;
 
     @Override
-    public int createDelivery(DeliveryModel delivery) {
+    public int createDelivery(Delivery delivery) {
 
-        DeliveryEntity deliveryEntity = new DeliveryEntity(delivery);
-
-        this.entityManager.persist(deliveryEntity);
+        this.entityManager.persist(delivery);
         this.entityManager.flush();
 
-        return deliveryEntity.getDeliveryId();
+        return delivery.getDeliveryId();
     }
 
     @Override
-    public List<DeliveryModel> getDeliveriesByOrderId(int orderId) {
+    public List<Delivery> getDeliveriesByOrderId(int orderId) {
 
-        String query = "FROM DeliveryEntity d WHERE d.orderId = :orderId";
-        TypedQuery<DeliveryEntity> result = this.entityManager.createQuery(query, DeliveryEntity.class)
+        String query = "FROM Delivery d WHERE d.orderId = :orderId";
+        TypedQuery<Delivery> result = this.entityManager.createQuery(query, Delivery.class)
                 .setParameter("orderId", orderId);
-        List<DeliveryEntity> entities = result.getResultList();
+        List<Delivery> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<DeliveryModel> deliveries = new ArrayList<>();
-        (entities).forEach((delivery) -> deliveries.add(delivery.toModel()));
-
-        return deliveries;
+        return entities;
     }
 
     @Override
-    public List<DeliveryModel> getDeliveriesByOrderSummaryId(int orderSummaryId) {
+    public List<Delivery> getDeliveriesByOrderSummaryId(int orderSummaryId) {
 
-        String query = "SELECT d FROM DeliveryEntity d, OrderEntity o, OrderSummaryEntity os WHERE d.orderId = o.orderId AND o.orderSummaryId = os.orderSummaryId AND os.orderSummaryId = :orderId";
-        TypedQuery<DeliveryEntity> result = this.entityManager.createQuery(query, DeliveryEntity.class)
+        String query = "SELECT d FROM Delivery d, Order o, OrderSummary os WHERE d.orderId = o.orderId AND o.orderSummaryId = os.orderSummaryId AND os.orderSummaryId = :orderId";
+        TypedQuery<Delivery> result = this.entityManager.createQuery(query, Delivery.class)
                 .setParameter("orderSummaryId", orderSummaryId);
-        List<DeliveryEntity> entities = result.getResultList();
+        List<Delivery> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<DeliveryModel> deliveries = new ArrayList<>();
-        (entities).forEach((delivery) -> deliveries.add(delivery.toModel()));
-
-        return deliveries;
+        return entities;
     }
 
     @Override
     public boolean updateDeliveryStatus(int deliveryId, boolean status) {
 
-        DeliveryEntity delivery = this.entityManager.find(DeliveryEntity.class, deliveryId);
+        Delivery delivery = this.entityManager.find(Delivery.class, deliveryId);
 
         if (delivery == null) {
             return false;

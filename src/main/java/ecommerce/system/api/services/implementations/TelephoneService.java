@@ -2,8 +2,8 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.StoreModel;
-import ecommerce.system.api.models.TelephoneModel;
+import ecommerce.system.api.models.Store;
+import ecommerce.system.api.models.Telephone;
 import ecommerce.system.api.repositories.ITelephoneRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.services.IStoreService;
@@ -23,14 +23,15 @@ public class TelephoneService implements ITelephoneService {
     private final IStoreService storeService;
 
     @Autowired
-    public TelephoneService(IAuthenticationService authenticationService, ITelephoneRepository telephoneRepository, IStoreService storeService) {
+    public TelephoneService(IAuthenticationService authenticationService, ITelephoneRepository telephoneRepository,
+            IStoreService storeService) {
         this.authenticationService = authenticationService;
         this.telephoneRepository = telephoneRepository;
         this.storeService = storeService;
     }
 
     @Override
-    public int createTelephone(TelephoneModel telephone, boolean relateWithUser) throws InvalidOperationException {
+    public int createTelephone(Telephone telephone, boolean relateWithUser) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -50,7 +51,7 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public List<TelephoneModel> getTelephonesByUserId(int userId) throws InvalidOperationException {
+    public List<Telephone> getTelephonesByUserId(int userId) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(userId) && this.authenticationService.isNotSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -60,13 +61,13 @@ public class TelephoneService implements ITelephoneService {
     }
 
     @Override
-    public TelephoneModel getTelephoneById(int telephoneId) {
+    public Telephone getTelephoneById(int telephoneId) {
 
         return this.telephoneRepository.getById(telephoneId);
     }
 
     @Override
-    public void updateTelephone(TelephoneModel telephone) throws InvalidOperationException {
+    public void updateTelephone(Telephone telephone) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(telephone.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -82,7 +83,7 @@ public class TelephoneService implements ITelephoneService {
     @Override
     public void deleteTelephone(int telephoneId) throws InvalidOperationException, IOException {
 
-        TelephoneModel telephone = this.getTelephoneById(telephoneId);
+        Telephone telephone = this.getTelephoneById(telephoneId);
 
         if (telephone == null) {
             throw new InvalidOperationException("Telefone não encontrado!");
@@ -92,10 +93,10 @@ public class TelephoneService implements ITelephoneService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        List<StoreModel> stores = this.storeService.getStoresByUserId(telephone.getUserId());
+        List<Store> stores = this.storeService.getStoresByUserId(telephone.getUserId());
 
         if (stores != null) {
-            for (StoreModel store : stores) {
+            for (Store store : stores) {
                 if (store.getTelephoneId() == telephoneId) {
                     throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");
                 }

@@ -1,11 +1,12 @@
 package ecommerce.system.api.repositories;
 
-import ecommerce.system.api.models.AddressModel;
+import ecommerce.system.api.models.Address;
 
 import java.util.List;
 
-public interface IAddressRepository extends ICrudRepository<AddressModel> {
+public interface IAddressRepository extends ICrudRepository<Address> {
 
     void relateAddressAndUser(int userId, int adddressId);
-    List<AddressModel> getAddressesByUserId(int userId);
+
+    List<Address> getAddressesByUserId(int userId);
 }

@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.AddressModel;
+import ecommerce.system.api.models.Address;
 import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.services.IAddressService;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class AddressController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createAddress(@RequestBody AddressModel address, @RequestParam("user") boolean relateWithUser) {
+    public ResponseEntity<?> createAddress(@RequestBody Address address, @RequestParam("user") boolean relateWithUser) {
 
         BaseResponseDTO<?> response;
 
@@ -64,7 +64,7 @@ public class AddressController {
 
         try {
 
-            List<AddressModel> adresses = this.addressService.getAdressesByUserId(userId);
+            List<Address> adresses = this.addressService.getAdressesByUserId(userId);
 
             if (adresses == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -100,7 +100,7 @@ public class AddressController {
 
         try {
 
-            AddressModel address = this.addressService.getAdressById(id);
+            Address address = this.addressService.getAdressById(id);
 
             if (address == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -122,7 +122,7 @@ public class AddressController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> updateAddress(@RequestBody AddressModel address) {
+    public ResponseEntity<?> updateAddress(@RequestBody Address address) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 

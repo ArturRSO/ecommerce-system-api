@@ -4,7 +4,7 @@ import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.exceptions.InvalidTokenException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.services.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createUser(@RequestBody UserModel user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
 
         BaseResponseDTO<?> response;
 
@@ -60,7 +60,8 @@ public class UserController {
     }
 
     @PostMapping("create/image/{userId}")
-    public ResponseEntity<?> createProfileImage(@PathVariable("userId") int userId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createProfileImage(@PathVariable("userId") int userId,
+            @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -84,7 +85,7 @@ public class UserController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -103,7 +104,7 @@ public class UserController {
 
         try {
 
-            List<UserModel> users = this.userService.getAllUsers();
+            List<User> users = this.userService.getAllUsers();
 
             if (users == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -131,7 +132,7 @@ public class UserController {
 
         try {
 
-            List<UserModel> users = this.userService.getUsersByRoleId(roleId);
+            List<User> users = this.userService.getUsersByRoleId(roleId);
 
             if (users == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -159,7 +160,7 @@ public class UserController {
 
         try {
 
-            UserModel user = this.userService.getUserById(id, false);
+            User user = this.userService.getUserById(id, false);
 
             if (user == null) {
                 response = new BaseResponseDTO<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -187,7 +188,7 @@ public class UserController {
 
         try {
 
-            UserModel user = this.userService.getUserProfile();
+            User user = this.userService.getUserProfile();
 
             if (user == null) {
                 response = new BaseResponseDTO<>(true, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -267,7 +268,7 @@ public class UserController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> updateUser(@RequestBody UserModel user) {
+    public ResponseEntity<?> updateUser(@RequestBody User user) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -348,8 +349,8 @@ public class UserController {
         try {
 
             boolean result = this.userService.sendPasswordRecoverEmail(email);
-            String message = result ? "E-mail para recuperação de senha enviado com sucesso!" :
-                    "Nenhum cadastro relacionado a esse e-mail foi encontrado";
+            String message = result ? "E-mail para recuperação de senha enviado com sucesso!"
+                    : "Nenhum cadastro relacionado a esse e-mail foi encontrado";
 
             response.setSuccess(result);
             response.setMessage(message);

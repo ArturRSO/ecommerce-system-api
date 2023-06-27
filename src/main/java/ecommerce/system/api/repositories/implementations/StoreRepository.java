@@ -1,9 +1,8 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.StoreEntity;
-import ecommerce.system.api.entities.StoreUserEntity;
-import ecommerce.system.api.entities.embedded.StoreUserKey;
-import ecommerce.system.api.models.StoreModel;
+import ecommerce.system.api.models.Store;
+import ecommerce.system.api.models.StoreUser;
+import ecommerce.system.api.models.embedded.StoreUserKey;
 import ecommerce.system.api.repositories.IStoreRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,11 +14,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class StoreRepository implements IStoreRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,64 +26,56 @@ public class StoreRepository implements IStoreRepository {
     EntityManager entityManager;
 
     @Override
-    public int create(StoreModel object) {
+    public int create(Store object) {
 
-        StoreEntity store = new StoreEntity(object);
-
-        this.entityManager.persist(store);
+        this.entityManager.persist(object);
         this.entityManager.flush();
 
-        return store.getStoreId();
+        return object.getStoreId();
     }
 
     @Override
     public void relateStoreAndUser(int storeId, int userId) {
 
         StoreUserKey storeUserKey = new StoreUserKey(storeId, userId);
-        StoreUserEntity storeUser = new StoreUserEntity(storeUserKey);
+        StoreUser storeUser = new StoreUser(storeUserKey);
 
         this.entityManager.persist(storeUser);
     }
 
     @Override
-    public List<StoreModel> getAllStores() {
+    public List<Store> getAllStores() {
 
-        String query = "FROM StoreEntity s WHERE s.active = true ORDER BY s.storeId ASC";
-        TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class);
-        List<StoreEntity> entities = result.getResultList();
+        String query = "FROM Store s WHERE s.active = true ORDER BY s.storeId ASC";
+        TypedQuery<Store> result = this.entityManager.createQuery(query, Store.class);
+        List<Store> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreModel> stores = new ArrayList<>();
-        (entities).forEach((store) -> stores.add(store.toModel()));
-
-        return stores;
+        return entities;
     }
 
     @Override
-    public List<StoreModel> getStoresByUserId(int userId) {
+    public List<Store> getStoresByUserId(int userId) {
 
-        String query = "SELECT s FROM StoreEntity s, StoreUserEntity su WHERE s.storeId = su.id.storeId AND su.id.userId = :userId AND s.active = true ORDER BY s.storeId ASC";
-        TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class)
+        String query = "SELECT s FROM Store s, StoreUser su WHERE s.storeId = su.id.storeId AND su.id.userId = :userId AND s.active = true ORDER BY s.storeId ASC";
+        TypedQuery<Store> result = this.entityManager.createQuery(query, Store.class)
                 .setParameter("userId", userId);
-        List<StoreEntity> entities = result.getResultList();
+        List<Store> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreModel> stores = new ArrayList<>();
-        (entities).forEach((store) -> stores.add(store.toModel()));
-
-        return stores;
+        return entities;
     }
 
     @Override
     public List<Integer> getUserIdsByStoreId(int storeId) {
 
-        String query = "SELECT su.id.userId FROM StoreUserEntity su, StoreEntity s WHERE s.storeId = su.id.storeId AND s.storeId = :storeId AND s.active = true ORDER BY s.storeId ASC";
+        String query = "SELECT su.id.userId FROM StoreUser su, Store s WHERE s.storeId = su.id.storeId AND s.storeId = :storeId AND s.active = true ORDER BY s.storeId ASC";
         TypedQuery<Integer> result = this.entityManager.createQuery(query, Integer.class)
                 .setParameter("storeId", storeId);
         List<Integer> userIds = result.getResultList();
@@ -98,16 +88,16 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
-    public StoreModel getById(int id) {
+    public Store getById(int id) {
 
         try {
 
-            String query = "FROM StoreEntity s WHERE s.active = true AND s.storeId = :storeId";
-            TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class)
+            String query = "FROM Store s WHERE s.active = true AND s.storeId = :storeId";
+            TypedQuery<Store> result = this.entityManager.createQuery(query, Store.class)
                     .setParameter("storeId", id);
-            StoreEntity store = result.getSingleResult();
+            Store store = result.getSingleResult();
 
-            return store.toModel();
+            return store;
 
         } catch (NoResultException nre) {
 
@@ -118,16 +108,16 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
-    public StoreModel getStoreByProductId(int productId) {
+    public Store getStoreByProductId(int productId) {
 
         try {
 
-            String query = "SELECT s FROM StoreEntity s, ProductEntity p WHERE p.storeId = s.storeId AND p.productId = :productId";
-            TypedQuery<StoreEntity> result = this.entityManager.createQuery(query, StoreEntity.class)
+            String query = "SELECT s FROM Store s, ProductEntity p WHERE p.storeId = s.storeId AND p.productId = :productId";
+            TypedQuery<Store> result = this.entityManager.createQuery(query, Store.class)
                     .setParameter("productId", productId);
-            StoreEntity store = result.getSingleResult();
+            Store store = result.getSingleResult();
 
-            return store.toModel();
+            return store;
 
         } catch (NoResultException nre) {
 
@@ -138,17 +128,15 @@ public class StoreRepository implements IStoreRepository {
     }
 
     @Override
-    public boolean update(StoreModel object) {
+    public boolean update(Store object) {
 
-        StoreEntity store = this.entityManager.find(StoreEntity.class, object.getStoreId());
+        Store store = this.entityManager.find(Store.class, object.getStoreId());
 
         if (store == null || !store.isActive()) {
             return false;
         }
 
-        StoreEntity updatedStore = new StoreEntity(object);
-
-        this.entityManager.merge(updatedStore);
+        this.entityManager.merge(object);
 
         return true;
     }
@@ -156,7 +144,7 @@ public class StoreRepository implements IStoreRepository {
     @Override
     public boolean delete(int id) {
 
-        StoreEntity store = this.entityManager.find(StoreEntity.class, id);
+        Store store = this.entityManager.find(Store.class, id);
 
         if (store == null || !store.isActive()) {
             return false;

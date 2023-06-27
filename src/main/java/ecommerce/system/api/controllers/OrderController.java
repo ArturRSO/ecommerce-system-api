@@ -4,8 +4,8 @@ import ecommerce.system.api.dto.PaymentDTO;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.DeliveryModel;
-import ecommerce.system.api.models.OrderModel;
+import ecommerce.system.api.models.Delivery;
+import ecommerce.system.api.models.Order;
 import ecommerce.system.api.services.IDeliveryService;
 import ecommerce.system.api.services.IOrderService;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class OrderController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createOrder(@RequestBody OrderModel order) {
+    public ResponseEntity<?> createOrder(@RequestBody Order order) {
 
         BaseResponseDTO<?> response;
 
@@ -63,7 +63,7 @@ public class OrderController {
     }
 
     @PostMapping("delivery/create")
-    public ResponseEntity<?> createDelivery(@RequestBody DeliveryModel delivery) {
+    public ResponseEntity<?> createDelivery(@RequestBody Delivery delivery) {
 
         BaseResponseDTO<?> response;
 
@@ -92,7 +92,7 @@ public class OrderController {
 
         try {
 
-            List<OrderModel> orders = this.orderService.getOrdersByStoreId(storeId);
+            List<Order> orders = this.orderService.getOrdersByStoreId(storeId);
 
             if (orders == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -103,7 +103,7 @@ public class OrderController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -120,7 +120,7 @@ public class OrderController {
 
         try {
 
-            List<OrderModel> orders = this.orderService.getOrderSummariesByUserId(userId);
+            List<Order> orders = this.orderService.getOrderSummariesByUserId(userId);
 
             if (orders == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -148,7 +148,7 @@ public class OrderController {
 
         try {
 
-            OrderModel order = this.orderService.getOrderById(orderId);
+            Order order = this.orderService.getOrderById(orderId);
 
             if (order == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -176,7 +176,7 @@ public class OrderController {
 
         try {
 
-            OrderModel order = this.orderService.getOrderSummaryById(orderId);
+            Order order = this.orderService.getOrderSummaryById(orderId);
 
             if (order == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -198,7 +198,8 @@ public class OrderController {
     }
 
     @PutMapping("update/{orderId}/status/{statusId}")
-    public ResponseEntity<?> updateOrderStatus(@PathVariable("orderId") int orderSummaryId, @PathVariable("statusId") int orderStatusId) {
+    public ResponseEntity<?> updateOrderStatus(@PathVariable("orderId") int orderSummaryId,
+            @PathVariable("statusId") int orderStatusId) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -235,7 +236,8 @@ public class OrderController {
     }
 
     @PutMapping("delivery/update/{deliveryId}")
-    public ResponseEntity<?> updateDelveryStatus(@PathVariable("deliveryId") int deliveryId, @RequestBody boolean status) {
+    public ResponseEntity<?> updateDelveryStatus(@PathVariable("deliveryId") int deliveryId,
+            @RequestBody boolean status) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -262,7 +264,8 @@ public class OrderController {
     }
 
     @PutMapping("{orderId}/pay")
-    public ResponseEntity<?> payOrder(@PathVariable("orderId") int orderSummaryId, @RequestBody PaymentDTO paymentInfo) {
+    public ResponseEntity<?> payOrder(@PathVariable("orderId") int orderSummaryId,
+            @RequestBody PaymentDTO paymentInfo) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 

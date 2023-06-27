@@ -2,8 +2,8 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.AddressModel;
-import ecommerce.system.api.models.StoreModel;
+import ecommerce.system.api.models.Address;
+import ecommerce.system.api.models.Store;
 import ecommerce.system.api.repositories.IAddressRepository;
 import ecommerce.system.api.services.IAddressService;
 import ecommerce.system.api.services.IAuthenticationService;
@@ -23,14 +23,15 @@ public class AddressService implements IAddressService {
     private final IStoreService storeService;
 
     @Autowired
-    public AddressService(IAuthenticationService authenticationService, IAddressRepository addressRepository, IStoreService storeService) {
+    public AddressService(IAuthenticationService authenticationService, IAddressRepository addressRepository,
+            IStoreService storeService) {
         this.authenticationService = authenticationService;
         this.addressRepository = addressRepository;
         this.storeService = storeService;
     }
 
     @Override
-    public int createAddress(AddressModel address, boolean relateWithUser) throws InvalidOperationException {
+    public int createAddress(Address address, boolean relateWithUser) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(address.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -50,7 +51,7 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public List<AddressModel> getAdressesByUserId(int userId) throws InvalidOperationException {
+    public List<Address> getAdressesByUserId(int userId) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(userId) && this.authenticationService.isNotSystemAdmin()) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -60,13 +61,13 @@ public class AddressService implements IAddressService {
     }
 
     @Override
-    public AddressModel getAdressById(int adddressId) {
+    public Address getAdressById(int adddressId) {
 
         return this.addressRepository.getById(adddressId);
     }
 
     @Override
-    public void updateAddress(AddressModel address) throws InvalidOperationException {
+    public void updateAddress(Address address) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(address.getUserId())) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -83,7 +84,7 @@ public class AddressService implements IAddressService {
     @Override
     public void deleteAdress(int addressId) throws InvalidOperationException, IOException {
 
-        AddressModel address = this.getAdressById(addressId);
+        Address address = this.getAdressById(addressId);
 
         if (address == null) {
             throw new InvalidOperationException("Endereço não encontrado!");
@@ -93,10 +94,10 @@ public class AddressService implements IAddressService {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
         }
 
-        List<StoreModel> stores = this.storeService.getStoresByUserId(address.getUserId());
+        List<Store> stores = this.storeService.getStoresByUserId(address.getUserId());
 
         if (stores != null) {
-            for (StoreModel store : stores) {
+            for (Store store : stores) {
 
                 if (store.getAddressId() == addressId) {
                     throw new InvalidOperationException("Não é possível deletar um endereço associado a uma loja.");

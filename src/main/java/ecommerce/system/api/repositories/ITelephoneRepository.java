@@ -1,11 +1,12 @@
 package ecommerce.system.api.repositories;
 
-import ecommerce.system.api.models.TelephoneModel;
+import ecommerce.system.api.models.Telephone;
 
 import java.util.List;
 
-public interface ITelephoneRepository extends ICrudRepository<TelephoneModel> {
+public interface ITelephoneRepository extends ICrudRepository<Telephone> {
 
     void relateTelephoneAndUser(int userId, int telephoneId);
-    List<TelephoneModel> getTelephonesByUserId(int userId);
+
+    List<Telephone> getTelephonesByUserId(int userId);
 }

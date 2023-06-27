@@ -1,6 +1,6 @@
 package ecommerce.system.api.services.implementations;
 
-import ecommerce.system.api.models.PaymentMethodModel;
+import ecommerce.system.api.models.PaymentMethod;
 import ecommerce.system.api.repositories.IPaymentMethodRepository;
 import ecommerce.system.api.services.IPaymentMethodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class PaymentMethodService implements IPaymentMethodService {
     }
 
     @Override
-    public List<PaymentMethodModel> getPaymentMethods() {
+    public List<PaymentMethod> getPaymentMethods() {
 
         return this.paymentMethodRepository.getPaymentMethods();
     }

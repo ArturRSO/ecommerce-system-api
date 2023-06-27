@@ -2,7 +2,7 @@ package ecommerce.system.api.configuration;
 
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.InvalidTokenException;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.services.IUserService;
 import ecommerce.system.api.tools.JwtHandler;
 import org.slf4j.Logger;
@@ -37,7 +37,8 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+            FilterChain filterChain)
             throws ServletException, IOException {
 
         try {
@@ -47,11 +48,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new InvalidTokenException("Token inválido ou nulo");
             }
 
-            String email =  this.jwtHandler.getTokenSubject(token);
+            String email = this.jwtHandler.getTokenSubject(token);
 
             if (this.jwtHandler.checkToken(email, token)) {
 
-                UserModel user = this.userService.getUserByEmail(email);
+                User user = this.userService.getUserByEmail(email);
 
                 String role = RolesEnum.getRoleById(user.getRoleId());
 

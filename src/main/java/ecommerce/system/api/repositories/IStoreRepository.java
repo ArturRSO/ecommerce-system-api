@@ -1,14 +1,18 @@
 package ecommerce.system.api.repositories;
 
-import ecommerce.system.api.models.StoreModel;
+import ecommerce.system.api.models.Store;
 
 import java.util.List;
 
-public interface IStoreRepository extends ICrudRepository<StoreModel> {
+public interface IStoreRepository extends ICrudRepository<Store> {
 
     void relateStoreAndUser(int storeId, int userId);
-    List<StoreModel> getAllStores();
-    List<StoreModel> getStoresByUserId(int userId);
+
+    List<Store> getAllStores();
+
+    List<Store> getStoresByUserId(int userId);
+
     List<Integer> getUserIdsByStoreId(int storeId);
-    StoreModel getStoreByProductId(int productId);
+
+    Store getStoreByProductId(int productId);
 }

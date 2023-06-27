@@ -1,11 +1,7 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.ProductDetailEntity;
-import ecommerce.system.api.entities.ProductDetailLabelEntity;
-import ecommerce.system.api.entities.ProductEntity;
-import ecommerce.system.api.entities.ProductImageEntity;
-import ecommerce.system.api.entities.embedded.ProductDetailKey;
 import ecommerce.system.api.models.*;
+import ecommerce.system.api.models.embedded.ProductDetailKey;
 import ecommerce.system.api.repositories.IProductDetailRepository;
 import ecommerce.system.api.repositories.IProductRepository;
 import ecommerce.system.api.repositories.IProductSubtypeRepository;
@@ -22,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class ProductRepository implements IProductRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -34,27 +30,26 @@ public class ProductRepository implements IProductRepository {
     EntityManager entityManager;
 
     @Autowired
-    public ProductRepository(IProductDetailRepository detailRepository, IProductSubtypeRepository productSubtypeRepository, IProductTypeRepository productTypeRepository) {
+    public ProductRepository(IProductDetailRepository detailRepository,
+            IProductSubtypeRepository productSubtypeRepository, IProductTypeRepository productTypeRepository) {
         this.detailRepository = detailRepository;
         this.productSubtypeRepository = productSubtypeRepository;
         this.productTypeRepository = productTypeRepository;
     }
 
     @Override
-    public int createProduct(ProductModel object) {
+    public int createProduct(Product object) {
 
-        ProductEntity product = new ProductEntity(object);
-
-        this.entityManager.persist(product);
+        this.entityManager.persist(object);
         this.entityManager.flush();
 
-        return product.getProductId();
+        return object.getProductId();
     }
 
     @Override
-    public void createProductDetail(ProductDetailModel detail, int productId) {
+    public void createProductDetail(ProductDetail detail, int productId) {
 
-        ProductDetailEntity entity = new ProductDetailEntity(detail, productId);
+        ProductDetail entity = new ProductDetail(detail, productId);
 
         this.entityManager.persist(entity);
     }
@@ -62,7 +57,7 @@ public class ProductRepository implements IProductRepository {
     @Override
     public int createProductImage(int productId, String path) {
 
-        ProductImageEntity productImage = new ProductImageEntity(productId, path);
+        ProductImage productImage = new ProductImage(productId, path);
 
         this.entityManager.persist(productImage);
         this.entityManager.flush();
@@ -71,12 +66,12 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsByQuantity(int quantity) {
+    public List<Product> getProductsByQuantity(int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+        String query = "FROM Product p WHERE p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
+        TypedQuery<Product> result = this.entityManager.createQuery(query, Product.class)
                 .setParameter("quantity", quantity);
-        List<ProductEntity> entities = result.getResultList();
+        List<Product> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
@@ -86,13 +81,13 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsByNameAndQuantity(String name, int quantity) {
+    public List<Product> getProductsByNameAndQuantity(String name, int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity AND p.name LIKE :name ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+        String query = "FROM Product p WHERE p.active = true AND p.quantity >= :quantity AND p.name LIKE :name ORDER BY p.productId ASC";
+        TypedQuery<Product> result = this.entityManager.createQuery(query, Product.class)
                 .setParameter("quantity", quantity)
                 .setParameter("name", "%" + name + "%");
-        List<ProductEntity> entities = result.getResultList();
+        List<Product> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
@@ -102,13 +97,13 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsByStoreIdAndQuantity(int storeId, int quantity) {
+    public List<Product> getProductsByStoreIdAndQuantity(int storeId, int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.storeId = :storeId AND p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+        String query = "FROM Product p WHERE p.storeId = :storeId AND p.active = true AND p.quantity >= :quantity ORDER BY p.productId ASC";
+        TypedQuery<Product> result = this.entityManager.createQuery(query, Product.class)
                 .setParameter("storeId", storeId)
                 .setParameter("quantity", quantity);
-        List<ProductEntity> entities = result.getResultList();
+        List<Product> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
@@ -118,13 +113,13 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductModel> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity) {
+    public List<Product> getProductsBySubtypeIdAndQuantity(int subtypeId, int quantity) {
 
-        String query = "FROM ProductEntity p WHERE p.active = true AND p.quantity >= :quantity AND p.productSubtypeId = :subtypeId ORDER BY p.productId ASC";
-        TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+        String query = "FROM Product p WHERE p.active = true AND p.quantity >= :quantity AND p.productSubtypeId = :subtypeId ORDER BY p.productId ASC";
+        TypedQuery<Product> result = this.entityManager.createQuery(query, Product.class)
                 .setParameter("subtypeId", subtypeId)
                 .setParameter("quantity", quantity);
-        List<ProductEntity> entities = result.getResultList();
+        List<Product> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
@@ -134,27 +129,26 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public ProductModel getProductById(int id) {
+    public Product getProductById(int id) {
 
         try {
 
-            String query = "FROM ProductEntity p WHERE p.active = true AND p.productId = :productId";
-            TypedQuery<ProductEntity> result = this.entityManager.createQuery(query, ProductEntity.class)
+            String query = "FROM Product p WHERE p.active = true AND p.productId = :productId";
+            TypedQuery<Product> result = this.entityManager.createQuery(query, Product.class)
                     .setParameter("productId", id);
-            ProductEntity entity = result.getSingleResult();
+            Product entity = result.getSingleResult();
 
-            ProductModel product = entity.toModel();
-            ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
-            ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
-            List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
-            List<ProductImageModel> images = this.getImagesByProductId(entity.getProductId());
+            ProductType productType = this.productTypeRepository.getById(entity.getProductTypeId());
+            ProductSubtype productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
+            List<ProductDetail> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
+            List<ProductImage> images = this.getImagesByProductId(entity.getProductId());
 
-            product.setDetails(details);
-            product.setImages(images);
-            product.setProductType(productType);
-            product.setProductSubtype(productSubtype);
+            entity.setDetails(details);
+            entity.setImages(images);
+            entity.setProductType(productType);
+            entity.setProductSubtype(productSubtype);
 
-            return product;
+            return entity;
 
         } catch (NoResultException nre) {
 
@@ -165,50 +159,50 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<ProductDetailModel> getProductDetailLabelsByProductSubtypeId(int productSubtypeId) {
+    public List<ProductDetail> getProductDetailLabelsByProductSubtypeId(int productSubtypeId) {
 
-        String query = "SELECT pdl FROM ProductDetailLabelEntity pdl, DetailLabelProductSubtypeEntity dlps WHERE dlps.id.detailLabelId = pdl.detailLabelId AND dlps.id.productSubtypeId = :productSubtypeId ORDER BY pdl.detailLabelId ASC";
-        TypedQuery<ProductDetailLabelEntity> result = this.entityManager.createQuery(query, ProductDetailLabelEntity.class)
+        String query = "SELECT pdl FROM ProductDetailLabel pdl, DetailLabelProductSubtypeEntity dlps WHERE dlps.id.detailLabelId = pdl.detailLabelId AND dlps.id.productSubtypeId = :productSubtypeId ORDER BY pdl.detailLabelId ASC";
+        TypedQuery<ProductDetailLabel> result = this.entityManager
+                .createQuery(query, ProductDetailLabel.class)
                 .setParameter("productSubtypeId", productSubtypeId);
-        List<ProductDetailLabelEntity> entities = result.getResultList();
+        List<ProductDetailLabel> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<ProductDetailModel> detailLabels = new ArrayList<>();
+        ArrayList<ProductDetail> detailLabels = new ArrayList<>();
 
-        (entities).forEach((entity) -> detailLabels.add(entity.toModel()));
+        (entities).forEach((entity) -> detailLabels.add(entity.toProductDetail()));
 
         return detailLabels;
     }
 
     @Override
-    public boolean updateProduct(ProductModel object) {
+    public boolean updateProduct(Product object) {
 
-        ProductEntity product = this.entityManager.find(ProductEntity.class, object.getProductId());
+        Product product = this.entityManager.find(Product.class, object.getProductId());
 
         if (product == null || !product.isActive()) {
             return false;
         }
 
-        ProductEntity updatedProduct = new ProductEntity(object);
-
-        this.entityManager.merge(updatedProduct);
+        this.entityManager.merge(object);
 
         return true;
     }
 
     @Override
-    public boolean updateProductDetails(ProductDetailModel detail, int productId) {
+    public boolean updateProductDetails(ProductDetail detail, int productId) {
 
-        ProductDetailEntity entity = this.entityManager.find(ProductDetailEntity.class, new ProductDetailKey(productId, detail.getLabelId()));
+        ProductDetail entity = this.entityManager.find(ProductDetail.class,
+                new ProductDetailKey(productId, detail.getLabelId()));
 
         if (entity == null) {
             return false;
         }
 
-        ProductDetailEntity updatedDetail = new ProductDetailEntity(detail, productId);
+        ProductDetail updatedDetail = new ProductDetail(detail, productId);
 
         this.entityManager.merge(updatedDetail);
 
@@ -216,17 +210,15 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public boolean updateProductImage(ProductImageModel image) {
+    public boolean updateProductImage(ProductImage image) {
 
-        ProductImageEntity entity = this.entityManager.find(ProductImageEntity.class, image.getProductImageId());
+        ProductImage entity = this.entityManager.find(ProductImage.class, image.getProductImageId());
 
         if (entity == null) {
             return false;
         }
 
-        ProductImageEntity updatedImage = new ProductImageEntity(image);
-
-        this.entityManager.merge(updatedImage);
+        this.entityManager.merge(image);
 
         return true;
     }
@@ -234,7 +226,7 @@ public class ProductRepository implements IProductRepository {
     @Override
     public boolean deleteProduct(int id) {
 
-        ProductEntity product = this.entityManager.find(ProductEntity.class, id);
+        Product product = this.entityManager.find(Product.class, id);
 
         if (product == null || !product.isActive()) {
             return false;
@@ -246,41 +238,34 @@ public class ProductRepository implements IProductRepository {
         return true;
     }
 
-    private List<ProductModel> buildProducts(List<ProductEntity> entities) {
-
-        ArrayList<ProductModel> products = new ArrayList<>();
+    private List<Product> buildProducts(List<Product> entities) {
 
         (entities).forEach(entity -> {
-            ProductTypeModel productType = this.productTypeRepository.getById(entity.getProductTypeId());
-            ProductSubtypeModel productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
-            List<ProductDetailModel> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
-            List<ProductImageModel> images = this.getImagesByProductId(entity.getProductId());
-            ProductModel product = entity.toModel();
-            product.setDetails(details);
-            product.setImages(images);
-            product.setProductType(productType);
-            product.setProductSubtype(productSubtype);
-            products.add(product);
+            ProductType productType = this.productTypeRepository.getById(entity.getProductTypeId());
+            ProductSubtype productSubtype = this.productSubtypeRepository.getById(entity.getProductSubtypeId());
+            List<ProductDetail> details = this.detailRepository.getDetailsByProductId(entity.getProductId());
+            List<ProductImage> images = this.getImagesByProductId(entity.getProductId());
+            entity.setDetails(details);
+            entity.setImages(images);
+            entity.setProductType(productType);
+            entity.setProductSubtype(productSubtype);
+
         });
 
-        return products;
+        return entities;
     }
 
-    private List<ProductImageModel> getImagesByProductId(int productId) {
+    private List<ProductImage> getImagesByProductId(int productId) {
 
-        String query = "FROM ProductImageEntity p WHERE p.productId = :productId ORDER BY p.productImageId ASC";
-        TypedQuery<ProductImageEntity> result = this.entityManager.createQuery(query, ProductImageEntity.class)
+        String query = "FROM ProductImage p WHERE p.productId = :productId ORDER BY p.productImageId ASC";
+        TypedQuery<ProductImage> result = this.entityManager.createQuery(query, ProductImage.class)
                 .setParameter("productId", productId);
-        List<ProductImageEntity> entities = result.getResultList();
+        List<ProductImage> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<ProductImageModel> paths = new ArrayList<>();
-
-        entities.forEach(entity -> paths.add(entity.toModel()));
-
-        return paths;
+        return entities;
     }
 }

@@ -1,7 +1,7 @@
 package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.enums.NotificationsEnum;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.services.IAlertService;
 import ecommerce.system.api.tools.NotificationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AlertService implements IAlertService {
     }
 
     @Override
-    public void sendOrderAlert(int orderId, String orderStatus, UserModel user) throws Exception {
+    public void sendOrderAlert(int orderId, String orderStatus, User user) throws Exception {
         Map<String, String> data = new HashMap<>();
 
         data.put("[[orderId]]", String.valueOf(orderId));
@@ -32,14 +32,14 @@ public class AlertService implements IAlertService {
     }
 
     @Override
-    public void sendStockAlert(String productName, String storeName, List<UserModel> users) throws Exception {
+    public void sendStockAlert(String productName, String storeName, List<User> users) throws Exception {
 
         Map<String, String> data = new HashMap<>();
 
         data.put("[[productName]]", productName);
         data.put("[[storeName]]", storeName);
 
-        for (UserModel user : users) {
+        for (User user : users) {
             this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.STOCK_ALERT, data);
         }
     }

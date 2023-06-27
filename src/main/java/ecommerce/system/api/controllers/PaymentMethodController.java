@@ -2,7 +2,7 @@ package ecommerce.system.api.controllers;
 
 import ecommerce.system.api.dto.BaseResponseDTO;
 import ecommerce.system.api.enums.MessagesEnum;
-import ecommerce.system.api.models.PaymentMethodModel;
+import ecommerce.system.api.models.PaymentMethod;
 import ecommerce.system.api.services.IPaymentMethodService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class PaymentMethodController {
 
         try {
 
-            List<PaymentMethodModel> paymentMethods = this.paymentMethodService.getPaymentMethods();
+            List<PaymentMethod> paymentMethods = this.paymentMethodService.getPaymentMethods();
 
             if (paymentMethods == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");

@@ -37,7 +37,7 @@ public class ReportController {
 
         try {
 
-            List<OrdersByStoreReportModel> reports = this.reportService.getOrdersReport();
+            List<OrdersByStoreReport> reports = this.reportService.getOrdersReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -65,7 +65,7 @@ public class ReportController {
 
         try {
 
-            OrdersByStoreReportModel report = this.reportService.getOrdersReportByStoreId(storeId);
+            OrdersByStoreReport report = this.reportService.getOrdersReportByStoreId(storeId);
 
             if (report == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -93,7 +93,7 @@ public class ReportController {
 
         try {
 
-            List<ProductsByStoreReportModel> reports = this.reportService.getProductsReport();
+            List<ProductsByStoreReport> reports = this.reportService.getProductsReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -121,7 +121,7 @@ public class ReportController {
 
         try {
 
-            ProductsByStoreReportModel report = this.reportService.getProductsReportByStoreId(storeId);
+            ProductsByStoreReport report = this.reportService.getProductsReportByStoreId(storeId);
 
             if (report == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -149,7 +149,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReport();
+            List<StoreCashFlowByOrderReport> reports = this.reportService.getStoreCashFlowReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -170,7 +170,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "stores/cashflow", params = {"startDate", "endDate"})
+    @GetMapping(value = "stores/cashflow", params = { "startDate", "endDate" })
     public ResponseEntity<?> getStoreCashFlowReportsByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -179,7 +179,8 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByDateRange(startDate, endDate);
+            List<StoreCashFlowByOrderReport> reports = this.reportService
+                    .getStoreCashFlowReportByDateRange(startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -207,7 +208,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByStoreId(storeId);
+            List<StoreCashFlowByOrderReport> reports = this.reportService.getStoreCashFlowReportByStoreId(storeId);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -228,7 +229,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "stores/cashflow", params = {"startDate", "endDate", "storeId"})
+    @GetMapping(value = "stores/cashflow", params = { "startDate", "endDate", "storeId" })
     public ResponseEntity<?> getStoreCashFlowReportsByDateRangeAndStoreId(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -238,7 +239,8 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowByOrderReportModel> reports = this.reportService.getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
+            List<StoreCashFlowByOrderReport> reports = this.reportService
+                    .getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -266,7 +268,7 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowRevenueReportModel> reports = this.reportService.getStoreCashFlowRevenueReport();
+            List<StoreCashFlowRevenueReport> reports = this.reportService.getStoreCashFlowRevenueReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -287,7 +289,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "stores/cashflow/revenue", params = {"startDate", "endDate"})
+    @GetMapping(value = "stores/cashflow/revenue", params = { "startDate", "endDate" })
     public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -296,7 +298,8 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowRevenueReportModel> reports = this.reportService.getStoreCashFlowRevenueReportByDateRange(startDate, endDate);
+            List<StoreCashFlowRevenueReport> reports = this.reportService
+                    .getStoreCashFlowRevenueReportByDateRange(startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -324,7 +327,8 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowRevenueReportModel> reports = this.reportService.getStoreCashFlowRevenueReportByStoreId(storeId);
+            List<StoreCashFlowRevenueReport> reports = this.reportService
+                    .getStoreCashFlowRevenueReportByStoreId(storeId);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -345,7 +349,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "stores/cashflow/revenue", params = {"startDate", "endDate", "storeId"})
+    @GetMapping(value = "stores/cashflow/revenue", params = { "startDate", "endDate", "storeId" })
     public ResponseEntity<?> getStoreCashFlowRevenueReportsByDateRangeAndStoreId(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
@@ -355,7 +359,8 @@ public class ReportController {
 
         try {
 
-            List<StoreCashFlowRevenueReportModel> reports = this.reportService.getStoreCashFlowRevenueReportByStoreIdAndDateRange(storeId, startDate, endDate);
+            List<StoreCashFlowRevenueReport> reports = this.reportService
+                    .getStoreCashFlowRevenueReportByStoreIdAndDateRange(storeId, startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -383,7 +388,7 @@ public class ReportController {
 
         try {
 
-            List<StoresByUserReportModel> reports = this.reportService.getStoresByUserReport();
+            List<StoresByUserReport> reports = this.reportService.getStoresByUserReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -411,7 +416,7 @@ public class ReportController {
 
         try {
 
-            StoresByUserReportModel report = this.reportService.getStoresByUserReportByUserId(userId);
+            StoresByUserReport report = this.reportService.getStoresByUserReportByUserId(userId);
 
             if (report == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -439,7 +444,7 @@ public class ReportController {
 
         try {
 
-            List<SystemCashFlowByOrderReportModel> reports = this.reportService.getSystemCashFlowByOrderReport();
+            List<SystemCashFlowByOrderReport> reports = this.reportService.getSystemCashFlowByOrderReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -460,7 +465,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "system/cashflow", params = {"startDate", "endDate"})
+    @GetMapping(value = "system/cashflow", params = { "startDate", "endDate" })
     public ResponseEntity<?> getSystemCashFlowReportsByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -469,7 +474,8 @@ public class ReportController {
 
         try {
 
-            List<SystemCashFlowByOrderReportModel> reports = this.reportService.getSystemCashFlowByOrderReportByDateRange(startDate, endDate);
+            List<SystemCashFlowByOrderReport> reports = this.reportService
+                    .getSystemCashFlowByOrderReportByDateRange(startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -497,7 +503,7 @@ public class ReportController {
 
         try {
 
-            List<SystemCashFlowRevenueReportModel> reports = this.reportService.getSystemCashFlowRevenueReport();
+            List<SystemCashFlowRevenueReport> reports = this.reportService.getSystemCashFlowRevenueReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -518,7 +524,7 @@ public class ReportController {
         }
     }
 
-    @GetMapping(value = "system/cashflow/revenue", params = {"startDate", "endDate"})
+    @GetMapping(value = "system/cashflow/revenue", params = { "startDate", "endDate" })
     public ResponseEntity<?> getSystemCashFlowRevenueReportsByDateRange(
             @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
@@ -527,7 +533,8 @@ public class ReportController {
 
         try {
 
-            List<SystemCashFlowRevenueReportModel> reports = this.reportService.getSystemCashFlowRevenueReportByDateRange(startDate, endDate);
+            List<SystemCashFlowRevenueReport> reports = this.reportService
+                    .getSystemCashFlowRevenueReportByDateRange(startDate, endDate);
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -555,7 +562,7 @@ public class ReportController {
 
         try {
 
-            List<UsersCountReportModel> reports = this.reportService.getUsersCountReport();
+            List<UsersCountReport> reports = this.reportService.getUsersCountReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -583,7 +590,7 @@ public class ReportController {
 
         try {
 
-            List<StoresCountReportModel> reports = this.reportService.getStoresCountReport();
+            List<StoresCountReport> reports = this.reportService.getStoresCountReport();
 
             if (reports == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");

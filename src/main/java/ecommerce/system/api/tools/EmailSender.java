@@ -1,6 +1,6 @@
 package ecommerce.system.api.tools;
 
-import ecommerce.system.api.models.SimpleMailModel;
+import ecommerce.system.api.models.SimpleMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,7 +24,7 @@ public class EmailSender {
         this.emailSender = emailSender;
     }
 
-    public void sendSimpleMail(SimpleMailModel mail) {
+    public void sendSimpleMail(SimpleMail mail) {
 
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -36,7 +36,7 @@ public class EmailSender {
         this.emailSender.send(message);
     }
 
-    public void sendMimeEmail(SimpleMailModel mail) throws MessagingException {
+    public void sendMimeEmail(SimpleMail mail) throws MessagingException {
 
         MimeMessage mimeMessage = this.emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");

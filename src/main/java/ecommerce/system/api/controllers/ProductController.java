@@ -3,10 +3,10 @@ package ecommerce.system.api.controllers;
 import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.ProductDetailModel;
-import ecommerce.system.api.models.ProductModel;
-import ecommerce.system.api.models.ProductSubtypeModel;
-import ecommerce.system.api.models.ProductTypeModel;
+import ecommerce.system.api.models.ProductDetail;
+import ecommerce.system.api.models.Product;
+import ecommerce.system.api.models.ProductSubtype;
+import ecommerce.system.api.models.ProductType;
 import ecommerce.system.api.services.IProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<?> createProduct(@RequestBody ProductModel product) {
+    public ResponseEntity<?> createProduct(@RequestBody Product product) {
 
         BaseResponseDTO<?> response;
 
@@ -54,7 +54,8 @@ public class ProductController {
     }
 
     @PostMapping("create/image/{productId}")
-    public ResponseEntity<?> createProductImage(@PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createProductImage(@PathVariable("productId") int productId,
+            @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<?> response;
 
@@ -66,7 +67,7 @@ public class ProductController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
 
@@ -74,7 +75,7 @@ public class ProductController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 
@@ -91,7 +92,7 @@ public class ProductController {
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsByQuantity(quantity);
+            List<Product> products = this.productService.getProductsByQuantity(quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -113,13 +114,14 @@ public class ProductController {
     }
 
     @GetMapping("search")
-    public ResponseEntity<?> getProductsByNameAndQuantity(@RequestParam("name") String name, @RequestParam("quantity") int quantity) {
+    public ResponseEntity<?> getProductsByNameAndQuantity(@RequestParam("name") String name,
+            @RequestParam("quantity") int quantity) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsByNameAndQuantity(name, quantity);
+            List<Product> products = this.productService.getProductsByNameAndQuantity(name, quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -141,13 +143,14 @@ public class ProductController {
     }
 
     @GetMapping("store/{storeId}")
-    public ResponseEntity<?> getProductsByStoreIdAndQuantity(@PathVariable("storeId") int storeId, @RequestParam("quantity") int quantity) {
+    public ResponseEntity<?> getProductsByStoreIdAndQuantity(@PathVariable("storeId") int storeId,
+            @RequestParam("quantity") int quantity) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsByStoreIdAndQuantity(storeId, quantity);
+            List<Product> products = this.productService.getProductsByStoreIdAndQuantity(storeId, quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -169,13 +172,14 @@ public class ProductController {
     }
 
     @GetMapping("subtype/{subtypeId}")
-    public ResponseEntity<?> getProductsBySubtypeIdAndQuantity(@PathVariable("subtypeId") int subtypeId, @RequestParam("quantity") int quantity) {
+    public ResponseEntity<?> getProductsBySubtypeIdAndQuantity(@PathVariable("subtypeId") int subtypeId,
+            @RequestParam("quantity") int quantity) {
 
         BaseResponseDTO<?> response;
 
         try {
 
-            List<ProductModel> products = this.productService.getProductsBySubtypeIdAndQuantity(subtypeId, quantity);
+            List<Product> products = this.productService.getProductsBySubtypeIdAndQuantity(subtypeId, quantity);
 
             if (products == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -203,7 +207,8 @@ public class ProductController {
 
         try {
 
-            List<ProductDetailModel> detailLabels = this.productService.getProductDetailLabelsByProductSubtypeId(productSubtypeId);
+            List<ProductDetail> detailLabels = this.productService
+                    .getProductDetailLabelsByProductSubtypeId(productSubtypeId);
 
             if (detailLabels == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -231,7 +236,7 @@ public class ProductController {
 
         try {
 
-            ProductModel product = this.productService.getProductById(id);
+            Product product = this.productService.getProductById(id);
 
             if (product == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -259,7 +264,7 @@ public class ProductController {
 
         try {
 
-            List<ProductTypeModel> productTypes = this.productService.getAllProductTypes();
+            List<ProductType> productTypes = this.productService.getAllProductTypes();
 
             if (productTypes == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -287,7 +292,8 @@ public class ProductController {
 
         try {
 
-            List<ProductSubtypeModel> productSubtypes = this.productService.getProductSubtypesByProductTypeId(productTypeId);
+            List<ProductSubtype> productSubtypes = this.productService
+                    .getProductSubtypesByProductTypeId(productTypeId);
 
             if (productSubtypes == null) {
                 response = new BaseResponseDTO<>(false, MessagesEnum.NOT_FOUND.getMessage(), "");
@@ -309,7 +315,7 @@ public class ProductController {
     }
 
     @PutMapping("update")
-    public ResponseEntity<?> updateProduct(@RequestBody ProductModel product) {
+    public ResponseEntity<?> updateProduct(@RequestBody Product product) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -346,7 +352,8 @@ public class ProductController {
     }
 
     @PutMapping("update/image/{imageId}/product{productId}")
-    public ResponseEntity<?> updateProductImage(@PathVariable("imageId") int imageId, @PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> updateProductImage(@PathVariable("imageId") int imageId,
+            @PathVariable("productId") int productId, @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 
@@ -360,7 +367,7 @@ public class ProductController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (InvalidOperationException ioe) {
+        } catch (InvalidOperationException ioe) {
 
             logger.error(ioe.getMessage());
 
@@ -370,7 +377,7 @@ public class ProductController {
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }  catch (Exception e) {
+        } catch (Exception e) {
 
             logger.error(e.getMessage());
 

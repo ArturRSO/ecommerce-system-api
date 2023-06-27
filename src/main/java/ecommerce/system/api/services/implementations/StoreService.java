@@ -4,9 +4,9 @@ import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.OrderStatusEnum;
 import ecommerce.system.api.enums.RolesEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.OrderModel;
-import ecommerce.system.api.models.StoreModel;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.Order;
+import ecommerce.system.api.models.Store;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.repositories.IStoreRepository;
 import ecommerce.system.api.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public int createStore(StoreModel store, int userId) throws InvalidOperationException {
+    public int createStore(Store store, int userId) throws InvalidOperationException {
 
         if (!this.authenticationService.isLoggedUser(userId)) {
             throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -57,16 +57,16 @@ public class StoreService implements IStoreService {
         store.setLastUpdate(null);
         store.setActive(true);
 
-       int storeId = this.storeRepository.create(store);
+        int storeId = this.storeRepository.create(store);
 
-       this.storeRepository.relateStoreAndUser(storeId, userId);
+        this.storeRepository.relateStoreAndUser(storeId, userId);
 
-       return storeId;
+        return storeId;
     }
 
     @Override
     public void createProfileImage(MultipartFile file, int storeId) throws InvalidOperationException, IOException {
-        StoreModel store = this.storeRepository.getById(storeId);
+        Store store = this.storeRepository.getById(storeId);
 
         if (store == null) {
             throw new InvalidOperationException("Loja não encontrada!");
@@ -81,11 +81,11 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public List<StoreModel> getAllStores() throws IOException {
+    public List<Store> getAllStores() throws IOException {
 
-        List<StoreModel> stores = this.storeRepository.getAllStores();
+        List<Store> stores = this.storeRepository.getAllStores();
 
-        for (StoreModel store : stores) {
+        for (Store store : stores) {
             store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
         }
 
@@ -93,12 +93,12 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public List<StoreModel> getStoresByUserId(int userId) throws IOException {
+    public List<Store> getStoresByUserId(int userId) throws IOException {
 
-        List<StoreModel> stores = this.storeRepository.getStoresByUserId(userId);
+        List<Store> stores = this.storeRepository.getStoresByUserId(userId);
 
         if (stores != null) {
-            for (StoreModel store : stores) {
+            for (Store store : stores) {
                 store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
             }
         }
@@ -107,19 +107,9 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public StoreModel getStoreById(int storeId) throws IOException {
+    public Store getStoreById(int storeId) throws IOException {
 
-        StoreModel store = this.storeRepository.getById(storeId);
-
-        store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
-
-        return store;
-    }
-
-    @Override
-    public StoreModel getStoreByProductId(int productId) throws IOException {
-
-        StoreModel store = this.storeRepository.getStoreByProductId(productId);
+        Store store = this.storeRepository.getById(storeId);
 
         store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
 
@@ -127,9 +117,19 @@ public class StoreService implements IStoreService {
     }
 
     @Override
-    public void updateStore(StoreModel store) throws InvalidOperationException, IOException {
+    public Store getStoreByProductId(int productId) throws IOException {
 
-        StoreModel oldStore = this.getStoreById(store.getStoreId());
+        Store store = this.storeRepository.getStoreByProductId(productId);
+
+        store.setProfileImage(this.fileService.getImageBase64(store.getProfileImage()));
+
+        return store;
+    }
+
+    @Override
+    public void updateStore(Store store) throws InvalidOperationException, IOException {
+
+        Store oldStore = this.getStoreById(store.getStoreId());
 
         if (oldStore == null) {
             throw new InvalidOperationException("Loja não encontrada!");
@@ -139,7 +139,7 @@ public class StoreService implements IStoreService {
 
         for (int id : userIds) {
 
-            UserModel user = this.userService.getUserById(id, false);
+            User user = this.userService.getUserById(id, false);
 
             if (!this.authenticationService.isLoggedUser(id) || user.getRoleId() != RolesEnum.SYSTEM_ADMIN.getId()) {
                 throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
@@ -156,7 +156,7 @@ public class StoreService implements IStoreService {
     @Override
     public void deleteStore(int storeId) throws InvalidOperationException, IOException {
 
-        StoreModel store = this.storeRepository.getById(storeId);
+        Store store = this.storeRepository.getById(storeId);
 
         if (store == null) {
             throw new InvalidOperationException("Loja não encontrada.");
@@ -166,16 +166,16 @@ public class StoreService implements IStoreService {
 
         for (int id : userIds) {
 
-            UserModel user = this.userService.getUserById(id, false);
+            User user = this.userService.getUserById(id, false);
 
             if (!this.authenticationService.isLoggedUser(id) || user.getRoleId() != RolesEnum.SYSTEM_ADMIN.getId()) {
                 throw new InvalidOperationException(MessagesEnum.UNALLOWED.getMessage());
             }
         }
 
-        List<OrderModel> orders = this.orderService.getOrdersByStoreId(storeId);
+        List<Order> orders = this.orderService.getOrdersByStoreId(storeId);
 
-        for (OrderModel order : orders) {
+        for (Order order : orders) {
 
             if (order.getOrderStatusId() != OrderStatusEnum.FINISHED.getId()) {
                 throw new InvalidOperationException("Não é possível desativar uma loja com pedidos em aberto.");

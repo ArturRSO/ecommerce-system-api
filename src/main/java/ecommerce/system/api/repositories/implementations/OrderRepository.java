@@ -1,11 +1,10 @@
 package ecommerce.system.api.repositories.implementations;
 
 import ecommerce.system.api.dto.OrderItemDTO;
-import ecommerce.system.api.entities.OrderEntity;
-import ecommerce.system.api.entities.OrderSummaryEntity;
-import ecommerce.system.api.entities.ProductOrderEntity;
-import ecommerce.system.api.entities.embedded.ProductOrderKey;
-import ecommerce.system.api.models.OrderModel;
+import ecommerce.system.api.models.Order;
+import ecommerce.system.api.models.OrderSummary;
+import ecommerce.system.api.models.ProductOrder;
+import ecommerce.system.api.models.embedded.ProductOrderKey;
 import ecommerce.system.api.repositories.IOrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class OrderRepository implements IOrderRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -29,94 +28,86 @@ public class OrderRepository implements IOrderRepository {
     EntityManager entityManager;
 
     @Override
-    public int createOrder(OrderModel order, int storeId) {
+    public int createOrder(Order order, int storeId) {
 
-        OrderEntity orderEntity = new OrderEntity(order, false);
-        orderEntity.setStoreId(storeId);
+        order.setStoreId(storeId);
 
-        this.entityManager.persist(orderEntity);
+        this.entityManager.persist(order);
         this.entityManager.flush();
 
-        return orderEntity.getOrderId();
+        return order.getOrderId();
     }
 
     @Override
-    public int createOrderSummary(OrderModel order) {
+    public int createOrderSummary(Order order) {
 
-        OrderSummaryEntity orderSummaryEntity = new OrderSummaryEntity(order);
+        OrderSummary orderSummary = new OrderSummary(order);
 
-        this.entityManager.persist(orderSummaryEntity);
+        this.entityManager.persist(orderSummary);
         this.entityManager.flush();
 
-        return orderSummaryEntity.getOrderSummaryId();
+        return orderSummary.getOrderSummaryId();
     }
 
     @Override
     public void createProductOrder(int productId, int orderId, int quantity) {
 
         ProductOrderKey productOrderKey = new ProductOrderKey(productId, orderId);
-        ProductOrderEntity productOrder = new ProductOrderEntity(productOrderKey, quantity);
+        ProductOrder productOrder = new ProductOrder(productOrderKey, quantity);
 
         this.entityManager.persist(productOrder);
     }
 
     @Override
-    public List<OrderModel> getOrdersByStoreId(int storeId) {
+    public List<Order> getOrdersByStoreId(int storeId) {
 
-        String query = "FROM OrderEntity o WHERE o.storeId = :storeId";
-        TypedQuery<OrderEntity> result = this.entityManager.createQuery(query, OrderEntity.class)
+        String query = "FROM Order o WHERE o.storeId = :storeId";
+        TypedQuery<Order> result = this.entityManager.createQuery(query, Order.class)
                 .setParameter("storeId", storeId);
-        List<OrderEntity> entities = result.getResultList();
+        List<Order> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        List<OrderModel> orders = new ArrayList<>();
         (entities).forEach((entity) -> {
-            OrderModel order = entity.toModel();
-            List<OrderItemDTO>  itens = this.getItensByOrderId(entity.getOrderId());
-            order.setItens(itens);
-            orders.add(order);
+            List<OrderItemDTO> itens = this.getItensByOrderId(entity.getOrderId());
+            entity.setItens(itens);
         });
 
-        return orders;
+        return entities;
     }
 
     @Override
-    public List<OrderModel> getOrdersByProductId(int productId) {
+    public List<Order> getOrdersByProductId(int productId) {
 
-        String query = "SELECT o FROM OrderEntity o, ProductOrderEntity po WHERE o.orderId = po.id.orderId AND po.id.productId = :productId";
-        TypedQuery<OrderEntity> result = this.entityManager.createQuery(query, OrderEntity.class)
+        String query = "SELECT o FROM Order o, ProductOrder po WHERE o.orderId = po.id.orderId AND po.id.productId = :productId";
+        TypedQuery<Order> result = this.entityManager.createQuery(query, Order.class)
                 .setParameter("productId", productId);
-        List<OrderEntity> entities = result.getResultList();
+        List<Order> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        List<OrderModel> orders = new ArrayList<>();
-
-        (entities).forEach((entity) -> orders.add(entity.toModel()));
-
-        return orders;
+        return entities;
     }
 
     @Override
-    public List<OrderModel> getOrderSummariesByUserId(int userId) {
+    public List<Order> getOrderSummariesByUserId(int userId) {
 
-        String query = "FROM OrderSummaryEntity os WHERE os.userId = :userId";
-        TypedQuery<OrderSummaryEntity> result = this.entityManager.createQuery(query, OrderSummaryEntity.class)
+        String query = "FROM OrderSummary os WHERE os.userId = :userId";
+        TypedQuery<OrderSummary> result = this.entityManager.createQuery(query, OrderSummary.class)
                 .setParameter("userId", userId);
-        List<OrderSummaryEntity> entities = result.getResultList();
+        List<OrderSummary> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        List<OrderModel> orders = new ArrayList<>();
+        List<Order> orders = new ArrayList<>();
         (entities).forEach((entity) -> {
-            OrderModel order = entity.toModel();
+            Order order = new Order(entity);
             order.setItens(this.getItensByOrderSummaryId(entity.getOrderSummaryId()));
             orders.add(order);
         });
@@ -125,38 +116,34 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
-    public List<OrderModel> getOrdersByOrderSummaryId(int orderSummaryId) {
+    public List<Order> getOrdersByOrderSummaryId(int orderSummaryId) {
 
-        String query = "SELECT o FROM OrderEntity o, OrderSummaryEntity os WHERE o.orderSummaryId = os.orderSummaryId AND os.orderSummaryId = :orderSummaryId ORDER BY o.orderId ASC";
-        TypedQuery<OrderEntity> result = this.entityManager.createQuery(query, OrderEntity.class)
+        String query = "SELECT o FROM Order o, OrderSummary os WHERE o.orderSummaryId = os.orderSummaryId AND os.orderSummaryId = :orderSummaryId ORDER BY o.orderId ASC";
+        TypedQuery<Order> result = this.entityManager.createQuery(query, Order.class)
                 .setParameter("orderSummaryId", orderSummaryId);
-        List<OrderEntity> entities = result.getResultList();
+        List<Order> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        List<OrderModel> orders = new ArrayList<>();
-        (entities).forEach((entity) -> orders.add(entity.toModel()));
-
-        return orders;
+        return entities;
     }
 
     @Override
-    public OrderModel getOrderById(int orderId) {
+    public Order getOrderById(int orderId) {
 
         try {
 
-            String query = "FROM OrderEntity o WHERE o.orderId = :orderId";
-            TypedQuery<OrderEntity> result = this.entityManager.createQuery(query, OrderEntity.class)
+            String query = "FROM Order o WHERE o.orderId = :orderId";
+            TypedQuery<Order> result = this.entityManager.createQuery(query, Order.class)
                     .setParameter("orderId", orderId);
 
-            OrderEntity entity = result.getSingleResult();
+            Order entity = result.getSingleResult();
 
-            OrderModel order = entity.toModel();
-            order.setItens(this.getItensByOrderId(entity.getOrderId()));
+            entity.setItens(this.getItensByOrderId(entity.getOrderId()));
 
-            return order;
+            return entity;
 
         } catch (NoResultException nre) {
 
@@ -167,17 +154,17 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
-    public OrderModel getOrderSummaryById(int orderSummaryId) {
+    public Order getOrderSummaryById(int orderSummaryId) {
 
         try {
 
-            String query = "FROM OrderSummaryEntity os WHERE os.orderSummaryId = :orderSummaryId";
-            TypedQuery<OrderSummaryEntity> result = this.entityManager.createQuery(query, OrderSummaryEntity.class)
+            String query = "FROM OrderSummary os WHERE os.orderSummaryId = :orderSummaryId";
+            TypedQuery<OrderSummary> result = this.entityManager.createQuery(query, OrderSummary.class)
                     .setParameter("orderSummaryId", orderSummaryId);
 
-            OrderSummaryEntity entity = result.getSingleResult();
+            OrderSummary entity = result.getSingleResult();
 
-            OrderModel order = entity.toModel();
+            Order order = new Order(entity);
             order.setItens(this.getItensByOrderSummaryId(entity.getOrderSummaryId()));
 
             return order;
@@ -191,30 +178,30 @@ public class OrderRepository implements IOrderRepository {
     }
 
     @Override
-    public boolean updateOrder(OrderModel order) {
+    public boolean updateOrder(Order order) {
 
-        OrderEntity entity = this.entityManager.find(OrderEntity.class, order.getOrderId());
+        Order entity = this.entityManager.find(Order.class, order.getOrderId());
 
         if (entity == null) {
             return false;
         }
 
-        OrderEntity updatedOrder = new OrderEntity(order, true);
+        Order updatedOrder = new Order(order, true);
         this.entityManager.merge(updatedOrder);
 
         return true;
     }
 
     @Override
-    public boolean updateOrderSummary(OrderModel orderSummary) {
+    public boolean updateOrderSummary(Order orderSummary) {
 
-        OrderSummaryEntity entity = this.entityManager.find(OrderSummaryEntity.class, orderSummary.getOrderSummaryId());
+        OrderSummary entity = this.entityManager.find(OrderSummary.class, orderSummary.getOrderSummaryId());
 
         if (entity == null) {
             return false;
         }
 
-        OrderSummaryEntity updatedOrder = new OrderSummaryEntity(orderSummary);
+        OrderSummary updatedOrder = new OrderSummary(orderSummary);
         this.entityManager.merge(updatedOrder);
 
         return true;
@@ -222,10 +209,10 @@ public class OrderRepository implements IOrderRepository {
 
     private List<OrderItemDTO> getItensByOrderId(int orderId) {
 
-        String query = "FROM ProductOrderEntity po WHERE po.id.orderId = :orderId";
-        TypedQuery<ProductOrderEntity> result = this.entityManager.createQuery(query, ProductOrderEntity.class)
+        String query = "FROM ProductOrder po WHERE po.id.orderId = :orderId";
+        TypedQuery<ProductOrder> result = this.entityManager.createQuery(query, ProductOrder.class)
                 .setParameter("orderId", orderId);
-        List<ProductOrderEntity> entities = result.getResultList();
+        List<ProductOrder> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
@@ -239,10 +226,10 @@ public class OrderRepository implements IOrderRepository {
 
     private List<OrderItemDTO> getItensByOrderSummaryId(int orderSummaryId) {
 
-        String query = "SELECT po FROM ProductOrderEntity po, OrderEntity o WHERE o.orderId = po.id.orderId AND o.orderSummaryId = :orderSummaryId";
-        TypedQuery<ProductOrderEntity> result = this.entityManager.createQuery(query, ProductOrderEntity.class)
+        String query = "SELECT po FROM ProductOrder po, Order o WHERE o.orderId = po.id.orderId AND o.orderSummaryId = :orderSummaryId";
+        TypedQuery<ProductOrder> result = this.entityManager.createQuery(query, ProductOrder.class)
                 .setParameter("orderSummaryId", orderSummaryId);
-        List<ProductOrderEntity> entities = result.getResultList();
+        List<ProductOrder> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;

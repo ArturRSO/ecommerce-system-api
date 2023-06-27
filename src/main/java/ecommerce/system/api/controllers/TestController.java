@@ -4,8 +4,8 @@ import ecommerce.system.api.enums.MessagesEnum;
 import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
 import ecommerce.system.api.dto.BaseResponseDTO;
-import ecommerce.system.api.models.SimpleMailModel;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.SimpleMail;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.services.IFileService;
 import ecommerce.system.api.tools.EmailSender;
 import ecommerce.system.api.tools.NotificationHandler;
@@ -59,7 +59,8 @@ public class TestController {
 
         logger.info("Checking if API is on...");
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), "Hello world!");
+        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(),
+                "Hello world!");
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -69,13 +70,14 @@ public class TestController {
 
         logger.info("Testing error...");
 
-        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.FAILURE.getMessage(), "Returning error for test purposes.");
+        BaseResponseDTO<String> response = new BaseResponseDTO<>(true, MessagesEnum.FAILURE.getMessage(),
+                "Returning error for test purposes.");
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @PostMapping("mail")
-    public ResponseEntity<?> simpleMailTest(@RequestBody SimpleMailModel mail) {
+    public ResponseEntity<?> simpleMailTest(@RequestBody SimpleMail mail) {
 
         logger.info("Testing mail...");
 
@@ -84,7 +86,8 @@ public class TestController {
 
             logger.info("Mail tested with success!");
 
-            BaseResponseDTO<SimpleMailModel> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
+            BaseResponseDTO<SimpleMail> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(),
+                    mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -99,17 +102,19 @@ public class TestController {
     }
 
     @PostMapping("mail/recover/password")
-    public ResponseEntity<?> sendRecoverPasswordEmail(@RequestBody UserModel user) {
+    public ResponseEntity<?> sendRecoverPasswordEmail(@RequestBody User user) {
 
         logger.info("Testing recover password mail...");
 
         try {
 
-            SimpleMailModel mail = this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(), NotificationsEnum.PASSWORD_RECOVER, null);
+            SimpleMail mail = this.notificationHandler.sendEmail(user.getUserId(), user.getEmail(),
+                    NotificationsEnum.PASSWORD_RECOVER, null);
 
             logger.info("Recover password mail tested with success!");
 
-            BaseResponseDTO<SimpleMailModel> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(), mail);
+            BaseResponseDTO<SimpleMail> response = new BaseResponseDTO<>(true, MessagesEnum.SUCCESS.getMessage(),
+                    mail);
 
             return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -155,7 +160,8 @@ public class TestController {
     }
 
     @PostMapping("image/create/{object}/{id}")
-    public ResponseEntity<?> createImage(@PathVariable("object") String object, @PathVariable("id") int id, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> createImage(@PathVariable("object") String object, @PathVariable("id") int id,
+            @RequestParam("file") MultipartFile file) {
 
         BaseResponseDTO<String> response = new BaseResponseDTO<>();
 

@@ -2,7 +2,7 @@ package ecommerce.system.api.services.implementations;
 
 import ecommerce.system.api.dto.CredentialsDTO;
 import ecommerce.system.api.dto.TokenDTO;
-import ecommerce.system.api.models.UserModel;
+import ecommerce.system.api.models.User;
 import ecommerce.system.api.repositories.IUserRepository;
 import ecommerce.system.api.services.IAuthenticationService;
 import ecommerce.system.api.tools.JwtHandler;
@@ -22,7 +22,6 @@ public class AuthenticationService implements IAuthenticationService {
     private final JwtHandler jwtHandler;
     private final SHAEncoder shaEncoder;
 
-
     @Autowired
     public AuthenticationService(
             IUserRepository userRepository,
@@ -40,7 +39,7 @@ public class AuthenticationService implements IAuthenticationService {
         String encodedPassword = this.shaEncoder.encode(credentials.getPassword());
         credentials.setPassword(encodedPassword);
 
-        UserModel user = this.userRepository.getUserByCredentials(credentials);
+        User user = this.userRepository.getUserByCredentials(credentials);
 
         if (user != null) {
 
@@ -57,7 +56,7 @@ public class AuthenticationService implements IAuthenticationService {
     public boolean isLoggedUser(int userId) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserModel user = this.userRepository.getUserByEmail(email);
+        User user = this.userRepository.getUserByEmail(email);
 
         return user != null && user.isActive() && user.getUserId() == userId;
     }

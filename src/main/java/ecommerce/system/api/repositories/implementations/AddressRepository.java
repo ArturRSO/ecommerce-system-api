@@ -1,9 +1,8 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.AddressEntity;
-import ecommerce.system.api.entities.UserAddressEntity;
-import ecommerce.system.api.entities.embedded.UserAddressKey;
-import ecommerce.system.api.models.AddressModel;
+import ecommerce.system.api.models.Address;
+import ecommerce.system.api.models.UserAddress;
+import ecommerce.system.api.models.embedded.UserAddressKey;
 import ecommerce.system.api.repositories.IAddressRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +11,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class AddressRepository implements IAddressRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -25,36 +23,34 @@ public class AddressRepository implements IAddressRepository {
     EntityManager entityManager;
 
     @Override
-    public int create(AddressModel object) {
+    public int create(Address object) {
 
-        AddressEntity address = new AddressEntity(object);
-
-        this.entityManager.persist(address);
+        this.entityManager.persist(object);
         this.entityManager.flush();
 
-        return address.getAddressId();
+        return object.getAddressId();
     }
 
     @Override
     public void relateAddressAndUser(int userId, int adddressId) {
 
         UserAddressKey userAddressKey = new UserAddressKey(userId, adddressId);
-        UserAddressEntity userAddress = new UserAddressEntity(userAddressKey);
+        UserAddress userAddress = new UserAddress(userAddressKey);
 
         this.entityManager.persist(userAddress);
     }
 
     @Override
-    public AddressModel getById(int id) {
+    public Address getById(int id) {
 
         try {
 
-            String query = "FROM AddressEntity a WHERE a.active = true AND a.addressId = :addressId";
-            TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
+            String query = "FROM Address a WHERE a.active = true AND a.addressId = :addressId";
+            TypedQuery<Address> result = this.entityManager.createQuery(query, Address.class)
                     .setParameter("addressId", id);
-            AddressEntity address = result.getSingleResult();
+            Address address = result.getSingleResult();
 
-            return address.toModel();
+            return address;
 
         } catch (NoResultException nre) {
 
@@ -65,27 +61,24 @@ public class AddressRepository implements IAddressRepository {
     }
 
     @Override
-    public List<AddressModel> getAddressesByUserId(int userId) {
+    public List<Address> getAddressesByUserId(int userId) {
 
-        String query = "SELECT a FROM AddressEntity a, UserAddressEntity ua WHERE a.active = true AND ua.id.userId = :userId AND a.addressId = ua.id.addressId ORDER BY a.addressId ASC";
-        TypedQuery<AddressEntity> result = this.entityManager.createQuery(query, AddressEntity.class)
+        String query = "SELECT a FROM Address a, UserAddress ua WHERE a.active = true AND ua.id.userId = :userId AND a.addressId = ua.id.addressId ORDER BY a.addressId ASC";
+        TypedQuery<Address> result = this.entityManager.createQuery(query, Address.class)
                 .setParameter("userId", userId);
-        List<AddressEntity> entities = result.getResultList();
+        List<Address> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<AddressModel> addresses = new ArrayList<>();
-        (entities).forEach((address) -> addresses.add(address.toModel()));
-
-        return addresses;
+        return entities;
     }
 
     @Override
-    public boolean update(AddressModel object) {
+    public boolean update(Address object) {
 
-        AddressEntity address = this.entityManager.find(AddressEntity.class, object.getAddressId());
+        Address address = this.entityManager.find(Address.class, object.getAddressId());
 
         if (address == null || !address.isActive()) {
             return false;
@@ -94,8 +87,7 @@ public class AddressRepository implements IAddressRepository {
         object.setCreationDate(address.getCreationDate());
         object.setActive(address.isActive());
 
-        AddressEntity updatedAddress = new AddressEntity(object);
-        this.entityManager.merge(updatedAddress);
+        this.entityManager.merge(object);
 
         return true;
     }
@@ -103,7 +95,7 @@ public class AddressRepository implements IAddressRepository {
     @Override
     public boolean delete(int id) {
 
-        AddressEntity address = this.entityManager.find(AddressEntity.class, id);
+        Address address = this.entityManager.find(Address.class, id);
 
         if (address == null || !address.isActive()) {
             return false;

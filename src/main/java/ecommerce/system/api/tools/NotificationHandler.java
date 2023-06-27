@@ -2,7 +2,7 @@ package ecommerce.system.api.tools;
 
 import ecommerce.system.api.enums.NotificationsEnum;
 import ecommerce.system.api.exceptions.InvalidOperationException;
-import ecommerce.system.api.models.SimpleMailModel;
+import ecommerce.system.api.models.SimpleMail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -123,7 +123,7 @@ public class NotificationHandler {
         return LocalDateTime.now().isBefore(expirationDate) && notificationId == notification.getId();
     }
 
-    public SimpleMailModel sendEmail(int userId, String userEmail, NotificationsEnum notification,
+    public SimpleMail sendEmail(int userId, String userEmail, NotificationsEnum notification,
             Map<String, String> data) throws Exception {
 
         String tokenData = data == null ? null : data.get("token");
@@ -140,7 +140,7 @@ public class NotificationHandler {
             }
         }
 
-        SimpleMailModel mail = new SimpleMailModel(userEmail, notification.getSubject(), emailTemplate);
+        SimpleMail mail = new SimpleMail(userEmail, notification.getSubject(), emailTemplate);
 
         this.emailSender.sendMimeEmail(mail);
 

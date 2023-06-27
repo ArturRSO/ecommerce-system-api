@@ -20,102 +20,108 @@ public class ReportService implements IReportService {
     }
 
     @Override
-    public List<OrdersByStoreReportModel> getOrdersReport() {
+    public List<OrdersByStoreReport> getOrdersReport() {
         return this.reportRepository.getOrdersReport();
     }
 
     @Override
-    public OrdersByStoreReportModel getOrdersReportByStoreId(int storeId) {
+    public OrdersByStoreReport getOrdersReportByStoreId(int storeId) {
         return this.reportRepository.getOrdersReportByStoreId(storeId);
     }
 
     @Override
-    public List<ProductsByStoreReportModel> getProductsReport() {
+    public List<ProductsByStoreReport> getProductsReport() {
         return this.reportRepository.getProductsReport();
     }
 
     @Override
-    public ProductsByStoreReportModel getProductsReportByStoreId(int storeId) {
+    public ProductsByStoreReport getProductsReportByStoreId(int storeId) {
         return this.reportRepository.getProductsReportByStoreId(storeId);
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReport() {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReport() {
         return this.reportRepository.getStoreCashFlowReport();
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowReportByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreId(int storeId) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByStoreId(int storeId) {
         return this.reportRepository.getStoreCashFlowReportByStoreId(storeId);
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByStoreIdAndDateRange(int storeId,
+            LocalDate startDate, LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowReportByStoreIdAndDateRange(storeId, startDate, endDate);
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReport() {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReport() {
         return this.reportRepository.getStoreCashFlowRevenueReport();
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowRevenueReportByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByStoreId(int storeId) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByStoreId(int storeId) {
         return this.reportRepository.getStoreCashFlowRevenueReportByStoreId(storeId);
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByStoreIdAndDateRange(int storeId,
+            LocalDate startDate, LocalDate endDate) {
         return this.reportRepository.getStoreCashFlowRevenueReportByStoreIdAndDateRange(storeId, startDate, endDate);
     }
 
     @Override
-    public List<StoresByUserReportModel> getStoresByUserReport() {
+    public List<StoresByUserReport> getStoresByUserReport() {
         return this.reportRepository.getStoresByUserReport();
     }
 
     @Override
-    public StoresByUserReportModel getStoresByUserReportByUserId(int userId) {
+    public StoresByUserReport getStoresByUserReportByUserId(int userId) {
         return this.reportRepository.getStoresByUserReportByUserId(userId);
     }
 
     @Override
-    public List<SystemCashFlowByOrderReportModel> getSystemCashFlowByOrderReport() {
+    public List<SystemCashFlowByOrderReport> getSystemCashFlowByOrderReport() {
         return this.reportRepository.getSystemCashFlowByOrderReport();
     }
 
     @Override
-    public List<SystemCashFlowByOrderReportModel> getSystemCashFlowByOrderReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<SystemCashFlowByOrderReport> getSystemCashFlowByOrderReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
         return this.reportRepository.getSystemCashFlowByOrderReportByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReport() {
+    public List<SystemCashFlowRevenueReport> getSystemCashFlowRevenueReport() {
         return this.reportRepository.getSystemCashFlowRevenueReport();
     }
 
     @Override
-    public List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<SystemCashFlowRevenueReport> getSystemCashFlowRevenueReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
         return this.reportRepository.getSystemCashFlowRevenueReportByDateRange(startDate, endDate);
     }
 
     @Override
-    public List<UsersCountReportModel> getUsersCountReport() {
+    public List<UsersCountReport> getUsersCountReport() {
         return this.reportRepository.getUsersCountReport();
     }
 
     @Override
-    public List<StoresCountReportModel> getStoresCountReport() {
+    public List<StoresCountReport> getStoresCountReport() {
 
         return this.reportRepository.getStoresCountReport();
     }

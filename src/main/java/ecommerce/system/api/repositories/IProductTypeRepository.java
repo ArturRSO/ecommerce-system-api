@@ -1,11 +1,12 @@
 package ecommerce.system.api.repositories;
 
-import ecommerce.system.api.models.ProductTypeModel;
+import ecommerce.system.api.models.ProductType;
 
 import java.util.List;
 
 public interface IProductTypeRepository {
 
-    List<ProductTypeModel> getAll();
-    ProductTypeModel getById(int id);
+    List<ProductType> getAll();
+
+    ProductType getById(int id);
 }

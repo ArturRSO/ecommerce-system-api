@@ -1,6 +1,5 @@
 package ecommerce.system.api.repositories.implementations;
 
-import ecommerce.system.api.entities.*;
 import ecommerce.system.api.models.*;
 import ecommerce.system.api.repositories.IReportRepository;
 import org.slf4j.Logger;
@@ -13,11 +12,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Transactional(rollbackOn = {Exception.class})
+@Transactional(rollbackOn = { Exception.class })
 public class ReportRepository implements IReportRepository {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -26,33 +24,32 @@ public class ReportRepository implements IReportRepository {
     EntityManager entityManager;
 
     @Override
-    public List<OrdersByStoreReportModel> getOrdersReport() {
+    public List<OrdersByStoreReport> getOrdersReport() {
 
-        String query = "FROM OrdersByStoreReportEntity o";
-        TypedQuery<OrdersByStoreReportEntity> result = this.entityManager.createQuery(query, OrdersByStoreReportEntity.class);
-        List<OrdersByStoreReportEntity> entities = result.getResultList();
+        String query = "FROM OrdersByStoreReport o";
+        TypedQuery<OrdersByStoreReport> result = this.entityManager.createQuery(query,
+                OrdersByStoreReport.class);
+        List<OrdersByStoreReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<OrdersByStoreReportModel> ordersByStoreReports = new ArrayList<>();
-        (entities).forEach(entity -> ordersByStoreReports.add(entity.toModel()));
-
-        return ordersByStoreReports;
+        return entities;
     }
 
     @Override
-    public OrdersByStoreReportModel getOrdersReportByStoreId(int storeId) {
+    public OrdersByStoreReport getOrdersReportByStoreId(int storeId) {
 
         try {
 
-            String query = "FROM OrdersByStoreReportEntity o WHERE o.storeId = :storeId";
-            TypedQuery<OrdersByStoreReportEntity> result = this.entityManager.createQuery(query, OrdersByStoreReportEntity.class)
+            String query = "FROM OrdersByStoreReport o WHERE o.storeId = :storeId";
+            TypedQuery<OrdersByStoreReport> result = this.entityManager
+                    .createQuery(query, OrdersByStoreReport.class)
                     .setParameter("storeId", storeId);
-            OrdersByStoreReportEntity ordersByStoreReport = result.getSingleResult();
+            OrdersByStoreReport ordersByStoreReport = result.getSingleResult();
 
-            return ordersByStoreReport.toModel();
+            return ordersByStoreReport;
 
         } catch (NoResultException nre) {
 
@@ -63,33 +60,32 @@ public class ReportRepository implements IReportRepository {
     }
 
     @Override
-    public List<ProductsByStoreReportModel> getProductsReport() {
+    public List<ProductsByStoreReport> getProductsReport() {
 
-        String query = "FROM ProductsByStoreReportEntity p";
-        TypedQuery<ProductsByStoreReportEntity> result = this.entityManager.createQuery(query, ProductsByStoreReportEntity.class);
-        List<ProductsByStoreReportEntity> entities = result.getResultList();
+        String query = "FROM ProductsByStoreReport p";
+        TypedQuery<ProductsByStoreReport> result = this.entityManager.createQuery(query,
+                ProductsByStoreReport.class);
+        List<ProductsByStoreReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<ProductsByStoreReportModel> productsByStoreReports = new ArrayList<>();
-        (entities).forEach(entity -> productsByStoreReports.add(entity.toModel()));
-
-        return productsByStoreReports;
+        return entities;
     }
 
     @Override
-    public ProductsByStoreReportModel getProductsReportByStoreId(int storeId) {
+    public ProductsByStoreReport getProductsReportByStoreId(int storeId) {
 
         try {
 
-            String query = "FROM ProductsByStoreReportEntity p WHERE p.storeId = :storeId";
-            TypedQuery<ProductsByStoreReportEntity> result = this.entityManager.createQuery(query, ProductsByStoreReportEntity.class)
+            String query = "FROM ProductsByStoreReport p WHERE p.storeId = :storeId";
+            TypedQuery<ProductsByStoreReport> result = this.entityManager
+                    .createQuery(query, ProductsByStoreReport.class)
                     .setParameter("storeId", storeId);
-            ProductsByStoreReportEntity productsByStoreReport = result.getSingleResult();
+            ProductsByStoreReport productsByStoreReport = result.getSingleResult();
 
-            return productsByStoreReport.toModel();
+            return productsByStoreReport;
 
         } catch (NoResultException nre) {
 
@@ -100,183 +96,170 @@ public class ReportRepository implements IReportRepository {
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReport() {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReport() {
 
-        String query = "FROM StoreCashFlowReportEntity s";
-        TypedQuery<StoreCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowByOrderReportEntity.class);
-        List<StoreCashFlowByOrderReportEntity> entities = result.getResultList();
+        String query = "FROM StoreCashFlowReport s";
+        TypedQuery<StoreCashFlowByOrderReport> result = this.entityManager.createQuery(query,
+                StoreCashFlowByOrderReport.class);
+        List<StoreCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowByOrderReportModel> storeCashFlowReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowReports.add(entity.toModel()));
-
-        return storeCashFlowReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
 
-        String query = "FROM StoreCashFlowReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
-        TypedQuery<StoreCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowByOrderReportEntity.class)
+        String query = "FROM StoreCashFlowReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
+        TypedQuery<StoreCashFlowByOrderReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowByOrderReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate);
-        List<StoreCashFlowByOrderReportEntity> entities = result.getResultList();
+        List<StoreCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowByOrderReportModel> storeCashFlowReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowReports.add(entity.toModel()));
-
-        return storeCashFlowReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreId(int storeId) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByStoreId(int storeId) {
 
-        String query = "FROM StoreCashFlowReportEntity s WHERE s.storeId = :storeId";
-        TypedQuery<StoreCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowByOrderReportEntity.class)
+        String query = "FROM StoreCashFlowReport s WHERE s.storeId = :storeId";
+        TypedQuery<StoreCashFlowByOrderReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowByOrderReport.class)
                 .setParameter("storeId", storeId);
-        List<StoreCashFlowByOrderReportEntity> entities = result.getResultList();
+        List<StoreCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowByOrderReportModel> storeCashFlowReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowReports.add(entity.toModel()));
-
-        return storeCashFlowReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowByOrderReportModel> getStoreCashFlowReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowByOrderReport> getStoreCashFlowReportByStoreIdAndDateRange(int storeId,
+            LocalDate startDate, LocalDate endDate) {
 
-        String query = "FROM StoreCashFlowReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate AND s.storeId = :storeId";
-        TypedQuery<StoreCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowByOrderReportEntity.class)
+        String query = "FROM StoreCashFlowReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate AND s.storeId = :storeId";
+        TypedQuery<StoreCashFlowByOrderReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowByOrderReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .setParameter("storeId", storeId);
-        List<StoreCashFlowByOrderReportEntity> entities = result.getResultList();
+        List<StoreCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowByOrderReportModel> storeCashFlowReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowReports.add(entity.toModel()));
-
-        return storeCashFlowReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReport() {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReport() {
 
-        String query = "FROM StoreCashFlowRevenueReportEntity s";
-        TypedQuery<StoreCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowRevenueReportEntity.class);
-        List<StoreCashFlowRevenueReportEntity> entities = result.getResultList();
+        String query = "FROM StoreCashFlowRevenueReport s";
+        TypedQuery<StoreCashFlowRevenueReport> result = this.entityManager.createQuery(query,
+                StoreCashFlowRevenueReport.class);
+        List<StoreCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowRevenueReportModel> storeCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowRevenueReports.add(entity.toModel()));
-
-        return storeCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
 
-        String query = "FROM StoreCashFlowRevenueReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
-        TypedQuery<StoreCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowRevenueReportEntity.class)
+        String query = "FROM StoreCashFlowRevenueReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
+        TypedQuery<StoreCashFlowRevenueReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowRevenueReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate);
-        List<StoreCashFlowRevenueReportEntity> entities = result.getResultList();
+        List<StoreCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowRevenueReportModel> storeCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowRevenueReports.add(entity.toModel()));
-
-        return storeCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByStoreId(int storeId) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByStoreId(int storeId) {
 
-        String query = "FROM StoreCashFlowRevenueReportEntity s WHERE s.storeId = :storeId";
-        TypedQuery<StoreCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowRevenueReportEntity.class)
+        String query = "FROM StoreCashFlowRevenueReport s WHERE s.storeId = :storeId";
+        TypedQuery<StoreCashFlowRevenueReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowRevenueReport.class)
                 .setParameter("storeId", storeId);
-        List<StoreCashFlowRevenueReportEntity> entities = result.getResultList();
+        List<StoreCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowRevenueReportModel> storeCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowRevenueReports.add(entity.toModel()));
-
-        return storeCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<StoreCashFlowRevenueReportModel> getStoreCashFlowRevenueReportByStoreIdAndDateRange(int storeId, LocalDate startDate, LocalDate endDate) {
+    public List<StoreCashFlowRevenueReport> getStoreCashFlowRevenueReportByStoreIdAndDateRange(int storeId,
+            LocalDate startDate, LocalDate endDate) {
 
-        String query = "FROM StoreCashFlowRevenueReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate AND s.storeId = :storeId";
-        TypedQuery<StoreCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, StoreCashFlowRevenueReportEntity.class)
+        String query = "FROM StoreCashFlowRevenueReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate AND s.storeId = :storeId";
+        TypedQuery<StoreCashFlowRevenueReport> result = this.entityManager
+                .createQuery(query, StoreCashFlowRevenueReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate)
                 .setParameter("storeId", storeId);
-        List<StoreCashFlowRevenueReportEntity> entities = result.getResultList();
+        List<StoreCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoreCashFlowRevenueReportModel> storeCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> storeCashFlowRevenueReports.add(entity.toModel()));
-
-        return storeCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<StoresByUserReportModel> getStoresByUserReport() {
+    public List<StoresByUserReport> getStoresByUserReport() {
 
-        String query = "FROM StoresByUserReportEntity s";
-        TypedQuery<StoresByUserReportEntity> result = this.entityManager.createQuery(query, StoresByUserReportEntity.class);
-        List<StoresByUserReportEntity> entities = result.getResultList();
+        String query = "FROM StoresByUserReport s";
+        TypedQuery<StoresByUserReport> result = this.entityManager.createQuery(query,
+                StoresByUserReport.class);
+        List<StoresByUserReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoresByUserReportModel> storesByUserReports = new ArrayList<>();
-        (entities).forEach(entity -> storesByUserReports.add(entity.toModel()));
-
-        return storesByUserReports;
+        return entities;
     }
 
     @Override
-    public StoresByUserReportModel getStoresByUserReportByUserId(int userId) {
+    public StoresByUserReport getStoresByUserReportByUserId(int userId) {
 
         try {
 
-            String query = "FROM StoresByUserReportEntity s WHERE s.userId = :userId";
-            TypedQuery<StoresByUserReportEntity> result = this.entityManager.createQuery(query, StoresByUserReportEntity.class)
+            String query = "FROM StoresByUserReport s WHERE s.userId = :userId";
+            TypedQuery<StoresByUserReport> result = this.entityManager
+                    .createQuery(query, StoresByUserReport.class)
                     .setParameter("userId", userId);
-            StoresByUserReportEntity storesByUserReport = result.getSingleResult();
+            StoresByUserReport storesByUserReport = result.getSingleResult();
 
-            return storesByUserReport.toModel();
+            return storesByUserReport;
 
-        }  catch (NoResultException nre) {
+        } catch (NoResultException nre) {
 
             logger.error(nre.getMessage());
 
@@ -285,108 +268,97 @@ public class ReportRepository implements IReportRepository {
     }
 
     @Override
-    public List<SystemCashFlowByOrderReportModel> getSystemCashFlowByOrderReport() {
+    public List<SystemCashFlowByOrderReport> getSystemCashFlowByOrderReport() {
 
-        String query = "FROM SystemCashFlowByOrderReportEntity s";
-        TypedQuery<SystemCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, SystemCashFlowByOrderReportEntity.class);
-        List<SystemCashFlowByOrderReportEntity> entities = result.getResultList();
+        String query = "FROM SystemCashFlowByOrderReport s";
+        TypedQuery<SystemCashFlowByOrderReport> result = this.entityManager.createQuery(query,
+                SystemCashFlowByOrderReport.class);
+        List<SystemCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<SystemCashFlowByOrderReportModel> systemCashFlowByOrderReports = new ArrayList<>();
-        (entities).forEach(entity -> systemCashFlowByOrderReports.add(entity.toModel()));
-
-        return systemCashFlowByOrderReports;
+        return entities;
     }
 
     @Override
-    public List<SystemCashFlowByOrderReportModel> getSystemCashFlowByOrderReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<SystemCashFlowByOrderReport> getSystemCashFlowByOrderReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
 
-        String query = "FROM SystemCashFlowByOrderReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
-        TypedQuery<SystemCashFlowByOrderReportEntity> result = this.entityManager.createQuery(query, SystemCashFlowByOrderReportEntity.class)
+        String query = "FROM SystemCashFlowByOrderReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
+        TypedQuery<SystemCashFlowByOrderReport> result = this.entityManager
+                .createQuery(query, SystemCashFlowByOrderReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate);
-        List<SystemCashFlowByOrderReportEntity> entities = result.getResultList();
+        List<SystemCashFlowByOrderReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<SystemCashFlowByOrderReportModel> systemCashFlowByOrderReports = new ArrayList<>();
-        (entities).forEach(entity -> systemCashFlowByOrderReports.add(entity.toModel()));
-
-        return systemCashFlowByOrderReports;
+        return entities;
     }
 
     @Override
-    public List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReport() {
+    public List<SystemCashFlowRevenueReport> getSystemCashFlowRevenueReport() {
 
-        String query = "FROM SystemCashFlowRevenueReportEntity s";
-        TypedQuery<SystemCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, SystemCashFlowRevenueReportEntity.class);
-        List<SystemCashFlowRevenueReportEntity> entities = result.getResultList();
+        String query = "FROM SystemCashFlowRevenueReport s";
+        TypedQuery<SystemCashFlowRevenueReport> result = this.entityManager.createQuery(query,
+                SystemCashFlowRevenueReport.class);
+        List<SystemCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<SystemCashFlowRevenueReportModel> systemCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> systemCashFlowRevenueReports.add(entity.toModel()));
-
-        return systemCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<SystemCashFlowRevenueReportModel> getSystemCashFlowRevenueReportByDateRange(LocalDate startDate, LocalDate endDate) {
+    public List<SystemCashFlowRevenueReport> getSystemCashFlowRevenueReportByDateRange(LocalDate startDate,
+            LocalDate endDate) {
 
-        String query = "FROM SystemCashFlowRevenueReportEntity s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
-        TypedQuery<SystemCashFlowRevenueReportEntity> result = this.entityManager.createQuery(query, SystemCashFlowRevenueReportEntity.class)
+        String query = "FROM SystemCashFlowRevenueReport s WHERE CAST(s.timestamp as LocalDate) BETWEEN :startDate AND :endDate";
+        TypedQuery<SystemCashFlowRevenueReport> result = this.entityManager
+                .createQuery(query, SystemCashFlowRevenueReport.class)
                 .setParameter("startDate", startDate)
                 .setParameter("endDate", endDate);
-        List<SystemCashFlowRevenueReportEntity> entities = result.getResultList();
+        List<SystemCashFlowRevenueReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<SystemCashFlowRevenueReportModel> systemCashFlowRevenueReports = new ArrayList<>();
-        (entities).forEach(entity -> systemCashFlowRevenueReports.add(entity.toModel()));
-
-        return systemCashFlowRevenueReports;
+        return entities;
     }
 
     @Override
-    public List<UsersCountReportModel> getUsersCountReport() {
+    public List<UsersCountReport> getUsersCountReport() {
 
-        String query = "FROM UsersCountReportEntity u";
-        TypedQuery<UsersCountReportEntity> result = this.entityManager.createQuery(query, UsersCountReportEntity.class);
-        List<UsersCountReportEntity> entities = result.getResultList();
+        String query = "FROM UsersCountReport u";
+        TypedQuery<UsersCountReport> result = this.entityManager.createQuery(query, UsersCountReport.class);
+        List<UsersCountReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<UsersCountReportModel> usersCountReports = new ArrayList<>();
-        (entities).forEach(entity -> usersCountReports.add(entity.toModel()));
-
-        return usersCountReports;
+        return entities;
     }
 
     @Override
-    public List<StoresCountReportModel> getStoresCountReport() {
+    public List<StoresCountReport> getStoresCountReport() {
 
-        String query = "FROM StoresCountReportEntity s";
-        TypedQuery<StoresCountReportEntity> result = this.entityManager.createQuery(query, StoresCountReportEntity.class);
-        List<StoresCountReportEntity> entities = result.getResultList();
+        String query = "FROM StoresCountReport s";
+        TypedQuery<StoresCountReport> result = this.entityManager.createQuery(query,
+                StoresCountReport.class);
+        List<StoresCountReport> entities = result.getResultList();
 
         if (entities == null || entities.isEmpty()) {
             return null;
         }
 
-        ArrayList<StoresCountReportModel> storesCountReports = new ArrayList<>();
-        (entities).forEach(entity -> storesCountReports.add(entity.toModel()));
-
-        return storesCountReports;
+        return entities;
     }
 }
